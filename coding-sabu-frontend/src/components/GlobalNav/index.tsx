@@ -33,7 +33,8 @@ const HeaderContainer = styled.div`
   width: 100%;
   background-image: url(${headerBackground});
   background-position: center;
-  background-size: cover;
+  background-size: contain;
+  background-color: #eee;
   box-shadow: rgb(0 0 0 / 25%) 0px 0px 15px;
 `;
 
@@ -88,7 +89,7 @@ const GlobalNav: FC = () => {
   );
 
   return (
-    <HeaderContainer>
+    <HeaderContainer data-testid='header'>
       <GlobalNavStyle>
         <Link to='/'>
           <GlobalNavContainer>

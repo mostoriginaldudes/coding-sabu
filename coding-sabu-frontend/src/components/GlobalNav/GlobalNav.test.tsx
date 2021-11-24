@@ -36,4 +36,18 @@ describe("appearance of global navigation bar", () => {
     const userMenu = screen.getByRole("userMenu");
     expect(userMenu).toBeInTheDocument();
   });
+
+  it("has #EEE as background color", () => {
+    render(<GlobalNav />);
+    const globalNav = screen.getByTestId("header");
+
+    expect(globalNav).toHaveStyle(`background-color: #eee`);
+  });
+
+  it("has contain as background size", () => {
+    render(<GlobalNav />);
+    const globalNav = screen.getByTestId("header");
+
+    expect(globalNav).toHaveStyle(`background-size: contain`);
+  });
 });
