@@ -19,9 +19,15 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "jsxImportSource": "@emotion/react",
-    "isolatedModules": true
+    "isolatedModules": true,
+    "typeRoots": [
+      "node_modules/@types",
+      "src/types"
+    ],
+    "baseUrl": "src"
   },
   "include": [
-    "src"
+    "src",
+    "src/types/images.d.ts"
   ]
 }
