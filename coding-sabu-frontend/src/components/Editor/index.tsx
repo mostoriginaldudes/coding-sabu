@@ -16,10 +16,10 @@ const Editor: FC = () => {
 
   return (
     <ToastEditor
-      previewStyle='vertical'
-      initialEditType='markdown'
-      height='600px'
-      placeholder='내용을 작성해주세요.'
+      previewStyle="vertical"
+      initialEditType="markdown"
+      height="600px"
+      placeholder="내용을 작성해주세요."
       plugins={[colorSyntax, [codeSyntaxHighlight, { highlighter: Prism }]]}
       viewer={true}
       useCommandShortcut={true}

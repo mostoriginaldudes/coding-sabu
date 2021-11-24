@@ -1,15 +1,15 @@
-import { useState, useCallback, FC } from "react";
-import styled from "@emotion/styled";
-import { css } from "@emotion/react";
-import { Link } from "react-router-dom";
-import logo from "../../assets/images/logo.svg";
-import headerBackground from "../../assets/images/header-background.svg";
-import { FaSearch as Search } from "react-icons/fa";
-import { AiFillCaretDown as DownArrow } from "react-icons/ai";
-import { AiOutlineUser as UserProfileImage } from "react-icons/ai";
-import { sizes, media, colors } from "../../styles/theme";
-import Button from "../Button";
-import UserMenu from "../UserMenu";
+import { useState, useCallback, FC } from 'react';
+import styled from '@emotion/styled';
+import { css } from '@emotion/react';
+import { Link } from 'react-router-dom';
+import logo from '../../assets/images/logo.svg';
+import headerBackground from '../../assets/images/header-background.svg';
+import { FaSearch as Search } from 'react-icons/fa';
+import { AiFillCaretDown as DownArrow } from 'react-icons/ai';
+import { AiOutlineUser as UserProfileImage } from 'react-icons/ai';
+import { sizes, media, colors } from '../../styles/theme';
+import Button from '../Button';
+import UserMenu from '../UserMenu';
 
 const FlexContainer = css`
   display: flex;
@@ -89,13 +89,13 @@ const GlobalNav: FC = () => {
   );
 
   return (
-    <HeaderContainer data-testid='header'>
+    <HeaderContainer data-testid="header">
       <GlobalNavStyle>
-        <Link to='/'>
+        <Link to="/">
           <GlobalNavContainer>
             <Image
               src={logo}
-              alt='logo'
+              alt="logo"
               width={sizes.unitTablet}
               height={sizes.unitTablet}
             />
@@ -104,29 +104,29 @@ const GlobalNav: FC = () => {
         </Link>
         <GlobalNavContainer>
           <GlobalNavContainer>
-            <Link to='/search'>
+            <Link to="/search">
               <Search
                 color={colors.gray[8]}
                 fontSize={`calc(${sizes.unitTablet}/2)`}
-                cursor='pointer'
-                role='search'
+                cursor="pointer"
+                role="search"
               />
             </Link>
           </GlobalNavContainer>
           <GlobalNavContainer>
-            <Button radius={sizes.unitTablet} color='white'>
-              <Link to='/myclass'>수련 관리</Link>
+            <Button radius={sizes.unitTablet} color="white">
+              <Link to="/myclass">수련 관리</Link>
             </Button>
           </GlobalNavContainer>
-          <GlobalNavContainer onClick={toggleUserMenu} role='toggleMenu'>
+          <GlobalNavContainer onClick={toggleUserMenu} role="toggleMenu">
             <RoundContainer>
               <UserProfileImage
                 color={colors.white}
                 fontSize={`calc(${sizes.unitTablet} - 10px)`}
-                cursor='pointer'
+                cursor="pointer"
               />
             </RoundContainer>
-            <DownArrow cursor='pointer' />
+            <DownArrow cursor="pointer" />
           </GlobalNavContainer>
         </GlobalNavContainer>
         {visibleUserMenu && <UserMenu />}
