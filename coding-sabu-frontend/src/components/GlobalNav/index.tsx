@@ -101,7 +101,6 @@ const GlobalNav: FC = () => {
             <EmphasisText>코딩사부</EmphasisText>
           </GlobalNavContainer>
         </Link>
-
         <GlobalNavContainer>
           <GlobalNavContainer>
             <Link to='/search'>
