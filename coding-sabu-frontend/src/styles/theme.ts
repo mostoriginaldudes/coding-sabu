@@ -1,18 +1,18 @@
-import { css } from "@emotion/react";
-import openColor from "open-color";
+import { css } from '@emotion/react';
+import openColor from 'open-color';
 
 interface Sizes {
   desktop: 1024;
   tablet: 768;
-  unitDesktop: "64px";
-  unitTablet: "48px";
+  unitDesktop: '64px';
+  unitTablet: '48px';
 }
 
 const sizes: Sizes = {
   desktop: 1024,
   tablet: 768,
-  unitDesktop: "64px",
-  unitTablet: "48px"
+  unitDesktop: '64px',
+  unitTablet: '48px'
 };
 
 const media = {

@@ -1,8 +1,8 @@
-import { FC, useCallback } from "react";
-import { RouteComponentProps, withRouter } from "react-router-dom";
-import styled from "@emotion/styled";
-import { css } from "@emotion/react";
-import { colors } from "../../styles/theme";
+import { FC, useCallback } from 'react';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
+import styled from '@emotion/styled';
+import { css } from '@emotion/react';
+import { colors } from '../../styles/theme';
 
 const FlexContainer = css`
   display: flex;
@@ -38,15 +38,15 @@ const UserMenu: FC<RouteComponentProps> = ({ history }) => {
 
   const logout = useCallback(() => {
     // TODO: store의 유저 정보 삭제 로직 추가
-    history.replace("/");
+    history.replace('/');
   }, [history]);
 
   return (
-    <UserMenuContainer role='userMenu'>
-      <UserMenuList onClick={() => navigatePage("/mypage")}>
+    <UserMenuContainer role="userMenu">
+      <UserMenuList onClick={() => navigatePage('/mypage')}>
         내 정보
       </UserMenuList>
-      <UserMenuList onClick={() => navigatePage("/myclass")}>
+      <UserMenuList onClick={() => navigatePage('/myclass')}>
         내 가르침
       </UserMenuList>
       <UserMenuList onClick={logout}>로그아웃</UserMenuList>

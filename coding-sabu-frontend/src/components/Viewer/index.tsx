@@ -14,7 +14,10 @@ interface Props {
 
 const Viewer: FC<Props> = ({ initialValue }) => {
   return (
-    <ToastViewer initialValue={initialValue} plugins={[colorSyntax, [codeSyntaxHighlight, { highlighter: Prism }]]} />
+    <ToastViewer
+      initialValue={initialValue}
+      plugins={[colorSyntax, [codeSyntaxHighlight, { highlighter: Prism }]]}
+    />
   );
 };
 
