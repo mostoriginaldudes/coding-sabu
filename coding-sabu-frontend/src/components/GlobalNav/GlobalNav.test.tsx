@@ -2,7 +2,7 @@ import { render, screen } from "../../utils/testUtil";
 import userEvent from "@testing-library/user-event";
 import GlobalNav from ".";
 
-describe("GlobalNavearance of global navigation bar", () => {
+describe("appearance of global navigation bar", () => {
   it("renders logo image", () => {
     render(<GlobalNav />);
     const logoImage = screen.getByAltText("logo");
