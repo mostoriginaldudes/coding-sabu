@@ -7,7 +7,7 @@ import headerBackground from '../../assets/images/header-background.svg';
 import { FaSearch as Search } from 'react-icons/fa';
 import { AiFillCaretDown as DownArrow } from 'react-icons/ai';
 import { AiOutlineUser as UserProfileImage } from 'react-icons/ai';
-import { sizes, media, colors } from '../../styles/theme';
+import { sizes, colors } from '../../styles/theme';
 import Button from '../Button';
 import UserMenu from '../UserMenu';
 
@@ -48,6 +48,7 @@ const GlobalNavStyle = styled.nav`
   width: calc(100% - 2rem);
   height: ${unitBig}px;
   margin: 0 auto;
+  position: relative;
 `;
 
 const GlobalNavContainer = styled.div`
@@ -57,9 +58,6 @@ const GlobalNavContainer = styled.div`
 
 const EmphasisText = styled.h4`
   font-size: 1.3rem;
-  ${media.tablet`
-    display: none;
-  `}
 `;
 
 const Image = styled.img`
@@ -91,6 +89,7 @@ const GlobalNav: FC = () => {
   return (
     <HeaderContainer data-testid="header">
       <GlobalNavStyle>
+        {visibleUserMenu && <UserMenu />}
         <Link to="/">
           <GlobalNavContainer>
             <Image
@@ -130,7 +129,6 @@ const GlobalNav: FC = () => {
           </GlobalNavContainer>
         </GlobalNavContainer>
       </GlobalNavStyle>
-      {visibleUserMenu && <UserMenu />}
     </HeaderContainer>
   );
 };
