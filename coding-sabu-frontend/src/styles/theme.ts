@@ -1,31 +1,32 @@
 import { css } from '@emotion/react';
+import { CSSInterpolation } from '@emotion/serialize';
 import openColor from 'open-color';
 
 interface Sizes {
   desktop: 1024;
   tablet: 768;
-  unitDesktop: '64px';
-  unitTablet: '48px';
+  unitBig: 64;
+  unitRegular: 48;
 }
 
 const sizes: Sizes = {
   desktop: 1024,
   tablet: 768,
-  unitDesktop: '64px',
-  unitTablet: '48px'
+  unitBig: 64,
+  unitRegular: 48
 };
 
 const media = {
-  desktop: (...args: any) =>
+  desktop: (...args: TemplateStringsArray[]) =>
     css`
       @media (max-width: ${sizes.desktop / 16}em) {
-        ${css(...args)}
+        ${css(...(args as unknown as CSSInterpolation[]))}
       }
     `,
-  tablet: (...args: any) =>
+  tablet: (...args: TemplateStringsArray[]) =>
     css`
       @media (max-width: ${sizes.tablet / 16}em) {
-        ${css(...args)}
+        ${css(...(args as unknown as CSSInterpolation[]))}
       }
     `
 } as const;

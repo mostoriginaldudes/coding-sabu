@@ -11,6 +11,9 @@ import { sizes, media, colors } from '../../styles/theme';
 import Button from '../Button';
 import UserMenu from '../UserMenu';
 
+const { desktop, unitBig, unitRegular } = sizes;
+const { gray, white } = colors;
+
 const FlexContainer = css`
   display: flex;
   justify-content: center;
@@ -38,11 +41,12 @@ const HeaderContainer = styled.div`
   box-shadow: rgb(0 0 0 / 25%) 0px 0px 15px;
 `;
 
-const GlobalNavStyle = styled.header`
+const GlobalNavStyle = styled.nav`
   ${FlexContainer}
   justify-content: space-between;
+  max-width: ${desktop}px;
   width: calc(100% - 2rem);
-  height: 80px;
+  height: ${unitBig}px;
   margin: 0 auto;
 `;
 
@@ -63,20 +67,16 @@ const Image = styled.img`
 `;
 
 const IconContainer = css`
-  width: ${sizes.unitDesktop};
-  height: ${sizes.unitDesktop};
-
-  ${media.tablet`
-    width: ${sizes.unitTablet};
-    height: ${sizes.unitTablet};
-  `}
+  width: ${unitRegular}px;
+  height: ${unitRegular}px;
+  padding: 2px;
 `;
 
 const RoundContainer = styled.div`
   ${FlexContainer};
   ${RoundStyle}
   ${IconContainer}
-  background-color: ${colors.gray[4]};
+  background-color: ${gray[4]};
   margin-left: 10px;
 `;
 
@@ -85,7 +85,7 @@ const GlobalNav: FC = () => {
 
   const toggleUserMenu = useCallback(
     () => setVisibleUserMenu(!visibleUserMenu),
-    [visibleUserMenu, setVisibleUserMenu]
+    [visibleUserMenu]
   );
 
   return (
@@ -96,8 +96,8 @@ const GlobalNav: FC = () => {
             <Image
               src={logo}
               alt="logo"
-              width={sizes.unitTablet}
-              height={sizes.unitTablet}
+              width={unitRegular}
+              height={unitRegular}
             />
             <EmphasisText>코딩사부</EmphasisText>
           </GlobalNavContainer>
@@ -106,31 +106,31 @@ const GlobalNav: FC = () => {
           <GlobalNavContainer>
             <Link to="/search">
               <Search
-                color={colors.gray[8]}
-                fontSize={`calc(${sizes.unitTablet}/2)`}
+                color={gray[8]}
+                fontSize={unitRegular / 2}
                 cursor="pointer"
                 role="search"
               />
             </Link>
           </GlobalNavContainer>
           <GlobalNavContainer>
-            <Button radius={sizes.unitTablet} color="white">
+            <Button radius={unitRegular} color="white">
               <Link to="/myclass">수련 관리</Link>
             </Button>
           </GlobalNavContainer>
           <GlobalNavContainer onClick={toggleUserMenu} role="toggleMenu">
             <RoundContainer>
               <UserProfileImage
-                color={colors.white}
-                fontSize={`calc(${sizes.unitTablet} - 10px)`}
+                color={white}
+                fontSize={unitRegular / 2}
                 cursor="pointer"
               />
             </RoundContainer>
             <DownArrow cursor="pointer" />
           </GlobalNavContainer>
         </GlobalNavContainer>
-        {visibleUserMenu && <UserMenu />}
       </GlobalNavStyle>
+      {visibleUserMenu && <UserMenu />}
     </HeaderContainer>
   );
 };
