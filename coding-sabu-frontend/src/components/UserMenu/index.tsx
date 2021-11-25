@@ -2,7 +2,7 @@ import { FC, useCallback } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
-import { colors } from '../../styles/theme';
+import { colors, sizes } from '../../styles/theme';
 
 const FlexContainer = css`
   display: flex;
@@ -14,8 +14,8 @@ const UserMenuContainer = styled.ul`
   width: 163px;
   box-shadow: rgb(0 0 0 / 25%) 0px 0px 15px;
   position: absolute;
-  top: 85px;
-  right: 10px;
+  top: ${sizes.unitBig + 4}px;
+  right: 0;
 `;
 
 const UserMenuList = styled.li`
