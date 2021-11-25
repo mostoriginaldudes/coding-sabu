@@ -15,5 +15,5 @@ export default function useEventListener<T extends HTMLElement>(
   useEffect(() => {
     elementToAdd.addEventListener(eventName, callback);
     return () => elementToAdd.removeEventListener(eventName, callback);
-  }, [eventName, elementToAdd]);
+  }, [eventName, handler, elementToAdd]);
 }
