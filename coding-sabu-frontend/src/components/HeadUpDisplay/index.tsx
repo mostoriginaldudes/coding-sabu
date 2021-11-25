@@ -1,9 +1,9 @@
-import { useState, useEffect, useCallback, useRef, FC } from "react";
-import { createPortal } from "react-dom";
-import styled from "@emotion/styled";
-import success from "../../assets/images/success.svg";
-import fail from "../../assets/images/fail.svg";
-import useTimeout from "../../hooks/useTimeout";
+import { useState, useEffect, useCallback, useRef, FC } from 'react';
+import { createPortal } from 'react-dom';
+import styled from '@emotion/styled';
+import success from '../../assets/images/success.svg';
+import fail from '../../assets/images/fail.svg';
+import useTimeout from '../../hooks/useTimeout';
 
 const size = 160;
 const delay = 3000;
@@ -42,8 +42,15 @@ const HeadUpDpWrapper = styled.div`
   }
 `;
 
+const getModalRoot = () => {
+  const modalRoot = document.createElement('div');
+  modalRoot.setAttribute('id', 'modal');
+  document.body.appendChild(modalRoot);
+  return modalRoot;
+};
+
 interface Props {
-  type: "success" | "fail";
+  type: 'success' | 'fail';
 }
 
 const HeadUpDisplay: FC<Props> = ({ type }) => {
@@ -54,15 +61,17 @@ const HeadUpDisplay: FC<Props> = ({ type }) => {
   );
   useTimeout(hideHeadUp, delay);
 
-  const modalTarget = useRef<HTMLDivElement>(document.createElement("div"));
+  const modalTarget = useRef<HTMLDivElement>(document.createElement('div'));
 
   useEffect(() => {
     const current = modalTarget.current;
-    const modalRoot =
-      document.getElementById("modal") ?? document.createElement("div");
+    const modalRoot = getModalRoot();
+
     modalRoot.appendChild(current);
 
-    return () => void modalRoot.removeChild(current);
+    return () => {
+      document.body.removeChild(modalRoot);
+    };
   }, []);
 
   return createPortal(
@@ -70,12 +79,12 @@ const HeadUpDisplay: FC<Props> = ({ type }) => {
       {visible && (
         <HeadUpDpWrapper>
           <img
-            src={type === "success" ? success : fail}
+            src={type === 'success' ? success : fail}
             alt={type}
             width={size / 2}
           />
-          <h4 data-testid='text'>
-            {type === "success" ? "완료" : "실패"}했습니다.
+          <h4 data-testid="text">
+            {type === 'success' ? '완료' : '실패'}했습니다.
           </h4>
         </HeadUpDpWrapper>
       )}
