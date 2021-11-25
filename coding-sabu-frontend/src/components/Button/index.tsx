@@ -3,11 +3,11 @@ import { media, colors } from '../../styles/theme';
 
 interface ButtonProps {
   color: 'yellow' | 'black' | 'white';
-  radius: string;
+  radius: number;
 }
 
 const Button = styled.button<ButtonProps>`
-  border-radius: ${({ radius }) => radius};
+  border-radius: ${({ radius }) => radius}px;
 
   border: ${({ color }) =>
     `1px solid ${color === 'yellow' ? colors.yellow[4] : colors.black}`};
