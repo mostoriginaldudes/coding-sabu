@@ -4,6 +4,7 @@ import styled from '@emotion/styled';
 import success from '../../assets/images/success.svg';
 import fail from '../../assets/images/fail.svg';
 import useTimeout from '../../hooks/useTimeout';
+import { getModalRoot } from '../../utils/utils';
 
 const size = 160;
 const delay = 3000;
@@ -41,13 +42,6 @@ const HeadUpDpWrapper = styled.div`
     }
   }
 `;
-
-const getModalRoot = () => {
-  const modalRoot = document.createElement('div');
-  modalRoot.setAttribute('id', 'modal');
-  document.body.appendChild(modalRoot);
-  return modalRoot;
-};
 
 interface Props {
   type: 'success' | 'fail';
