@@ -8,7 +8,7 @@ export default function useEventListener<T extends HTMLElement>(
   handler: Handler,
   target?: T | Window
 ) {
-  const savedCallback = useRef<Handler>(handler);
+  const savedCallback = useRef<(event: Event) => void>(handler);
   const callback = (event: Event) => savedCallback.current(event);
   const elementToAdd = target || window;
 
