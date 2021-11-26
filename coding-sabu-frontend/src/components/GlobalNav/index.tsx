@@ -82,14 +82,17 @@ const GlobalNav: FC = () => {
   const [visibleUserMenu, setVisibleUserMenu] = useState<boolean>(false);
 
   const toggleUserMenu = useCallback(
-    () => setVisibleUserMenu(!visibleUserMenu),
-    [visibleUserMenu]
+    e => {
+      e.stopPropagation();
+      console.log(2);
+      setVisibleUserMenu(!visibleUserMenu);
+    },
+    [visibleUserMenu, setVisibleUserMenu]
   );
 
   return (
     <HeaderContainer data-testid="header">
       <GlobalNavStyle>
-        {visibleUserMenu && <UserMenu />}
         <Link to="/">
           <GlobalNavContainer>
             <Image
@@ -117,7 +120,7 @@ const GlobalNav: FC = () => {
               <Link to="/myclass">수련 관리</Link>
             </Button>
           </GlobalNavContainer>
-          <GlobalNavContainer onClick={toggleUserMenu} role="toggleMenu">
+          <GlobalNavContainer role="toggleMenu" onClick={toggleUserMenu}>
             <RoundContainer>
               <UserProfileImage
                 color={white}
@@ -126,6 +129,10 @@ const GlobalNav: FC = () => {
               />
             </RoundContainer>
             <DownArrow cursor="pointer" />
+            <UserMenu
+              visibleUserMenu={visibleUserMenu}
+              setVisibleUserMenu={setVisibleUserMenu}
+            />
           </GlobalNavContainer>
         </GlobalNavContainer>
       </GlobalNavStyle>

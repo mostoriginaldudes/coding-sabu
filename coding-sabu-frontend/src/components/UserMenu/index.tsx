@@ -1,8 +1,9 @@
-import { FC, useCallback } from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { FC, useCallback, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 import { colors, sizes } from '../../styles/theme';
+import useClickOutside from '../../hooks/useClickOutside';
 
 const FlexContainer = css`
   display: flex;
@@ -28,30 +29,36 @@ const UserMenuList = styled.li`
   cursor: pointer;
 `;
 
-const UserMenu: FC<RouteComponentProps> = ({ history }) => {
-  const navigatePage = useCallback(
-    path => {
-      history.push(path);
-    },
-    [history]
-  );
+interface Props {
+  visibleUserMenu: boolean;
+  setVisibleUserMenu: (visibleUserMenu: boolean) => void;
+}
 
-  const logout = useCallback(() => {
-    // TODO: store의 유저 정보 삭제 로직 추가
-    history.replace('/');
-  }, [history]);
+const UserMenu: FC<Props> = ({ visibleUserMenu, setVisibleUserMenu }) => {
+  const offUserMenu = useCallback(() => {
+    setVisibleUserMenu(false);
+  }, [setVisibleUserMenu]);
+
+  const userMenu = useRef(null);
+  useClickOutside(userMenu, offUserMenu);
 
   return (
-    <UserMenuContainer role="userMenu">
-      <UserMenuList onClick={() => navigatePage('/mypage')}>
-        내 정보
-      </UserMenuList>
-      <UserMenuList onClick={() => navigatePage('/myclass')}>
-        내 가르침
-      </UserMenuList>
-      <UserMenuList onClick={logout}>로그아웃</UserMenuList>
-    </UserMenuContainer>
+    <div ref={userMenu}>
+      {visibleUserMenu && (
+        <UserMenuContainer role="userMenu">
+          <UserMenuList>
+            <Link to="/mypage">내 정보</Link>
+          </UserMenuList>
+          <UserMenuList>
+            <Link to="/myclass">내 가르침</Link>
+          </UserMenuList>
+          <UserMenuList>
+            <Link to="/logout">로그아웃</Link>
+          </UserMenuList>
+        </UserMenuContainer>
+      )}
+    </div>
   );
 };
 
-export default withRouter(UserMenu);
+export default UserMenu;
