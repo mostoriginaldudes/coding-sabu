@@ -5,15 +5,14 @@ import success from '../../assets/images/success.svg';
 import fail from '../../assets/images/fail.svg';
 import useTimeout from '../../hooks/useTimeout';
 import { getModalRoot } from '../../utils/utils';
+import { flexCenter, positionFixed } from 'styles/module';
 
 const size = 160;
 const delay = 3000;
 const HeadUpDpWrapper = styled.div`
-  display: flex;
+  ${flexCenter}
+  ${positionFixed}
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  position: fixed;
   top: calc((100vh - ${size}px) / 2);
   left: calc((100vw - ${size}px) / 2);
   width: ${size}px;
@@ -27,6 +26,7 @@ const HeadUpDpWrapper = styled.div`
   animation-timing-function: cubic-bezier(0.455, 0.03, 0.515, 0.955);
   animation-duration: ${delay}ms;
   animation-iteration-count: 1;
+
   @keyframes fade {
     0% {
       opacity: 0;
@@ -63,9 +63,7 @@ const HeadUpDisplay: FC<Props> = ({ type }) => {
 
     modalRoot.appendChild(current);
 
-    return () => {
-      document.body.removeChild(modalRoot);
-    };
+    return () => void document.body.removeChild(modalRoot);
   }, []);
 
   return createPortal(

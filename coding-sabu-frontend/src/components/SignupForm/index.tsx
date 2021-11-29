@@ -4,6 +4,7 @@ import Modal from '../Modal';
 import Input from '../Input';
 import Button from '../Button';
 import { media } from 'styles/theme';
+import { flexCenter } from 'styles/module';
 
 const SignupContainer = styled.div``;
 const SignupFormElement = styled.form``;
@@ -24,7 +25,7 @@ const SignupEmailWrapper = styled.div`
 `;
 
 const SignupButtonWrapper = styled.div`
-  display: flex;
+  ${flexCenter}
   justify-content: space-between;
   & > button {
     width: 100%;

@@ -4,15 +4,14 @@ import { getModalRoot } from '../../utils/utils';
 import { HiX } from 'react-icons/hi';
 import styled from '@emotion/styled';
 import { sizes, colors, media } from '../../styles/theme';
+import { flexCenter, positionFixed } from '../../styles/module';
 
 const modalMaskZIndex = 3;
 const ModalMask = styled.div`
+  ${positionFixed}
   width: 100vw;
   height: 100vh;
   background-color: rgba(255, 255, 255, 0.65);
-  position: fixed;
-  top: 0;
-  left: 0;
   z-index: ${modalMaskZIndex};
   ${media.tablet`
     display: none;
@@ -20,6 +19,7 @@ const ModalMask = styled.div`
 `;
 
 const ModalContainer = styled.div`
+  ${positionFixed}
   min: {
     width: ${sizes.desktop / 4}px;
     width: ${sizes.desktop / 2}px;
@@ -28,7 +28,6 @@ const ModalContainer = styled.div`
   border-radius: 5px;
   z-index: ${modalMaskZIndex + 1};
   box-shadow: 1px 12px 15px -4px rgba(0, 0, 0, 0.62);
-  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -42,9 +41,8 @@ const ModalContainer = styled.div`
 `;
 
 const ModalHeader = styled.header`
-  display: flex;
+  ${flexCenter}
   justify-content: space-between;
-  align-items: center;
   width: 100%;
   height: 3.5rem;
   background-color: ${colors.yellow[4]};
@@ -73,9 +71,7 @@ const ModalTitle = styled.h3`
 `;
 
 const ModalClose = styled.button`
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  ${flexCenter}
   background-color: transparent;
   border: none;
   cursor: pointer;

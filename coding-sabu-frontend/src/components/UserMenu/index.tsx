@@ -1,15 +1,9 @@
 import { FC, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import styled from '@emotion/styled';
-import { css } from '@emotion/react';
 import { colors, sizes } from '../../styles/theme';
+import { flexCenter } from '../../styles/module';
 import useClickOutside from '../../hooks/useClickOutside';
-
-const FlexContainer = css`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
 
 const UserMenuContainer = styled.ul`
   width: 163px;
@@ -20,7 +14,7 @@ const UserMenuContainer = styled.ul`
 `;
 
 const UserMenuList = styled.li`
-  ${FlexContainer}
+  ${flexCenter}
   width: 100%;
   height: 36px;
   &:hover {

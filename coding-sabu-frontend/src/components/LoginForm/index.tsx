@@ -4,13 +4,14 @@ import Input from '../Input';
 import styled from '@emotion/styled';
 import Button from 'components/Button';
 import { media } from 'styles/theme';
+import { flexCenter } from '../../styles/module';
 
 const LoginFormContainer = styled.div``;
 
 const LoginFormElement = styled.form``;
 
 const ButtonContainer = styled.div`
-  display: flex;
+  ${flexCenter}
   justify-content: space-between;
   & > button {
     width: 100%;

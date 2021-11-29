@@ -1,10 +1,11 @@
 import { FC, InputHTMLAttributes } from 'react';
 import styled from '@emotion/styled';
 import { colors } from '../../styles/theme';
-import { FlexCol } from 'styles/module';
+import { flexCenter } from 'styles/module';
 
 const InputContainer = styled.div`
-  ${FlexCol}
+  ${flexCenter}
+  flex-direction: column;
   align-items: flex-start;
   width: 100%;
   margin: 1em 0;
