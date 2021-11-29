@@ -106,7 +106,7 @@ const Modal: FC<Props> = ({ modalTitle, children }) => {
   }, []);
 
   return createPortal(
-    <div>
+    <>
       {visibleModal && (
         <>
           <ModalMask />
@@ -121,7 +121,7 @@ const Modal: FC<Props> = ({ modalTitle, children }) => {
           </ModalContainer>
         </>
       )}
-    </div>,
+    </>,
     modalTarget.current
   );
 };
