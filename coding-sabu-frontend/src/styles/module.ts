@@ -7,6 +7,12 @@ export const flexCenter = css`
   align-items: center;
 `;
 
+export const positionFixed = css`
+  position: fixed;
+  top: 0;
+  left: 0;
+`;
+
 export const FlexRow = styled.div`
   ${flexCenter}
 `;
