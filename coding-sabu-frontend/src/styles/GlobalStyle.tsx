@@ -7,8 +7,7 @@ import '../assets/fonts/D2CodingBold.ttf';
 const style = css`
   ${emotionNormalize}
 
-  html,
-  body {
+  * {
     box-sizing: border-box;
     font-family: 'D2Coding';
   }
@@ -23,6 +22,22 @@ const style = css`
   }
   li {
     list-style: none;
+  }
+  input {
+    outline: none;
+    border: none;
+    padding: 0;
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    /* Firefox */
+    &[type='number'] {
+      -moz-appearance: textfield;
+    }
   }
 `;
 
