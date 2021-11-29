@@ -4,56 +4,42 @@ import { css } from '@emotion/react';
 import { Link } from 'react-router-dom';
 import logo from '../../assets/images/logo.svg';
 import headerBackground from '../../assets/images/header-background.svg';
-import { FaSearch as Search } from 'react-icons/fa';
+import { FaSearch } from 'react-icons/fa';
 import { AiFillCaretDown as DownArrow } from 'react-icons/ai';
-import { AiOutlineUser as UserProfileImage } from 'react-icons/ai';
-import { sizes, colors } from '../../styles/theme';
+import { AiOutlineUser } from 'react-icons/ai';
+import { sizes, colors, media } from '../../styles/theme';
 import Button from '../Button';
 import UserMenu from '../UserMenu';
+import { flexCenter, positionFixed, FlexRow } from '../../styles/module';
 
 const { desktop, unitBig, unitRegular } = sizes;
 const { gray, white } = colors;
-
-const FlexContainer = css`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const FixedPosition = css`
-  position: fixed;
-  top: 0;
-  left: 0;
-`;
 
 const RoundStyle = css`
   border-radius: 50%;
 `;
 
 const HeaderContainer = styled.div`
-  ${FlexContainer}
-  ${FixedPosition}
+  ${flexCenter}
+  ${positionFixed}
+  background: {
+    image: url(${headerBackground});
+    position: center;
+    size: contain;
+    color: #eee;
+  }
   width: 100%;
-  background-image: url(${headerBackground});
-  background-position: center;
-  background-size: contain;
-  background-color: #eee;
   box-shadow: rgb(0 0 0 / 25%) 0px 0px 15px;
 `;
 
 const GlobalNavStyle = styled.nav`
-  ${FlexContainer}
+  ${flexCenter}
   justify-content: space-between;
   max-width: ${desktop}px;
   width: calc(100% - 2rem);
   height: ${unitBig}px;
   margin: 0 auto;
   position: relative;
-`;
-
-const GlobalNavContainer = styled.div`
-  ${FlexContainer};
-  height: 100%;
 `;
 
 const EmphasisText = styled.h4`
@@ -70,28 +56,40 @@ const IconContainer = css`
   padding: 2px;
 `;
 
-const RoundContainer = styled.div`
-  ${FlexContainer};
+const UserProfileImage = styled(AiOutlineUser)`
+  ${flexCenter};
   ${RoundStyle}
   ${IconContainer}
   background-color: ${gray[4]};
   margin-left: 10px;
 `;
 
+const Search = styled(FaSearch)`
+  margin-right: 10px;
+`;
+
+const ButtonToMyClass = styled(Button)`
+  ${media.tablet`
+    display: none;
+  `}
+`;
+
 const GlobalNav: FC = () => {
   const [visibleUserMenu, setVisibleUserMenu] = useState<boolean>(false);
 
   const toggleUserMenu = useCallback(
-    () => setVisibleUserMenu(!visibleUserMenu),
-    [visibleUserMenu]
+    e => {
+      e.stopPropagation();
+      setVisibleUserMenu(!visibleUserMenu);
+    },
+    [visibleUserMenu, setVisibleUserMenu]
   );
 
   return (
     <HeaderContainer data-testid="header">
       <GlobalNavStyle>
-        {visibleUserMenu && <UserMenu />}
         <Link to="/">
-          <GlobalNavContainer>
+          <FlexRow>
             <Image
               src={logo}
               alt="logo"
@@ -99,35 +97,33 @@ const GlobalNav: FC = () => {
               height={unitRegular}
             />
             <EmphasisText>코딩사부</EmphasisText>
-          </GlobalNavContainer>
+          </FlexRow>
         </Link>
-        <GlobalNavContainer>
-          <GlobalNavContainer>
-            <Link to="/search">
-              <Search
-                color={gray[8]}
-                fontSize={unitRegular / 2}
-                cursor="pointer"
-                role="search"
-              />
-            </Link>
-          </GlobalNavContainer>
-          <GlobalNavContainer>
-            <Button radius={unitRegular} color="white">
-              <Link to="/myclass">수련 관리</Link>
-            </Button>
-          </GlobalNavContainer>
-          <GlobalNavContainer onClick={toggleUserMenu} role="toggleMenu">
-            <RoundContainer>
-              <UserProfileImage
-                color={white}
-                fontSize={unitRegular / 2}
-                cursor="pointer"
-              />
-            </RoundContainer>
+        <FlexRow>
+          <Link to="/search">
+            <Search
+              color={gray[8]}
+              fontSize={unitRegular / 2}
+              cursor="pointer"
+              role="search"
+            />
+          </Link>
+          <ButtonToMyClass radius={unitRegular} color="white">
+            <Link to="/myclass">수련 관리</Link>
+          </ButtonToMyClass>
+          <FlexRow role="toggleMenu" onClick={toggleUserMenu}>
+            <UserProfileImage
+              color={white}
+              fontSize={unitRegular / 3}
+              cursor="pointer"
+            />
             <DownArrow cursor="pointer" />
-          </GlobalNavContainer>
-        </GlobalNavContainer>
+            <UserMenu
+              visibleUserMenu={visibleUserMenu}
+              setVisibleUserMenu={setVisibleUserMenu}
+            />
+          </FlexRow>
+        </FlexRow>
       </GlobalNavStyle>
     </HeaderContainer>
   );
