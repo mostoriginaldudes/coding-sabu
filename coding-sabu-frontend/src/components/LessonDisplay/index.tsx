@@ -2,7 +2,7 @@ import { FC } from 'react';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 import { colors, media } from 'styles/theme';
-import { Props as ILesson } from 'components/Lesson';
+import { Lesson } from 'types';
 import { flexCenter } from 'styles/module';
 import { Link } from 'react-router-dom';
 import { EmphasisText, PageTitle } from 'components/LessonList';
@@ -107,7 +107,7 @@ const LessonDisplayInfo = styled.li`
 `;
 
 interface Props {
-  displayedLesson: ILesson | null;
+  displayedLesson: Lesson | null;
 }
 
 const LessonDisplay: FC<Props> = ({ displayedLesson }) => {

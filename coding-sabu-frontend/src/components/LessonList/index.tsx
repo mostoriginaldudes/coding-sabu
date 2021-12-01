@@ -1,7 +1,8 @@
 import { FC, memo } from 'react';
 import styled from '@emotion/styled';
 import { media } from 'styles/theme';
-import Lesson, { Props as ILesson } from 'components/Lesson';
+import LessonItem from 'components/LessonItem';
+import { Lesson } from 'types';
 import { flexCenter } from 'styles/module';
 
 export const PageTitle = styled.header`
@@ -35,12 +36,12 @@ const LessonListElement = styled.li`
 `;
 
 interface Props {
-  lessons: ILesson[];
-  setDisplayedLesson: (lesson: ILesson) => void;
+  lessons: Lesson[];
+  setDisplayedLesson: (lesson: Lesson) => void;
 }
 
 const LessonList: FC<Props> = ({ lessons, setDisplayedLesson }) => {
-  const pickOneLesson = (lesson: ILesson) => {
+  const pickOneLesson = (lesson: Lesson) => {
     setDisplayedLesson(lesson);
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
   };
@@ -53,7 +54,7 @@ const LessonList: FC<Props> = ({ lessons, setDisplayedLesson }) => {
       <LessonListContainer>
         {lessons.map((lesson, index) => (
           <LessonListElement key={index} onClick={() => pickOneLesson(lesson)}>
-            <Lesson {...lesson} />
+            <LessonItem {...lesson} />
           </LessonListElement>
         ))}
       </LessonListContainer>

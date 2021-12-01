@@ -2,11 +2,11 @@ import { FC, useState, useEffect } from 'react';
 import LessonDisplay from 'components/LessonDisplay';
 import LessonList from 'components/LessonList';
 import { fetchLessons } from 'apis';
-import { Props as ILesson } from '../../components/Lesson';
+import { Lesson } from 'types';
 
 const Home: FC = () => {
-  const [lessons, setLessons] = useState<ILesson[]>([]);
-  const [displayedLesson, setDisplayedLesson] = useState<ILesson | null>(null);
+  const [lessons, setLessons] = useState<Lesson[]>([]);
+  const [displayedLesson, setDisplayedLesson] = useState<Lesson | null>(null);
 
   const fetchLessonData = async () => {
     const fetchedLessons = await fetchLessons();
