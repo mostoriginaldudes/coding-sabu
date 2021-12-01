@@ -133,7 +133,7 @@ const Lesson: FC<Props> = ({
         <Description>{lessonDescription}</Description>
         <LessonFooter>
           <EmpahsisBlock>{studentCount}명</EmpahsisBlock>
-          <EmphasisText>{lessonPrice}원</EmphasisText>
+          <EmphasisText>{lessonPrice.toLocaleString()}원</EmphasisText>
         </LessonFooter>
       </LessonInfo>
     </LessonContainer>
