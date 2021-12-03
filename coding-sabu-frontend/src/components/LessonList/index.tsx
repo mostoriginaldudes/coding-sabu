@@ -1,9 +1,10 @@
-import { FC, memo } from 'react';
+import { FC } from 'react';
 import styled from '@emotion/styled';
 import { media } from 'styles/theme';
 import LessonItem from 'components/LessonItem';
 import { Lesson } from 'types';
 import { flexCenter } from 'styles/module';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 export const PageTitle = styled.header`
   width: 100%;
@@ -35,15 +36,14 @@ const LessonListElement = styled.li`
   justify-content: space-between;
 `;
 
-interface Props {
+interface Props extends RouteComponentProps {
   lessons: Lesson[];
-  setDisplayedLesson: (lesson: Lesson) => void;
 }
 
-const LessonList: FC<Props> = ({ lessons, setDisplayedLesson }) => {
-  const pickOneLesson = (lesson: Lesson) => {
-    setDisplayedLesson(lesson);
+const LessonList: FC<Props> = ({ history, lessons }) => {
+  const pickOneLesson = (lessonId: Lesson['lessonId']) => {
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+    history.push(`/lesson/${lessonId}`);
   };
 
   return (
@@ -53,7 +53,10 @@ const LessonList: FC<Props> = ({ lessons, setDisplayedLesson }) => {
       </PageTitle>
       <LessonListContainer>
         {lessons.map((lesson, index) => (
-          <LessonListElement key={index} onClick={() => pickOneLesson(lesson)}>
+          <LessonListElement
+            key={index}
+            onClick={() => pickOneLesson(lesson.lessonId)}
+          >
             <LessonItem {...lesson} />
           </LessonListElement>
         ))}
@@ -62,4 +65,4 @@ const LessonList: FC<Props> = ({ lessons, setDisplayedLesson }) => {
   );
 };
 
-export default memo(LessonList);
+export default withRouter(LessonList);

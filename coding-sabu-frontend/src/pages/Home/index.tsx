@@ -6,7 +6,6 @@ import { Lesson } from 'types';
 
 const Home: FC = () => {
   const [lessons, setLessons] = useState<Lesson[]>([]);
-  const [displayedLesson, setDisplayedLesson] = useState<Lesson | null>(null);
 
   const fetchLessonData = async () => {
     const fetchedLessons = await fetchLessons();
@@ -17,14 +16,10 @@ const Home: FC = () => {
     fetchLessonData();
   }, []);
 
-  useEffect(() => {
-    setDisplayedLesson(lessons[0]);
-  }, [lessons]);
-
   return (
     <div>
-      <LessonDisplay displayedLesson={displayedLesson}></LessonDisplay>
-      <LessonList lessons={lessons} setDisplayedLesson={setDisplayedLesson} />
+      <LessonDisplay lessons={lessons} />
+      <LessonList lessons={lessons} />
     </div>
   );
 };
