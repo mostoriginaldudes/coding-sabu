@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mostoriginaldudes.codingsabubackend.respository.LessonRepository">
+    <select id="getAllLessons" resultType="list">
+        SELECT *
+        FROM lesson
+        ORDER BY student_count DESC
+        LIMIT 12 #{page}
+    </select>
+
+    <select id="getLessonById" resultType="LessonDto">
+        SELECT *
+        FROM lesson
+        WHERE id = #{lessonId}
+    </select>
+</mapper>
