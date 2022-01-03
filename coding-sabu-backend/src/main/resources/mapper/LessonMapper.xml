@@ -7,7 +7,7 @@
     <select id="getAllLessons" resultType="list">
         SELECT *
         FROM lesson
-        ORDER BY student_count DESC
+        ORDER BY created_at DESC
         LIMIT 12 #{page}
     </select>
 
