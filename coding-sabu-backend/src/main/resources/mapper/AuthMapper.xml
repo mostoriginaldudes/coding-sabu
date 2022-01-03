@@ -10,9 +10,44 @@
          ,email
          ,nickname
          ,user_type
+         ,phone_num
+         ,description
          ,profile_image
          FROM user
          WHERE email = #{email}
          AND password = #{password}
     </select>
+
+    <select id="checkIfExistEmail" resultType="string">
+        SELECT
+         email
+        FROM user
+        WHERE email = #{email}
+    </select>
+
+    <insert
+            id="createUser"
+            parameterType="com.mostoriginaldudes.codingsabubackend.dto.request.SignupRequestDto"
+            useGeneratedKeys="true"
+            keyProperty="id"
+    >
+        INSERT INTO
+         user(
+         id
+         ,email
+         ,password
+         ,nickname
+         ,user_type
+         ,phone_num
+         ,description
+        ) VALUES (
+        id
+         ,#{email}
+         ,#{password}
+         ,#{nickname}
+         ,#{userType}
+         ,#{phoneNum}
+         ,#{description}
+        )
+    </insert>
 </mapper>

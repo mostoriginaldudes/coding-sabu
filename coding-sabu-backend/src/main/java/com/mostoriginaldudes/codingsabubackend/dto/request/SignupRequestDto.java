@@ -1,21 +1,12 @@
-package com.mostoriginaldudes.codingsabubackend.dto;
+package com.mostoriginaldudes.codingsabubackend.dto.request;
 
-public class UserDto {
-  private int id;
+public class SignupRequestDto {
   private String email;
+  private String password;
   private String nickname;
   private String userType;
   private String phoneNum;
   private String description;
-  private String profileImage;
-
-  public int getId() {
-    return id;
-  }
-
-  public void setId(int id) {
-    this.id = id;
-  }
 
   public String getEmail() {
     return email;
@@ -23,6 +14,14 @@ public class UserDto {
 
   public void setEmail(String email) {
     this.email = email;
+  }
+
+  public String getPassword() {
+    return password;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
   }
 
   public String getNickname() {
@@ -55,13 +54,5 @@ public class UserDto {
 
   public void setDescription(String description) {
     this.description = description;
-  }
-
-  public String getProfileImage() {
-    return profileImage;
-  }
-
-  public void setProfileImage(String profileImage) {
-    this.profileImage = profileImage;
   }
 }
