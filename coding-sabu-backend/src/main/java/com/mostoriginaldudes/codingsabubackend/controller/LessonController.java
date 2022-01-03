@@ -5,6 +5,7 @@ import com.mostoriginaldudes.codingsabubackend.service.lesson.LessonService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,8 +24,8 @@ public class LessonController {
         return ResponseEntity.ok(lessonService.getAllLessons(page));
     }
 
-    @GetMapping("lesson?id={lessonId}")
-    public ResponseEntity<LessonDto> lesson(@RequestParam(defaultValue="0") int lessonId) {
+    @GetMapping("lesson/{lessonId}")
+    public ResponseEntity<LessonDto> lesson(@PathVariable int lessonId) {
         // lessonId 명시하지 않은 경우 BAD REQUEST
         if(lessonId == 0) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);

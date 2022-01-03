@@ -3,36 +3,29 @@ package com.mostoriginaldudes.codingsabubackend.dto;
 import java.time.LocalDateTime;
 
 public class LessonDto {
-  private int id;
-  private String teacher;
-  private int studentCount;
+  private int lessonId;
+  private int teacherId;
   private String title;
+  private String description;
+  private int price;
   private String lessonImage;
   private LocalDateTime createdAt;
-  private int price;
+  private LocalDateTime terminatedAt;
 
-  public int getId() {
-    return id;
+  public int getLessonId() {
+    return lessonId;
   }
 
-  public void setId(int id) {
-    this.id = id;
+  public void setLessonId(int lessonId) {
+    this.lessonId = lessonId;
   }
 
-  public String getTeacher() {
-    return teacher;
+  public int getTeacherId() {
+    return teacherId;
   }
 
-  public void setTeacher(String teacher) {
-    this.teacher = teacher;
-  }
-
-  public int getStudentCount() {
-    return studentCount;
-  }
-
-  public void setStudentCount(int studentCount) {
-    this.studentCount = studentCount;
+  public void setTeacherId(int teacherId) {
+    this.teacherId = teacherId;
   }
 
   public String getTitle() {
@@ -41,6 +34,22 @@ public class LessonDto {
 
   public void setTitle(String title) {
     this.title = title;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+  public int getPrice() {
+    return price;
+  }
+
+  public void setPrice(int price) {
+    this.price = price;
   }
 
   public String getLessonImage() {
@@ -59,11 +68,11 @@ public class LessonDto {
     this.createdAt = createdAt;
   }
 
-  public int getPrice() {
-    return price;
+  public LocalDateTime getTerminatedAt() {
+    return terminatedAt;
   }
 
-  public void setPrice(int price) {
-    this.price = price;
+  public void setTerminatedAt(LocalDateTime terminatedAt) {
+    this.terminatedAt = terminatedAt;
   }
 }
