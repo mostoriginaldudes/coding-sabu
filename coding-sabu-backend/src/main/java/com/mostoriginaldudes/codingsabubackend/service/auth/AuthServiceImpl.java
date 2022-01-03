@@ -1,5 +1,6 @@
 package com.mostoriginaldudes.codingsabubackend.service.auth;
 
+import com.mostoriginaldudes.codingsabubackend.dto.UserDto;
 import com.mostoriginaldudes.codingsabubackend.dto.request.LoginRequestDto;
 import com.mostoriginaldudes.codingsabubackend.dto.response.LoginResponseDto;
 import com.mostoriginaldudes.codingsabubackend.respository.AuthRepository;
@@ -18,12 +19,12 @@ public class AuthServiceImpl implements AuthService {
   }
 
   @Override
-  public LoginResponseDto login(LoginRequestDto loginRequest) {
+  public UserDto login(LoginRequestDto loginRequest) {
     return getMatchedUser(loginRequest);
   }
 
-  private LoginResponseDto getMatchedUser(LoginRequestDto loginRequest) {
-    LoginResponseDto loginResponse = null;
+  private UserDto getMatchedUser(LoginRequestDto loginRequest) {
+    UserDto loginResponse = null;
 
     try {
       String password = loginRequest.getPassword();

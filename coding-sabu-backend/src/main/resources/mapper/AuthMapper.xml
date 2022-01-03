@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.mostoriginaldudes.codingsabubackend.respository.AuthRepository">
-    <select id="matchUser" resultType="LoginResponseDto">
+    <select id="matchUser" resultType="UserDto">
         SELECT
          id
          ,email

@@ -1,5 +1,6 @@
 package com.mostoriginaldudes.codingsabubackend.controller;
 
+import com.mostoriginaldudes.codingsabubackend.dto.UserDto;
 import com.mostoriginaldudes.codingsabubackend.dto.request.LoginRequestDto;
 import com.mostoriginaldudes.codingsabubackend.dto.response.LoginResponseDto;
 import com.mostoriginaldudes.codingsabubackend.service.auth.AuthService;
@@ -21,10 +22,20 @@ public class AuthController {
 
   @PostMapping("/login")
   public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequest) {
+    UserDto user = authService.login(loginRequest);
+    String authToken = authService.createAuthToken(loginRequest.getEmail());
+
+    LoginResponseDto loginResponse = new LoginResponseDto.Builder()
+        .id(user.getId())
+        .email(user.getEmail())
+        .nickname(user.getNickname())
+        .userType(user.getUserType())
+        .profileImage(user.getProfileImage())
+        .builder();
 
     return ResponseEntity
         .status(HttpStatus.CREATED)
-        .header("authToken", authService.createAuthToken(loginRequest.getEmail()))
-        .body(authService.login(loginRequest));
+        .header("Authorization", authToken)
+        .body(loginResponse);
   }
 }
