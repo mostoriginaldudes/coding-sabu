@@ -6,10 +6,7 @@ import com.mostoriginaldudes.codingsabubackend.dto.response.LoginResponseDto;
 import com.mostoriginaldudes.codingsabubackend.service.auth.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
@@ -25,17 +22,27 @@ public class AuthController {
     UserDto user = authService.login(loginRequest);
     String authToken = authService.createAuthToken(loginRequest.getEmail());
 
-    LoginResponseDto loginResponse = new LoginResponseDto.Builder()
-        .id(user.getId())
-        .email(user.getEmail())
-        .nickname(user.getNickname())
-        .userType(user.getUserType())
-        .profileImage(user.getProfileImage())
-        .builder();
+    if(user == null) {
+      return ResponseEntity.badRequest().body(null);
+    } else {
+      LoginResponseDto loginResponse = new LoginResponseDto.Builder()
+          .id(user.getId())
+          .email(user.getEmail())
+          .nickname(user.getNickname())
+          .userType(user.getUserType())
+          .profileImage(user.getProfileImage())
+          .builder();
 
-    return ResponseEntity
-        .status(HttpStatus.CREATED)
-        .header("Authorization", authToken)
-        .body(loginResponse);
+      return ResponseEntity
+          .status(HttpStatus.CREATED)
+          .header("Authorization", authToken)
+          .body(loginResponse);
+    }
+
+  }
+
+  @GetMapping("/user/email/{email}")
+  public ResponseEntity<String> checkEmail(@PathVariable String email) {
+    return null;
   }
 }
