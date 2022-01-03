@@ -42,4 +42,9 @@ public class AuthServiceImpl implements AuthService {
   public String createAuthToken(String email) {
     return jwt.issueJsonWebToken(email);
   }
+
+  @Override
+  public String checkIfExistEmail(String email) {
+    return authRepository.checkIfExistEmail(email);
+  }
 }

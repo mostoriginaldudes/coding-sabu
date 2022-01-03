@@ -9,4 +9,5 @@ import org.springframework.stereotype.Repository;
 @Mapper
 public interface AuthRepository {
   UserDto matchUser(LoginRequestDto loginRequest);
+  String checkIfExistEmail(String email);
 }

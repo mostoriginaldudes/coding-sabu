@@ -15,4 +15,11 @@
          WHERE email = #{email}
          AND password = #{password}
     </select>
+
+    <select id="checkIfExistEmail" resultType="string">
+        SELECT
+         email
+        FROM user
+        WHERE email = #{email}
+    </select>
 </mapper>

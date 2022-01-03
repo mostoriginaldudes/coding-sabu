@@ -6,4 +6,5 @@ import com.mostoriginaldudes.codingsabubackend.dto.request.LoginRequestDto;
 public interface AuthService {
   UserDto login(LoginRequestDto loginRequest);
   String createAuthToken(String email);
+  String checkIfExistEmail(String email);
 }

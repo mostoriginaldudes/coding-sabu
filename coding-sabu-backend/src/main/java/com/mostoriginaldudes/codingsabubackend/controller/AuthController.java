@@ -42,7 +42,13 @@ public class AuthController {
   }
 
   @GetMapping("/user/email/{email}")
-  public ResponseEntity<String> checkEmail(@PathVariable String email) {
-    return null;
+  public ResponseEntity<String> checkEmail(@PathVariable String email) throws NullPointerException {
+    String validatedEmail = authService.checkIfExistEmail(email);
+
+    if(validatedEmail == null) {
+      return ResponseEntity.ok(null);
+    } else {
+      return ResponseEntity.status(HttpStatus.CONFLICT).body(validatedEmail);
+    }
   }
 }
