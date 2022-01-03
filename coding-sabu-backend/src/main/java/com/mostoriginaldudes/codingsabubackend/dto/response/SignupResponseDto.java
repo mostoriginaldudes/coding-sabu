@@ -1,6 +1,6 @@
 package com.mostoriginaldudes.codingsabubackend.dto.response;
 
-public class LoginResponseDto {
+public class SignupResponseDto {
   private final int id;
   private final String email;
   private final String nickname;
@@ -53,12 +53,12 @@ public class LoginResponseDto {
       return this;
     }
 
-    public LoginResponseDto builder() {
-      return new LoginResponseDto(this);
+    public SignupResponseDto builder() {
+      return new SignupResponseDto(this);
     }
   }
 
-  private LoginResponseDto(Builder builder) {
+  private SignupResponseDto(Builder builder) {
     id = builder.id;
     email = builder.email;
     nickname = builder.nickname;
