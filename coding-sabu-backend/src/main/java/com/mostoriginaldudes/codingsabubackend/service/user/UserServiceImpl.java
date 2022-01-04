@@ -76,4 +76,9 @@ public class UserServiceImpl implements UserService {
     userRepository.editProfileImage(id, profileImagePath);
     return profileImagePath;
   }
+
+  @Override
+  public UserDto getTeacherInfo(String nickname) {
+    return userRepository.getTeacherByNickname(nickname);
+  }
 }

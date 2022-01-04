@@ -6,7 +6,7 @@
 <mapper namespace="com.mostoriginaldudes.codingsabubackend.respository.UserRepository">
     <select id="getUserInfoById" resultType="UserDto">
         SELECT *
-         FROM
+         FROM user
          WHERE id = #{id}
     </select>
 
@@ -33,4 +33,11 @@
          WHERE
          id = #{id}
     </update>
+
+    <select id="getTeacherByNickname" resultType="UserDto">
+        SELECT *
+         FROM user
+         WHERE user_type = "teacher"
+         AND nickname = #{nickname}
+    </select>
 </mapper>
