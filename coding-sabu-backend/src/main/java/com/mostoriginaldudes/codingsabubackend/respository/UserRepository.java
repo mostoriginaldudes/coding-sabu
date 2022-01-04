@@ -11,4 +11,5 @@ public interface UserRepository {
   UserDto getUserInfoById(int id);
   void editUserInfo(EditUserInfoRequestDto editUserInfoRequest);
   void editProfileImage(int id, String profileImage);
+  UserDto getTeacherByNickname(String nickname);
 }

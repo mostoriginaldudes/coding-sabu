@@ -62,4 +62,15 @@ public class UserController {
         .status(HttpStatus.CREATED)
         .body(profileImageUrl);
   }
+
+  @GetMapping("/teacher/@{nickname}")
+  public ResponseEntity<UserDto> searchTeacher(@PathVariable String nickname) {
+    UserDto teacher = userService.getTeacherInfo(nickname);
+
+    if(teacher == null) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    } else {
+      return ResponseEntity.ok(teacher);
+    }
+  }
 }

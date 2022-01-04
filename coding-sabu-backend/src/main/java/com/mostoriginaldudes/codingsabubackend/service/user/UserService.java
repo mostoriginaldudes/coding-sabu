@@ -10,4 +10,5 @@ public interface UserService {
   UserDto getUserInfo(int id);
   String uploadProfileImage(MultipartFile profileImage);
   String updateProfileImagePath(int id, String profileImagePath);
+  UserDto getTeacherInfo(String nickname);
 }
