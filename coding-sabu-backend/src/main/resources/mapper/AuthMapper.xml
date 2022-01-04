@@ -41,7 +41,7 @@
          ,phone_num
          ,description
         ) VALUES (
-        id
+         id
          ,#{email}
          ,#{password}
          ,#{nickname}

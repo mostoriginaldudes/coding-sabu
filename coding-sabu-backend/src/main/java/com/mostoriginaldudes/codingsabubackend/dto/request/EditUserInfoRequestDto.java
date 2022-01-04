@@ -1,13 +1,13 @@
 package com.mostoriginaldudes.codingsabubackend.dto.request;
 
-public class SignupRequestDto {
+public class EditUserInfoRequestDto {
   private int id;
   private String email;
   private String password;
   private String nickname;
-  private String userType;
   private String phoneNum;
   private String description;
+  private String profileImage;
 
   public int getId() {
     return id;
@@ -41,14 +41,6 @@ public class SignupRequestDto {
     this.nickname = nickname;
   }
 
-  public String getUserType() {
-    return userType;
-  }
-
-  public void setUserType(String userType) {
-    this.userType = userType;
-  }
-
   public String getPhoneNum() {
     return phoneNum;
   }
@@ -63,5 +55,13 @@ public class SignupRequestDto {
 
   public void setDescription(String description) {
     this.description = description;
+  }
+
+  public String getProfileImage() {
+    return profileImage;
+  }
+
+  public void setProfileImage(String profileImage) {
+    this.profileImage = profileImage;
   }
 }

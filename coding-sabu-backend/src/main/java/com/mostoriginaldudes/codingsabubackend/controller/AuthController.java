@@ -5,6 +5,7 @@ import com.mostoriginaldudes.codingsabubackend.dto.request.SignupRequestDto;
 import com.mostoriginaldudes.codingsabubackend.dto.response.LoginResponseDto;
 import com.mostoriginaldudes.codingsabubackend.dto.response.SignupResponseDto;
 import com.mostoriginaldudes.codingsabubackend.service.auth.AuthService;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,7 @@ public class AuthController {
   @PostMapping("/login")
   public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequest) {
     LoginResponseDto loginResponse = authService.login(loginRequest);
-    String authToken = authService.createAuthToken(loginRequest.getEmail());
+    String authToken = authService.createAuthToken(loginResponse);
 
     if(loginResponse == null) {
       return ResponseEntity
@@ -29,8 +30,8 @@ public class AuthController {
           .body(null);
     } else {
       return ResponseEntity
-          .status(HttpStatus.CREATED)
-          .header("Authorization", authToken)
+          .status(HttpStatus.OK)
+          .header(HttpHeaders.AUTHORIZATION, authToken)
           .body(loginResponse);
     }
   }

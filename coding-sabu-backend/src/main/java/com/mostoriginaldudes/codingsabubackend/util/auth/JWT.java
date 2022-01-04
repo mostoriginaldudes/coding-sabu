@@ -1,55 +1,61 @@
 package com.mostoriginaldudes.codingsabubackend.util.auth;
 
-import io.jsonwebtoken.*;
+import com.mostoriginaldudes.codingsabubackend.dto.response.LoginResponseDto;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.IncorrectClaimException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.io.UnsupportedEncodingException;
-import java.time.Duration;
-import java.util.Base64;
+import javax.crypto.SecretKey;
 import java.util.Date;
-import java.util.Map;
+
+import static com.mostoriginaldudes.codingsabubackend.util.constant.Constant.SESSION_TIME;
+import static com.mostoriginaldudes.codingsabubackend.util.constant.Constant.TOKEN_ISSUER;
 
 @Component
 public class JWT {
-  @Value("spring.jwt.secret")
+  @Value("${spring.jwt.secret}")
   private String secretKey;
+  private SecretKey key;
 
   @PostConstruct
   protected void init() {
-    this.secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
+    this.key = Keys.hmacShaKeyFor(secretKey.getBytes());
   }
 
-  public String issueJsonWebToken(String email) {
-    Date now = new Date();
+  public String issueJsonWebToken(LoginResponseDto loginResponse) {
+    String subject = "coding-sabu";
+    Date expiryDate = new Date(System.currentTimeMillis() + SESSION_TIME * 1000);
 
-    Claims claims = Jwts.claims().setSubject(email);
-    claims.put("email", email);
+    Claims claims = Jwts.claims();
+    claims.put("userInfo", loginResponse);
 
     return Jwts.builder()
-        .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
+        .setSubject(subject)
+        .setExpiration(expiryDate)
+        .setIssuer(TOKEN_ISSUER)
         .setClaims(claims)
-        .setIssuer("coding-sabu")
-        .setIssuedAt(now)
-        .setExpiration(new Date(now.getTime() + Duration.ofMinutes(30).toMillis()))
-        .signWith(SignatureAlgorithm.HS256, secretKey)
+        .signWith(key)
         .compact();
   }
 
-  public Map<String, Object> verifyJsonWebToken(String jsonWebToken) throws UnsupportedEncodingException {
-    Map<String, Object> claimMap = null;
-
+  public Claims verifyJsonWebToken(String jsonWebToken){
     try {
-      claimMap = Jwts.parser()
-          .setSigningKey(secretKey.getBytes("UTF-8"))
+      return Jwts.parserBuilder()
+          .setSigningKey(secretKey.getBytes())
+          .build()
           .parseClaimsJws(jsonWebToken)
           .getBody();
-    } catch (ExpiredJwtException e) {
-      e.printStackTrace();
-    } catch (Exception e) {
-      throw e;
+    } catch (ExpiredJwtException expiredJwtException) {
+      expiredJwtException.printStackTrace();
+      return null;
+    } catch (IncorrectClaimException incorrectClaimException) {
+      incorrectClaimException.printStackTrace();
+      throw incorrectClaimException;
     }
-    return claimMap;
   }
 }
