@@ -19,12 +19,12 @@ import static com.mostoriginaldudes.codingsabubackend.util.constant.Constant.TOK
 @Component
 public class JWT {
   @Value("${spring.jwt.secret}")
-  private String secretKey;
-  private SecretKey key;
+  private String key;
+  private SecretKey secretKey;
 
   @PostConstruct
   protected void init() {
-    this.key = Keys.hmacShaKeyFor(secretKey.getBytes());
+    this.secretKey = Keys.hmacShaKeyFor(key.getBytes());
   }
 
   public String issueJsonWebToken(LoginResponseDto loginResponse) {
@@ -39,14 +39,14 @@ public class JWT {
         .setExpiration(expiryDate)
         .setIssuer(TOKEN_ISSUER)
         .setClaims(claims)
-        .signWith(key)
+        .signWith(secretKey)
         .compact();
   }
 
   public Claims verifyJsonWebToken(String jsonWebToken){
     try {
       return Jwts.parserBuilder()
-          .setSigningKey(secretKey.getBytes())
+          .setSigningKey(key.getBytes())
           .build()
           .parseClaimsJws(jsonWebToken)
           .getBody();
