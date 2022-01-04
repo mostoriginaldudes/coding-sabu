@@ -25,4 +25,12 @@
          WHERE
          id = #{id}
     </update>
+
+    <update id="editProfileImage">
+        UPDATE user
+         SET
+         profile_image = #{profileImage}
+         WHERE
+         id = #{id}
+    </update>
 </mapper>
