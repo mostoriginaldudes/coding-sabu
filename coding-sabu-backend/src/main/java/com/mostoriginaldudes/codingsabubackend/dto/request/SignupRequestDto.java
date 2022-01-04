@@ -1,12 +1,21 @@
 package com.mostoriginaldudes.codingsabubackend.dto.request;
 
 public class SignupRequestDto {
+  private int id;
   private String email;
   private String password;
   private String nickname;
   private String userType;
   private String phoneNum;
   private String description;
+
+  public int getId() {
+    return id;
+  }
+
+  public void setId(int id) {
+    this.id = id;
+  }
 
   public String getEmail() {
     return email;

@@ -1,5 +1,6 @@
 package com.mostoriginaldudes.codingsabubackend.service.auth;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mostoriginaldudes.codingsabubackend.dto.UserDto;
 import com.mostoriginaldudes.codingsabubackend.dto.request.LoginRequestDto;
 import com.mostoriginaldudes.codingsabubackend.dto.request.SignupRequestDto;
@@ -8,6 +9,7 @@ import com.mostoriginaldudes.codingsabubackend.dto.response.SignupResponseDto;
 import com.mostoriginaldudes.codingsabubackend.respository.AuthRepository;
 import com.mostoriginaldudes.codingsabubackend.util.auth.JWT;
 import com.mostoriginaldudes.codingsabubackend.util.auth.SHA256;
+import io.jsonwebtoken.Claims;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +25,9 @@ public class AuthServiceImpl implements AuthService {
 
   @Override
   public LoginResponseDto login(LoginRequestDto loginRequest) {
+    String encryptedPassword = encryptPassword(loginRequest.getPassword());
+    loginRequest.setPassword(encryptedPassword);
+
     UserDto user = getMatchedUser(loginRequest);
 
     if (user == null) {
@@ -40,40 +45,18 @@ public class AuthServiceImpl implements AuthService {
     }
   }
 
-  private UserDto getMatchedUser(LoginRequestDto loginRequest) {
-    UserDto loginResponse = null;
-
-    try {
-      String password = loginRequest.getPassword();
-      String encryptedPassword = SHA256.encrypt(password);
-      loginRequest.setPassword(encryptedPassword);
-
-      loginResponse = authRepository.matchUser(loginRequest);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-    return loginResponse;
-  }
-
-  @Override
-  public String createAuthToken(String email) {
-    return jwt.issueJsonWebToken(email);
-  }
-
-  @Override
-  public String checkIfExistEmail(String email) {
-    return authRepository.checkIfExistEmail(email);
-  }
-
   @Override
   @Transactional
   public SignupResponseDto signup(SignupRequestDto signupRequest) {
+    String encryptedPassword = encryptPassword(signupRequest.getPassword());
+    signupRequest.setPassword(encryptedPassword);
+
     authRepository.createUser(signupRequest);
 
     UserDto user = getMatchedUser(
         new LoginRequestDto(
             signupRequest.getEmail(),
-            signupRequest.getPassword()
+            encryptedPassword
         )
     );
 
@@ -86,5 +69,42 @@ public class AuthServiceImpl implements AuthService {
         .description(user.getDescription())
         .profileImage(user.getProfileImage())
         .builder();
+  }
+
+  private UserDto getMatchedUser(LoginRequestDto loginRequest) {
+    return authRepository.matchUser(
+        new LoginRequestDto(
+            loginRequest.getEmail(),
+            loginRequest.getPassword()
+        )
+    );
+  }
+
+  public String encryptPassword(String password) {
+    try {
+      return SHA256.encrypt(password);
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw new RuntimeException("암호화 실패");
+    }
+  }
+
+  @Override
+  public String createAuthToken(LoginResponseDto loginResponseDto) {
+    return jwt.issueJsonWebToken(loginResponseDto);
+  }
+
+  @Override
+  public String checkIfExistEmail(String email) {
+    return authRepository.checkIfExistEmail(email);
+  }
+
+  @Override
+  public UserDto getLoggedInUserInfo(String token)  {
+      Claims claims = jwt.verifyJsonWebToken(token);
+
+      return new ObjectMapper()
+          .convertValue(claims.get("userInfo"), UserDto.class);
+
   }
 }
