@@ -6,5 +6,6 @@ import java.util.List;
 
 public interface LessonService {
   List<LessonDto> getAllLessons(int page);
-  LessonDto getLessonById(int lessonId);
+  LessonDto getLessonById(int id);
+  LessonDto createLesson(LessonDto lesson);
 }

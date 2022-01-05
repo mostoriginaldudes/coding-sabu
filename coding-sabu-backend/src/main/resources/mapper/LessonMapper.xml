@@ -14,6 +14,30 @@
     <select id="getLessonById" resultType="LessonDto">
         SELECT *
         FROM lesson
-        WHERE id = #{lessonId}
+        WHERE id = #{id}
     </select>
+
+    <insert
+            id="createLesson"
+            parameterType="com.mostoriginaldudes.codingsabubackend.dto.LessonDto"
+            keyProperty="id"
+            useGeneratedKeys="true"
+    >
+        INSERT
+         INTO lesson (
+         id
+         ,teacher_id
+         ,title
+         ,description
+         ,price
+         ,terminated_at
+         ) VALUES (
+         id
+         ,#{teacherId}
+         ,#{title}
+         ,#{description}
+         ,#{price}
+         ,#{terminatedAt}
+         )
+    </insert>
 </mapper>

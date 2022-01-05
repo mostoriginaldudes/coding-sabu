@@ -3,21 +3,20 @@ package com.mostoriginaldudes.codingsabubackend.dto;
 import java.time.LocalDateTime;
 
 public class LessonDto {
-  private int lessonId;
+  private int id;
   private int teacherId;
   private String title;
   private String description;
   private int price;
-  private String lessonImage;
   private LocalDateTime createdAt;
   private LocalDateTime terminatedAt;
 
-  public int getLessonId() {
-    return lessonId;
+  public int getId() {
+    return id;
   }
 
-  public void setLessonId(int lessonId) {
-    this.lessonId = lessonId;
+  public void setId(int id) {
+    this.id = id;
   }
 
   public int getTeacherId() {
@@ -50,14 +49,6 @@ public class LessonDto {
 
   public void setPrice(int price) {
     this.price = price;
-  }
-
-  public String getLessonImage() {
-    return lessonImage;
-  }
-
-  public void setLessonImage(String lessonImage) {
-    this.lessonImage = lessonImage;
   }
 
   public LocalDateTime getCreatedAt() {
