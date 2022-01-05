@@ -33,4 +33,17 @@ public class LessonServiceImpl implements LessonService {
 
     return getLesson(lessonId);
   }
+
+  @Override
+  @Transactional
+  public LessonDto registerLesson(int lessonId, int studentId) {
+    try {
+      lessonRepository.registerStudentToLesson(lessonId, studentId);
+
+      return getLesson(lessonId);
+    } catch (RuntimeException runtimeException) {
+      runtimeException.printStackTrace();
+      throw runtimeException;
+    }
+  }
 }

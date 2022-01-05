@@ -2,6 +2,7 @@ package com.mostoriginaldudes.codingsabubackend.controller;
 
 import com.mostoriginaldudes.codingsabubackend.dto.LessonDto;
 import com.mostoriginaldudes.codingsabubackend.dto.UserDto;
+import com.mostoriginaldudes.codingsabubackend.dto.request.RegisterLessonRequestDto;
 import com.mostoriginaldudes.codingsabubackend.service.auth.AuthService;
 import com.mostoriginaldudes.codingsabubackend.service.lesson.LessonService;
 import org.springframework.http.HttpStatus;
@@ -62,5 +63,29 @@ public class LessonController {
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(lessonService.createLesson(lesson));
+    }
+
+    @PostMapping("/lesson/{lessonId}/student")
+    public ResponseEntity<LessonDto> registerLesson (
+        @PathVariable int lessonId,
+        @RequestHeader Map<String, Object> requestHeader,
+        @RequestBody RegisterLessonRequestDto registerLessonRequest
+    ) {
+        if(!requestHeader.containsKey(AUTHORIZATION_HEADER)) {
+            return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(null);
+        }
+
+        LessonDto lesson = lessonService.registerLesson(lessonId, registerLessonRequest.getStudentId());
+        if(lesson == null) {
+            return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(null);
+        }
+
+        return ResponseEntity
+            .status(HttpStatus.CREATED)
+            .body(lesson);
     }
 }

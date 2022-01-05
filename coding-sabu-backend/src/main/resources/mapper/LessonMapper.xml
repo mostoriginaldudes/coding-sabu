@@ -40,4 +40,19 @@
          ,#{terminatedAt}
          )
     </insert>
+
+    <insert
+            id="registerStudentToLesson"
+            parameterType="com.mostoriginaldudes.codingsabubackend.dto.request.RegisterLessonRequestDto"
+    >
+        INSERT INTO lesson_student (
+         id
+         ,lesson_id
+         ,student_id
+         ) VALUES (
+         id
+         ,#{lessonId}
+         ,#{studentId}
+         )
+    </insert>
 </mapper>

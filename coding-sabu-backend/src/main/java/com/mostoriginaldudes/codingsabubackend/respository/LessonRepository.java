@@ -12,4 +12,5 @@ public interface LessonRepository {
   List<LessonDto> getAllLessons(int page);
   LessonDto getLessonById(int id);
   int createLesson(LessonDto lesson);
+  int registerStudentToLesson(int lessonId, int studentId);
 }
