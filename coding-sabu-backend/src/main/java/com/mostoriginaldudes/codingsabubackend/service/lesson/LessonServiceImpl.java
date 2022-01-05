@@ -21,7 +21,7 @@ public class LessonServiceImpl implements LessonService {
   }
 
   @Override
-  public LessonDto getLessonById(int id) {
+  public LessonDto getLesson(int id) {
     return lessonRepository.getLessonById(id);
   }
 
@@ -31,6 +31,6 @@ public class LessonServiceImpl implements LessonService {
     lessonRepository.createLesson(lesson);
     int lessonId = lesson.getId();
 
-    return getLessonById(lessonId);
+    return getLesson(lessonId);
   }
 }

@@ -30,12 +30,13 @@ public class LessonController {
 
     @GetMapping("/lesson/{lessonId}")
     public ResponseEntity<LessonDto> lesson(@PathVariable int lessonId) {
-        // lessonId 명시하지 않은 경우 BAD REQUEST
-        if(lessonId == 0) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        } else {
-            return ResponseEntity.ok(lessonService.getLessonById(lessonId));
+        LessonDto lesson = lessonService.getLesson(lessonId);
+        if(lesson == null) {
+            return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(null);
         }
+        return ResponseEntity.ok(lesson);
     }
 
     @PostMapping("/lessons")
