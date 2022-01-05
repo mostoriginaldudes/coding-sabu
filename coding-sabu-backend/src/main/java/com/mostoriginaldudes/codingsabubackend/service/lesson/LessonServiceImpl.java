@@ -46,4 +46,11 @@ public class LessonServiceImpl implements LessonService {
       throw runtimeException;
     }
   }
+
+  @Override
+  public List<LessonDto> getMyLessons(int userId) {
+    List<LessonDto> lessons = lessonRepository.getMyLessonsByUserId(userId);
+
+    return lessons;
+  }
 }

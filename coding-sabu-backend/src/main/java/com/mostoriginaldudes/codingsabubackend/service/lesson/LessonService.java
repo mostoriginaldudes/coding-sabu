@@ -9,4 +9,5 @@ public interface LessonService {
   LessonDto getLesson(int id);
   LessonDto createLesson(LessonDto lesson);
   LessonDto registerLesson(int lessonId, int studentId);
+  List<LessonDto> getMyLessons(int userId);
 }
