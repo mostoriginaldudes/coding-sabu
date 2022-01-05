@@ -16,76 +16,76 @@ import static com.mostoriginaldudes.codingsabubackend.util.constant.Constant.AUT
 
 @RestController
 public class LessonController {
-    private final LessonService lessonService;
-    private final AuthService authService;
+  private final LessonService lessonService;
+  private final AuthService authService;
 
-    public LessonController(LessonService lessonService, AuthService authService) {
-        this.lessonService = lessonService;
-        this.authService = authService;
+  public LessonController(LessonService lessonService, AuthService authService) {
+    this.lessonService = lessonService;
+    this.authService = authService;
+  }
+
+  @GetMapping("/lessons?page={page}")
+  public ResponseEntity<List<LessonDto>> allLessons(@RequestParam(defaultValue = "0") int page) {
+    return ResponseEntity.ok(lessonService.getAllLessons(page));
+  }
+
+  @GetMapping("/lesson/{lessonId}")
+  public ResponseEntity<LessonDto> lesson(@PathVariable int lessonId) {
+    LessonDto lesson = lessonService.getLesson(lessonId);
+    if(lesson == null) {
+      return ResponseEntity
+        .status(HttpStatus.NOT_FOUND)
+        .body(null);
+    }
+    return ResponseEntity.ok(lesson);
+  }
+
+  @PostMapping("/lessons")
+  public ResponseEntity<LessonDto> createLesson (
+      @RequestHeader Map<String, Object> requestHeader,
+      @RequestBody LessonDto lesson
+  ) {
+    if(!requestHeader.containsKey(AUTHORIZATION_HEADER)) {
+      return ResponseEntity
+        .status(HttpStatus.UNAUTHORIZED)
+        .body(null);
     }
 
-    @GetMapping("/lessons?page={page}")
-    public ResponseEntity<List<LessonDto>> allLessons(@RequestParam(defaultValue = "0") int page) {
-        return ResponseEntity.ok(lessonService.getAllLessons(page));
+    String token = (String) requestHeader.get(AUTHORIZATION_HEADER);
+    UserDto user = authService.getLoggedInUserInfo(token);
+
+    if(user.getUserType().equals("student")) {
+      return ResponseEntity
+        .status(HttpStatus.BAD_REQUEST)
+        .body(null);
     }
 
-    @GetMapping("/lesson/{lessonId}")
-    public ResponseEntity<LessonDto> lesson(@PathVariable int lessonId) {
-        LessonDto lesson = lessonService.getLesson(lessonId);
-        if(lesson == null) {
-            return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
-                .body(null);
-        }
-        return ResponseEntity.ok(lesson);
+    return ResponseEntity
+      .status(HttpStatus.CREATED)
+      .body(lessonService.createLesson(lesson));
+  }
+
+  @PostMapping("/lesson/{lessonId}/student")
+  public ResponseEntity<LessonDto> registerLesson (
+      @PathVariable int lessonId,
+      @RequestHeader Map<String, Object> requestHeader,
+      @RequestBody RegisterLessonRequestDto registerLessonRequest
+  ) {
+    if(!requestHeader.containsKey(AUTHORIZATION_HEADER)) {
+      return ResponseEntity
+        .status(HttpStatus.UNAUTHORIZED)
+        .body(null);
     }
 
-    @PostMapping("/lessons")
-    public ResponseEntity<LessonDto> createLesson (
-        @RequestHeader Map<String, Object> requestHeader,
-        @RequestBody LessonDto lesson
-    ) {
-        if(!requestHeader.containsKey(AUTHORIZATION_HEADER)) {
-            return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED)
-                .body(null);
-        }
-
-        String token = (String) requestHeader.get(AUTHORIZATION_HEADER);
-        UserDto user = authService.getLoggedInUserInfo(token);
-
-        if(user.getUserType().equals("student")) {
-            return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(null);
-        }
-
-        return ResponseEntity
-            .status(HttpStatus.CREATED)
-            .body(lessonService.createLesson(lesson));
+    LessonDto lesson = lessonService.registerLesson(lessonId, registerLessonRequest.getStudentId());
+    if(lesson == null) {
+      return ResponseEntity
+        .status(HttpStatus.BAD_REQUEST)
+        .body(null);
     }
 
-    @PostMapping("/lesson/{lessonId}/student")
-    public ResponseEntity<LessonDto> registerLesson (
-        @PathVariable int lessonId,
-        @RequestHeader Map<String, Object> requestHeader,
-        @RequestBody RegisterLessonRequestDto registerLessonRequest
-    ) {
-        if(!requestHeader.containsKey(AUTHORIZATION_HEADER)) {
-            return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED)
-                .body(null);
-        }
-
-        LessonDto lesson = lessonService.registerLesson(lessonId, registerLessonRequest.getStudentId());
-        if(lesson == null) {
-            return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(null);
-        }
-
-        return ResponseEntity
-            .status(HttpStatus.CREATED)
-            .body(lesson);
-    }
+    return ResponseEntity
+      .status(HttpStatus.CREATED)
+      .body(lesson);
+  }
 }

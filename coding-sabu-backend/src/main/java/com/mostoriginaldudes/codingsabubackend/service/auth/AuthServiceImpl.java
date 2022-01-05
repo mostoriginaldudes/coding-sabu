@@ -34,14 +34,14 @@ public class AuthServiceImpl implements AuthService {
       return null;
     } else {
       return new LoginResponseDto.Builder()
-          .id(user.getId())
-          .email(user.getEmail())
-          .nickname(user.getNickname())
-          .userType(user.getUserType())
-          .phoneNum(user.getPhoneNum())
-          .description(user.getDescription())
-          .profileImage(user.getProfileImage())
-          .builder();
+        .id(user.getId())
+        .email(user.getEmail())
+        .nickname(user.getNickname())
+        .userType(user.getUserType())
+        .phoneNum(user.getPhoneNum())
+        .description(user.getDescription())
+        .profileImage(user.getProfileImage())
+        .builder();
     }
   }
 
@@ -54,28 +54,28 @@ public class AuthServiceImpl implements AuthService {
     authRepository.createUser(signupRequest);
 
     UserDto user = getMatchedUser(
-        new LoginRequestDto(
-            signupRequest.getEmail(),
-            encryptedPassword
-        )
+      new LoginRequestDto(
+        signupRequest.getEmail(),
+        encryptedPassword
+      )
     );
 
     return new SignupResponseDto.Builder()
-        .id(user.getId())
-        .email(user.getEmail())
-        .nickname(user.getNickname())
-        .userType(user.getUserType())
-        .phoneNum(user.getPhoneNum())
-        .description(user.getDescription())
-        .profileImage(user.getProfileImage())
-        .builder();
+      .id(user.getId())
+      .email(user.getEmail())
+      .nickname(user.getNickname())
+      .userType(user.getUserType())
+      .phoneNum(user.getPhoneNum())
+      .description(user.getDescription())
+      .profileImage(user.getProfileImage())
+      .builder();
   }
 
   private UserDto getMatchedUser(LoginRequestDto loginRequest) {
     return authRepository.matchUser(
         new LoginRequestDto(
-            loginRequest.getEmail(),
-            loginRequest.getPassword()
+          loginRequest.getEmail(),
+          loginRequest.getPassword()
         )
     );
   }
@@ -101,10 +101,9 @@ public class AuthServiceImpl implements AuthService {
 
   @Override
   public UserDto getLoggedInUserInfo(String token)  {
-      Claims claims = jwt.verifyJsonWebToken(token);
+    Claims claims = jwt.verifyJsonWebToken(token);
 
-      return new ObjectMapper()
-          .convertValue(claims.get("userInfo"), UserDto.class);
-
+    return new ObjectMapper()
+      .convertValue(claims.get("userInfo"), UserDto.class);
   }
 }

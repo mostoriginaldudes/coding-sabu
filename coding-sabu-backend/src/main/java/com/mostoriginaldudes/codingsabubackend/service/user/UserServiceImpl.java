@@ -30,14 +30,14 @@ public class UserServiceImpl implements UserService {
     UserDto user = getUserInfo(editUserInfoRequest.getId());
 
     return new EditUserInfoResponseDto.Builder()
-        .id(user.getId())
-        .email(user.getEmail())
-        .nickname(user.getNickname())
-        .userType(user.getUserType())
-        .phoneNum(user.getPhoneNum())
-        .description(user.getDescription())
-        .profileImage(user.getProfileImage())
-        .builder();
+      .id(user.getId())
+      .email(user.getEmail())
+      .nickname(user.getNickname())
+      .userType(user.getUserType())
+      .phoneNum(user.getPhoneNum())
+      .description(user.getDescription())
+      .profileImage(user.getProfileImage())
+      .builder();
   }
 
   @Override

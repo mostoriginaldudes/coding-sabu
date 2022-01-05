@@ -1,53 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.mostoriginaldudes.codingsabubackend.respository.AuthRepository">
-    <select id="matchUser" resultType="UserDto">
-        SELECT
-         id
-         ,email
-         ,nickname
-         ,user_type
-         ,phone_num
-         ,description
-         ,profile_image
-         FROM user
-         WHERE email = #{email}
-         AND password = #{password}
-    </select>
+  <select id="matchUser" resultType="UserDto">
+    SELECT
+    id
+    ,email
+    ,nickname
+    ,user_type
+    ,phone_num
+    ,description
+    ,profile_image
+    FROM user
+    WHERE email = #{email}
+    AND password = #{password}
+  </select>
 
-    <select id="checkIfExistEmail" resultType="string">
-        SELECT
-         email
-        FROM user
-        WHERE email = #{email}
-    </select>
+  <select id="checkIfExistEmail" resultType="string">
+    SELECT
+    email
+    FROM user
+    WHERE email = #{email}
+  </select>
 
-    <insert
-            id="createUser"
-            parameterType="com.mostoriginaldudes.codingsabubackend.dto.request.SignupRequestDto"
-            useGeneratedKeys="true"
-            keyProperty="id"
-    >
-        INSERT INTO
-         user(
-         id
-         ,email
-         ,password
-         ,nickname
-         ,user_type
-         ,phone_num
-         ,description
-        ) VALUES (
-         id
-         ,#{email}
-         ,#{password}
-         ,#{nickname}
-         ,#{userType}
-         ,#{phoneNum}
-         ,#{description}
-        )
-    </insert>
+  <insert
+    id="createUser"
+    parameterType="com.mostoriginaldudes.codingsabubackend.dto.request.SignupRequestDto"
+    useGeneratedKeys="true"
+    keyProperty="id"
+  >
+    INSERT INTO
+    user(
+    id
+    ,email
+    ,password
+    ,nickname
+    ,user_type
+    ,phone_num
+    ,description
+    ) VALUES (
+    id
+    ,#{email}
+    ,#{password}
+    ,#{nickname}
+    ,#{userType}
+    ,#{phoneNum}
+    ,#{description}
+    )
+  </insert>
 </mapper>
