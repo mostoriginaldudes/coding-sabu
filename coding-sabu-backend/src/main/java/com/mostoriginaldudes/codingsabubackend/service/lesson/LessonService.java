@@ -6,5 +6,7 @@ import java.util.List;
 
 public interface LessonService {
   List<LessonDto> getAllLessons(int page);
-  LessonDto getLessonById(int lessonId);
+  LessonDto getLesson(int id);
+  LessonDto createLesson(LessonDto lesson);
+  LessonDto registerLesson(int lessonId, int studentId);
 }

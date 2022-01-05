@@ -35,21 +35,21 @@ public class JWT {
     claims.put("userInfo", loginResponse);
 
     return Jwts.builder()
-        .setSubject(subject)
-        .setExpiration(expiryDate)
-        .setIssuer(TOKEN_ISSUER)
-        .setClaims(claims)
-        .signWith(secretKey)
-        .compact();
+      .setSubject(subject)
+      .setExpiration(expiryDate)
+      .setIssuer(TOKEN_ISSUER)
+      .setClaims(claims)
+      .signWith(secretKey)
+      .compact();
   }
 
   public Claims verifyJsonWebToken(String jsonWebToken){
     try {
       return Jwts.parserBuilder()
-          .setSigningKey(key.getBytes())
-          .build()
-          .parseClaimsJws(jsonWebToken)
-          .getBody();
+        .setSigningKey(key.getBytes())
+        .build()
+        .parseClaimsJws(jsonWebToken)
+        .getBody();
     } catch (ExpiredJwtException expiredJwtException) {
       expiredJwtException.printStackTrace();
       return null;

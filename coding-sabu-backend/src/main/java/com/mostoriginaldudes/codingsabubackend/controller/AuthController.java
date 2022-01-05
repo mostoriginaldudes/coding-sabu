@@ -26,13 +26,13 @@ public class AuthController {
 
     if(loginResponse == null) {
       return ResponseEntity
-          .badRequest()
-          .body(null);
+        .badRequest()
+        .body(null);
     } else {
       return ResponseEntity
-          .status(HttpStatus.OK)
-          .header(HttpHeaders.AUTHORIZATION, authToken)
-          .body(loginResponse);
+        .status(HttpStatus.OK)
+        .header(HttpHeaders.AUTHORIZATION, authToken)
+        .body(loginResponse);
     }
   }
 
@@ -44,15 +44,15 @@ public class AuthController {
       return ResponseEntity.ok(null);
     } else {
       return ResponseEntity
-          .status(HttpStatus.CONFLICT)
-          .body(validatedEmail);
+        .status(HttpStatus.CONFLICT)
+        .body(validatedEmail);
     }
   }
 
   @PostMapping("/users")
   public ResponseEntity<SignupResponseDto> signup(@RequestBody SignupRequestDto signupRequest) {
     return ResponseEntity
-        .status(HttpStatus.CREATED)
-        .body(authService.signup(signupRequest));
+      .status(HttpStatus.CREATED)
+      .body(authService.signup(signupRequest));
   }
 }

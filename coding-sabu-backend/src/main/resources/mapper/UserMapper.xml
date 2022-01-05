@@ -1,43 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.mostoriginaldudes.codingsabubackend.respository.UserRepository">
-    <select id="getUserInfoById" resultType="UserDto">
-        SELECT *
-         FROM user
-         WHERE id = #{id}
-    </select>
+  <select id="getUserInfoById" resultType="UserDto">
+    SELECT *
+    FROM user
+    WHERE id = #{id}
+  </select>
 
-    <update
-            id="editUserInfo"
-            parameterType="com.mostoriginaldudes.codingsabubackend.dto.request.EditUserInfoRequestDto"
-            keyProperty="id"
-    >
-        UPDATE user
-         SET
-         password = #{password}
-         ,nickname = #{nickname}
-         ,phone_num = #{phoneNum}
-         ,description = #{description}
-         ,profile_image = #{profileImage}
-         WHERE
-         id = #{id}
-    </update>
+  <update
+    id="editUserInfo"
+    parameterType="com.mostoriginaldudes.codingsabubackend.dto.request.EditUserInfoRequestDto"
+    keyProperty="id"
+  >
+    UPDATE user
+    SET
+    password = #{password}
+    ,nickname = #{nickname}
+    ,phone_num = #{phoneNum}
+    ,description = #{description}
+    ,profile_image = #{profileImage}
+    WHERE
+    id = #{id}
+  </update>
 
-    <update id="editProfileImage">
-        UPDATE user
-         SET
-         profile_image = #{profileImage}
-         WHERE
-         id = #{id}
-    </update>
+  <update id="editProfileImage">
+    UPDATE user
+    SET
+    profile_image = #{profileImage}
+    WHERE
+    id = #{id}
+  </update>
 
-    <select id="getTeacherByNickname" resultType="UserDto">
-        SELECT *
-         FROM user
-         WHERE user_type = "teacher"
-         AND nickname = #{nickname}
-    </select>
+  <select id="getTeacherByNickname" resultType="UserDto">
+    SELECT *
+    FROM user
+    WHERE user_type = "teacher"
+    AND nickname = #{nickname}
+  </select>
 </mapper>
