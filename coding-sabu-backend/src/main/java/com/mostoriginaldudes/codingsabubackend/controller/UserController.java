@@ -7,6 +7,7 @@ import com.mostoriginaldudes.codingsabubackend.dto.response.EditUserInfoResponse
 import com.mostoriginaldudes.codingsabubackend.service.auth.AuthService;
 import com.mostoriginaldudes.codingsabubackend.service.lesson.LessonService;
 import com.mostoriginaldudes.codingsabubackend.service.user.UserService;
+import org.apache.tomcat.util.http.parser.HttpParser;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -81,8 +82,16 @@ public class UserController {
       .body(profileImageUrl);
   }
 
-  @GetMapping("/teacher/@{nickname}")
-  public ResponseEntity<UserDto> searchTeacher(@PathVariable String nickname) {
+  @GetMapping("/@{nickname}?userType={userType}")
+  public ResponseEntity<UserDto> searchTeacher(
+    @PathVariable String nickname,
+    @RequestParam(defaultValue = "teacher") String userType
+  ) {
+    if(!userType.equals("teacher")) {
+      return ResponseEntity
+        .status(HttpStatus.BAD_REQUEST)
+        .body(null);
+    }
     UserDto teacher = userService.getTeacherInfo(nickname);
 
     if(teacher == null) {
