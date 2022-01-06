@@ -1,19 +1,95 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.mostoriginaldudes.codingsabubackend.respository.LessonRepository">
-    <select id="getAllLessons" resultType="list">
-        SELECT *
-        FROM lesson
-        ORDER BY created_at DESC
-        LIMIT 12 #{page}
-    </select>
+  <select id="getAllLessons" resultType="LessonDto">
+    SELECT *
+    FROM lesson
+    ORDER BY id
+    LIMIT 12
+    OFFSET #{page}
+  </select>
 
-    <select id="getLessonById" resultType="LessonDto">
-        SELECT *
-        FROM lesson
-        WHERE id = #{lessonId}
-    </select>
+  <select id="getLessonById" resultType="LessonDto">
+    SELECT *
+    FROM lesson
+    WHERE id = #{id}
+  </select>
+
+  <insert
+    id="createLesson"
+    parameterType="com.mostoriginaldudes.codingsabubackend.dto.LessonDto"
+    keyProperty="id"
+    useGeneratedKeys="true"
+  >
+    INSERT
+    INTO lesson (
+    id
+    ,teacher_id
+    ,title
+    ,description
+    ,price
+    ,terminated_at
+    ) VALUES (
+    id
+    ,#{teacherId}
+    ,#{title}
+    ,#{description}
+    ,#{price}
+    ,#{terminatedAt}
+    )
+  </insert>
+
+  <insert
+    id="registerStudentToLesson"
+    parameterType="com.mostoriginaldudes.codingsabubackend.dto.request.RegisterLessonRequestDto"
+  >
+    INSERT INTO lesson_student (
+    id
+    ,lesson_id
+    ,student_id
+    ) VALUES (
+    id
+    ,#{lessonId}
+    ,#{studentId}
+    )
+  </insert>
+
+  <select id="getMyLessonsByUserId" resultType="LessonDto">
+    SELECT
+    lesson.id AS id
+    ,lesson.title AS title
+    ,lesson.teacher_id AS teacher_id
+    ,lesson.created_at AS created_at
+    ,lesson.terminated_at AS terminated_at
+    ,lesson.description AS description
+    ,lesson.price AS price
+    FROM user
+    INNER JOIN lesson_student
+    ON user.id = lesson_student.student_id
+    INNER JOIN lesson
+    ON lesson.id = lesson_student.lesson_id
+    WHERE user.id = #{id}
+    ORDER BY created_at DESC
+  </select>
+
+  <select id="getStudentsInMyLessonByTeacherId" resultType="UserDto">
+    SELECT
+    user.id
+    ,user.email
+    ,user.nickname
+    ,user.user_type
+    ,user.phone_num
+    ,user.description
+    ,user.profile_image
+    FROM lesson
+    INNER JOIN lesson_student
+    ON lesson.id = lesson_student.lesson_id
+    INNER JOIN user
+    ON user.id = lesson_student.student_id
+    WHERE lesson.id = #{lessonId}
+    AND lesson.teacher_id = #{teacherId}
+  </select>
 </mapper>

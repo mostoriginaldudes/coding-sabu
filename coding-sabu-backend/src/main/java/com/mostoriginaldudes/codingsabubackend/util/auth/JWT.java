@@ -1,10 +1,7 @@
 package com.mostoriginaldudes.codingsabubackend.util.auth;
 
 import com.mostoriginaldudes.codingsabubackend.dto.response.LoginResponseDto;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.IncorrectClaimException;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -19,12 +16,12 @@ import static com.mostoriginaldudes.codingsabubackend.util.constant.Constant.TOK
 @Component
 public class JWT {
   @Value("${spring.jwt.secret}")
-  private String secretKey;
-  private SecretKey key;
+  private String key;
+  private SecretKey secretKey;
 
   @PostConstruct
   protected void init() {
-    this.key = Keys.hmacShaKeyFor(secretKey.getBytes());
+    this.secretKey = Keys.hmacShaKeyFor(key.getBytes());
   }
 
   public String issueJsonWebToken(LoginResponseDto loginResponse) {
@@ -35,24 +32,30 @@ public class JWT {
     claims.put("userInfo", loginResponse);
 
     return Jwts.builder()
-        .setSubject(subject)
-        .setExpiration(expiryDate)
-        .setIssuer(TOKEN_ISSUER)
-        .setClaims(claims)
-        .signWith(key)
-        .compact();
+      .setSubject(subject)
+      .setExpiration(expiryDate)
+      .setIssuer(TOKEN_ISSUER)
+      .setClaims(claims)
+      .signWith(secretKey)
+      .compact();
   }
 
-  public Claims verifyJsonWebToken(String jsonWebToken){
+  public Claims verifyJsonWebToken(String jsonWebToken) {
     try {
+      if (jsonWebToken.isEmpty()) {
+        throw new MalformedJwtException("Token is not valid");
+      }
       return Jwts.parserBuilder()
-          .setSigningKey(secretKey.getBytes())
-          .build()
-          .parseClaimsJws(jsonWebToken)
-          .getBody();
+        .setSigningKey(key.getBytes())
+        .build()
+        .parseClaimsJws(jsonWebToken)
+        .getBody();
+    } catch(MalformedJwtException malformedJwtException) {
+      malformedJwtException.printStackTrace();
+      throw malformedJwtException;
     } catch (ExpiredJwtException expiredJwtException) {
       expiredJwtException.printStackTrace();
-      return null;
+      throw expiredJwtException;
     } catch (IncorrectClaimException incorrectClaimException) {
       incorrectClaimException.printStackTrace();
       throw incorrectClaimException;

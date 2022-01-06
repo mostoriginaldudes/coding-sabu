@@ -4,6 +4,7 @@ import com.mostoriginaldudes.codingsabubackend.dto.UserDto;
 import com.mostoriginaldudes.codingsabubackend.dto.request.EditUserInfoRequestDto;
 import com.mostoriginaldudes.codingsabubackend.dto.response.EditUserInfoResponseDto;
 import com.mostoriginaldudes.codingsabubackend.respository.UserRepository;
+import com.mostoriginaldudes.codingsabubackend.util.auth.Security;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,18 +27,20 @@ public class UserServiceImpl implements UserService {
   @Override
   @Transactional
   public EditUserInfoResponseDto editUserInfo(EditUserInfoRequestDto editUserInfoRequest) {
+    String encryptedPassword = Security.encrypt(editUserInfoRequest.getPassword());
+    editUserInfoRequest.setPassword(encryptedPassword);
     userRepository.editUserInfo(editUserInfoRequest);
-    UserDto user = getUserInfo(editUserInfoRequest.getId());
 
+    UserDto user = getUserInfo(editUserInfoRequest.getId());
     return new EditUserInfoResponseDto.Builder()
-        .id(user.getId())
-        .email(user.getEmail())
-        .nickname(user.getNickname())
-        .userType(user.getUserType())
-        .phoneNum(user.getPhoneNum())
-        .description(user.getDescription())
-        .profileImage(user.getProfileImage())
-        .builder();
+      .id(user.getId())
+      .email(user.getEmail())
+      .nickname(user.getNickname())
+      .userType(user.getUserType())
+      .phoneNum(user.getPhoneNum())
+      .description(user.getDescription())
+      .profileImage(user.getProfileImage())
+      .builder();
   }
 
   @Override
@@ -75,5 +78,10 @@ public class UserServiceImpl implements UserService {
   public String updateProfileImagePath(int id, String profileImagePath) {
     userRepository.editProfileImage(id, profileImagePath);
     return profileImagePath;
+  }
+
+  @Override
+  public UserDto getTeacherInfo(String nickname) {
+    return userRepository.getTeacherByNickname(nickname);
   }
 }

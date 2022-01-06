@@ -8,7 +8,7 @@ import com.mostoriginaldudes.codingsabubackend.dto.response.LoginResponseDto;
 import com.mostoriginaldudes.codingsabubackend.dto.response.SignupResponseDto;
 import com.mostoriginaldudes.codingsabubackend.respository.AuthRepository;
 import com.mostoriginaldudes.codingsabubackend.util.auth.JWT;
-import com.mostoriginaldudes.codingsabubackend.util.auth.SHA256;
+import com.mostoriginaldudes.codingsabubackend.util.auth.Security;
 import io.jsonwebtoken.Claims;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +25,7 @@ public class AuthServiceImpl implements AuthService {
 
   @Override
   public LoginResponseDto login(LoginRequestDto loginRequest) {
-    String encryptedPassword = encryptPassword(loginRequest.getPassword());
+    String encryptedPassword = Security.encrypt(loginRequest.getPassword());
     loginRequest.setPassword(encryptedPassword);
 
     UserDto user = getMatchedUser(loginRequest);
@@ -34,33 +34,6 @@ public class AuthServiceImpl implements AuthService {
       return null;
     } else {
       return new LoginResponseDto.Builder()
-          .id(user.getId())
-          .email(user.getEmail())
-          .nickname(user.getNickname())
-          .userType(user.getUserType())
-          .phoneNum(user.getPhoneNum())
-          .description(user.getDescription())
-          .profileImage(user.getProfileImage())
-          .builder();
-    }
-  }
-
-  @Override
-  @Transactional
-  public SignupResponseDto signup(SignupRequestDto signupRequest) {
-    String encryptedPassword = encryptPassword(signupRequest.getPassword());
-    signupRequest.setPassword(encryptedPassword);
-
-    authRepository.createUser(signupRequest);
-
-    UserDto user = getMatchedUser(
-        new LoginRequestDto(
-            signupRequest.getEmail(),
-            encryptedPassword
-        )
-    );
-
-    return new SignupResponseDto.Builder()
         .id(user.getId())
         .email(user.getEmail())
         .nickname(user.getNickname())
@@ -69,24 +42,42 @@ public class AuthServiceImpl implements AuthService {
         .description(user.getDescription())
         .profileImage(user.getProfileImage())
         .builder();
+    }
+  }
+
+  @Override
+  @Transactional
+  public SignupResponseDto signup(SignupRequestDto signupRequest) {
+    String encryptedPassword = Security.encrypt(signupRequest.getPassword());
+    signupRequest.setPassword(encryptedPassword);
+
+    authRepository.createUser(signupRequest);
+
+    UserDto user = getMatchedUser(
+      new LoginRequestDto(
+        signupRequest.getEmail(),
+        encryptedPassword
+      )
+    );
+
+    return new SignupResponseDto.Builder()
+      .id(user.getId())
+      .email(user.getEmail())
+      .nickname(user.getNickname())
+      .userType(user.getUserType())
+      .phoneNum(user.getPhoneNum())
+      .description(user.getDescription())
+      .profileImage(user.getProfileImage())
+      .builder();
   }
 
   private UserDto getMatchedUser(LoginRequestDto loginRequest) {
     return authRepository.matchUser(
         new LoginRequestDto(
-            loginRequest.getEmail(),
-            loginRequest.getPassword()
+          loginRequest.getEmail(),
+          loginRequest.getPassword()
         )
     );
-  }
-
-  public String encryptPassword(String password) {
-    try {
-      return SHA256.encrypt(password);
-    } catch (Exception e) {
-      e.printStackTrace();
-      throw new RuntimeException("암호화 실패");
-    }
   }
 
   @Override
@@ -101,10 +92,12 @@ public class AuthServiceImpl implements AuthService {
 
   @Override
   public UserDto getLoggedInUserInfo(String token)  {
+    try {
       Claims claims = jwt.verifyJsonWebToken(token);
-
-      return new ObjectMapper()
-          .convertValue(claims.get("userInfo"), UserDto.class);
-
+      return new ObjectMapper().convertValue(claims.get("userInfo"), UserDto.class);
+    } catch (Exception e) {
+      e.printStackTrace();
+      return null;
+    }
   }
 }
