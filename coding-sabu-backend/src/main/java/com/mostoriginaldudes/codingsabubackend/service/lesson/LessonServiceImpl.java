@@ -1,6 +1,7 @@
 package com.mostoriginaldudes.codingsabubackend.service.lesson;
 
 import com.mostoriginaldudes.codingsabubackend.dto.LessonDto;
+import com.mostoriginaldudes.codingsabubackend.dto.UserDto;
 import com.mostoriginaldudes.codingsabubackend.respository.LessonRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,7 +51,11 @@ public class LessonServiceImpl implements LessonService {
   @Override
   public List<LessonDto> getMyLessons(int userId) {
     List<LessonDto> lessons = lessonRepository.getMyLessonsByUserId(userId);
-
     return lessons;
+  }
+
+  @Override
+  public List<UserDto> getStudentsInMyClass(int lessonId, int teacherId) {
+    return lessonRepository.getStudentsInMyLessonByTeacherId(lessonId, teacherId);
   }
 }

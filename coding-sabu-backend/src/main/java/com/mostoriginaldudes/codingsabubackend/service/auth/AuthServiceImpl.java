@@ -101,9 +101,12 @@ public class AuthServiceImpl implements AuthService {
 
   @Override
   public UserDto getLoggedInUserInfo(String token)  {
-    Claims claims = jwt.verifyJsonWebToken(token);
-
-    return new ObjectMapper()
-      .convertValue(claims.get("userInfo"), UserDto.class);
+    try {
+      Claims claims = jwt.verifyJsonWebToken(token);
+      return new ObjectMapper().convertValue(claims.get("userInfo"), UserDto.class);
+    } catch (Exception e) {
+      e.printStackTrace();
+      return null;
+    }
   }
 }

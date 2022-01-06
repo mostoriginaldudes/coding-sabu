@@ -1,6 +1,7 @@
 package com.mostoriginaldudes.codingsabubackend.respository;
 
 import com.mostoriginaldudes.codingsabubackend.dto.LessonDto;
+import com.mostoriginaldudes.codingsabubackend.dto.UserDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
@@ -14,4 +15,5 @@ public interface LessonRepository {
   int createLesson(LessonDto lesson);
   int registerStudentToLesson(int lessonId, int studentId);
   List<LessonDto> getMyLessonsByUserId(int userId);
+  List<UserDto> getStudentsInMyLessonByTeacherId(int lessonId, int teacherId);
 }
