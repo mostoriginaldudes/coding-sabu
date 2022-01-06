@@ -118,4 +118,33 @@ public class LessonController {
 
     return ResponseEntity.ok(lessons);
   }
+
+  @GetMapping("/lesson/{lessonId}/students")
+  public ResponseEntity<List<UserDto>> students(
+    @RequestHeader Map<String, Object> requestHeader,
+    @PathVariable int lessonId
+  ) {
+    if (!requestHeader.containsKey(AUTHORIZATION_HEADER)) {
+      return ResponseEntity
+        .status(HttpStatus.UNAUTHORIZED)
+        .body(null);
+    }
+
+    String token = (String) requestHeader.get(AUTHORIZATION_HEADER);
+    UserDto user = authService.getLoggedInUserInfo(token);
+
+    if(user == null || user.getUserType().equals("student")) {
+      return ResponseEntity
+        .status(HttpStatus.BAD_REQUEST)
+        .body(null);
+    }
+
+    List<UserDto> students = lessonService.getStudentsInMyClass(lessonId, user.getId());
+    if(students.isEmpty()) {
+      return ResponseEntity
+        .status(HttpStatus.NO_CONTENT)
+        .body(students);
+    }
+    return ResponseEntity.ok(students);
+  }
 }

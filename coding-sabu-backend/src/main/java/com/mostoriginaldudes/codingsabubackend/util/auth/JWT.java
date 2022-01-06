@@ -1,10 +1,7 @@
 package com.mostoriginaldudes.codingsabubackend.util.auth;
 
 import com.mostoriginaldudes.codingsabubackend.dto.response.LoginResponseDto;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.IncorrectClaimException;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -43,16 +40,22 @@ public class JWT {
       .compact();
   }
 
-  public Claims verifyJsonWebToken(String jsonWebToken){
+  public Claims verifyJsonWebToken(String jsonWebToken) {
     try {
+      if (jsonWebToken.isEmpty()) {
+        throw new MalformedJwtException("Token is not valid");
+      }
       return Jwts.parserBuilder()
         .setSigningKey(key.getBytes())
         .build()
         .parseClaimsJws(jsonWebToken)
         .getBody();
+    } catch(MalformedJwtException malformedJwtException) {
+      malformedJwtException.printStackTrace();
+      throw malformedJwtException;
     } catch (ExpiredJwtException expiredJwtException) {
       expiredJwtException.printStackTrace();
-      return null;
+      throw expiredJwtException;
     } catch (IncorrectClaimException incorrectClaimException) {
       incorrectClaimException.printStackTrace();
       throw incorrectClaimException;
