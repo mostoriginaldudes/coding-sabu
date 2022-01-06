@@ -67,4 +67,32 @@ public class EditUserInfoResponseDto {
     description = builder.description;
     profileImage = builder.profileImage;
   }
+
+  public int getId() {
+    return id;
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  public String getNickname() {
+    return nickname;
+  }
+
+  public String getUserType() {
+    return userType;
+  }
+
+  public String getPhoneNum() {
+    return phoneNum;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public String getProfileImage() {
+    return profileImage;
+  }
 }

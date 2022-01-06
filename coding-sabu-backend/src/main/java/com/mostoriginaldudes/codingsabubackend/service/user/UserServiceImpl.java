@@ -4,6 +4,7 @@ import com.mostoriginaldudes.codingsabubackend.dto.UserDto;
 import com.mostoriginaldudes.codingsabubackend.dto.request.EditUserInfoRequestDto;
 import com.mostoriginaldudes.codingsabubackend.dto.response.EditUserInfoResponseDto;
 import com.mostoriginaldudes.codingsabubackend.respository.UserRepository;
+import com.mostoriginaldudes.codingsabubackend.util.auth.Security;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,9 +27,11 @@ public class UserServiceImpl implements UserService {
   @Override
   @Transactional
   public EditUserInfoResponseDto editUserInfo(EditUserInfoRequestDto editUserInfoRequest) {
+    String encryptedPassword = Security.encrypt(editUserInfoRequest.getPassword());
+    editUserInfoRequest.setPassword(encryptedPassword);
     userRepository.editUserInfo(editUserInfoRequest);
-    UserDto user = getUserInfo(editUserInfoRequest.getId());
 
+    UserDto user = getUserInfo(editUserInfoRequest.getId());
     return new EditUserInfoResponseDto.Builder()
       .id(user.getId())
       .email(user.getEmail())

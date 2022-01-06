@@ -8,7 +8,7 @@ import com.mostoriginaldudes.codingsabubackend.dto.response.LoginResponseDto;
 import com.mostoriginaldudes.codingsabubackend.dto.response.SignupResponseDto;
 import com.mostoriginaldudes.codingsabubackend.respository.AuthRepository;
 import com.mostoriginaldudes.codingsabubackend.util.auth.JWT;
-import com.mostoriginaldudes.codingsabubackend.util.auth.SHA256;
+import com.mostoriginaldudes.codingsabubackend.util.auth.Security;
 import io.jsonwebtoken.Claims;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +25,7 @@ public class AuthServiceImpl implements AuthService {
 
   @Override
   public LoginResponseDto login(LoginRequestDto loginRequest) {
-    String encryptedPassword = encryptPassword(loginRequest.getPassword());
+    String encryptedPassword = Security.encrypt(loginRequest.getPassword());
     loginRequest.setPassword(encryptedPassword);
 
     UserDto user = getMatchedUser(loginRequest);
@@ -48,7 +48,7 @@ public class AuthServiceImpl implements AuthService {
   @Override
   @Transactional
   public SignupResponseDto signup(SignupRequestDto signupRequest) {
-    String encryptedPassword = encryptPassword(signupRequest.getPassword());
+    String encryptedPassword = Security.encrypt(signupRequest.getPassword());
     signupRequest.setPassword(encryptedPassword);
 
     authRepository.createUser(signupRequest);
@@ -78,15 +78,6 @@ public class AuthServiceImpl implements AuthService {
           loginRequest.getPassword()
         )
     );
-  }
-
-  public String encryptPassword(String password) {
-    try {
-      return SHA256.encrypt(password);
-    } catch (Exception e) {
-      e.printStackTrace();
-      throw new RuntimeException("암호화 실패");
-    }
   }
 
   @Override

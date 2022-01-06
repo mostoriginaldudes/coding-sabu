@@ -10,11 +10,7 @@
     WHERE id = #{id}
   </select>
 
-  <update
-    id="editUserInfo"
-    parameterType="com.mostoriginaldudes.codingsabubackend.dto.request.EditUserInfoRequestDto"
-    keyProperty="id"
-  >
+  <update id="editUserInfo">
     UPDATE user
     SET
     password = #{password}

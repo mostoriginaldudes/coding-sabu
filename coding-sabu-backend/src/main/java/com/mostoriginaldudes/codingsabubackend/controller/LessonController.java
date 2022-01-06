@@ -15,6 +15,7 @@ import java.util.Map;
 import static com.mostoriginaldudes.codingsabubackend.util.constant.Constant.AUTHORIZATION_HEADER;
 
 @RestController
+@RequestMapping("/lesson")
 public class LessonController {
   private final LessonService lessonService;
   private final AuthService authService;
@@ -24,7 +25,7 @@ public class LessonController {
     this.authService = authService;
   }
 
-  @GetMapping("/lessons")
+  @GetMapping("/all")
   public ResponseEntity<List<LessonDto>> allLessons(@RequestParam(required = false, defaultValue = "0") int page) {
     List<LessonDto> lessons = lessonService.getAllLessons(page);
     if(lessons.isEmpty()) {
@@ -35,7 +36,7 @@ public class LessonController {
     return ResponseEntity.ok(lessons);
   }
 
-  @GetMapping("/lesson/{lessonId}")
+  @GetMapping("/{lessonId}")
   public ResponseEntity<LessonDto> lesson(@PathVariable int lessonId) {
     LessonDto lesson = lessonService.getLesson(lessonId);
     if (lesson == null) {
@@ -46,7 +47,7 @@ public class LessonController {
     return ResponseEntity.ok(lesson);
   }
 
-  @PostMapping("/lessons")
+  @PostMapping
   public ResponseEntity<LessonDto> createLesson(
     @RequestHeader Map<String, Object> requestHeader,
     @RequestBody LessonDto lesson
@@ -71,7 +72,7 @@ public class LessonController {
       .body(lessonService.createLesson(lesson));
   }
 
-  @PostMapping("/lesson/{lessonId}/student")
+  @PostMapping("/{lessonId}/student")
   public ResponseEntity<LessonDto> registerLesson(
     @PathVariable int lessonId,
     @RequestHeader Map<String, Object> requestHeader,
@@ -95,31 +96,7 @@ public class LessonController {
       .body(lesson);
   }
 
-  @GetMapping("/lessons/me")
-  public ResponseEntity<List<LessonDto>> myLessons (
-    @RequestHeader Map<String, Object> requestHeader
-  ) {
-    if (!requestHeader.containsKey(AUTHORIZATION_HEADER)) {
-      return ResponseEntity
-        .status(HttpStatus.UNAUTHORIZED)
-        .body(null);
-    }
-
-    String token = (String) requestHeader.get(AUTHORIZATION_HEADER);
-    UserDto user = authService.getLoggedInUserInfo(token);
-
-    List<LessonDto> lessons = lessonService.getMyLessons(user.getId());
-
-    if(lessons.isEmpty()) {
-      return ResponseEntity
-        .status(HttpStatus.NO_CONTENT)
-        .body(lessons);
-    }
-
-    return ResponseEntity.ok(lessons);
-  }
-
-  @GetMapping("/lesson/{lessonId}/students")
+  @GetMapping("/{lessonId}/students")
   public ResponseEntity<List<UserDto>> studentsInMyLesson(
     @RequestHeader Map<String, Object> requestHeader,
     @PathVariable int lessonId

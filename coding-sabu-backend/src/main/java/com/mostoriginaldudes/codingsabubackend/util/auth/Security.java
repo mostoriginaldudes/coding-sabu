@@ -5,13 +5,20 @@ import org.springframework.stereotype.Component;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-@Component
-public class SHA256 {
-  public static String encrypt(String text) throws NoSuchAlgorithmException {
-    MessageDigest md = MessageDigest.getInstance("SHA-256");
-    md.update(text.getBytes());
+import static com.mostoriginaldudes.codingsabubackend.util.constant.Constant.ENCRYPT_ALGORITHM;
 
-    return bytesToHex(md.digest());
+@Component
+public class Security {
+  public static String encrypt(String text) {
+    try {
+      MessageDigest md = MessageDigest.getInstance(ENCRYPT_ALGORITHM);
+      md.update(text.getBytes());
+
+      return bytesToHex(md.digest());
+    } catch (NoSuchAlgorithmException e) {
+      e.printStackTrace();
+      return null;
+    }
   }
 
   private static String bytesToHex(byte[] bytes) {
