@@ -27,7 +27,7 @@ public class UserController {
   }
 
   @PutMapping("/me")
-  public ResponseEntity<EditUserInfoResponseDto> editMyInfo(
+  public ResponseEntity<EditUserInfoResponseDto> editMyInfo (
       EditUserInfoRequestDto editInfoRequest,
       @RequestHeader Map<String, Object> requestHeader
     ) {
@@ -48,8 +48,8 @@ public class UserController {
   ) {
     if(!requestHeader.containsKey(AUTHORIZATION_HEADER)) {
       return ResponseEntity
-          .status(HttpStatus.UNAUTHORIZED)
-          .body(null);
+        .status(HttpStatus.UNAUTHORIZED)
+        .body(null);
     }
 
     String token = (String) requestHeader.get(AUTHORIZATION_HEADER);
@@ -59,8 +59,8 @@ public class UserController {
     userService.updateProfileImagePath(user.getId(), profileImageUrl);
 
     return ResponseEntity
-        .status(HttpStatus.CREATED)
-        .body(profileImageUrl);
+      .status(HttpStatus.CREATED)
+      .body(profileImageUrl);
   }
 
   @GetMapping("/teacher/@{nickname}")
