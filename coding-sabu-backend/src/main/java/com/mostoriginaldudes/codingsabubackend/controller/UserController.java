@@ -7,13 +7,11 @@ import com.mostoriginaldudes.codingsabubackend.dto.response.EditUserInfoResponse
 import com.mostoriginaldudes.codingsabubackend.service.auth.AuthService;
 import com.mostoriginaldudes.codingsabubackend.service.lesson.LessonService;
 import com.mostoriginaldudes.codingsabubackend.service.user.UserService;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
@@ -36,19 +34,29 @@ public class UserController {
     this.lessonService = lessonService;
   }
 
-  @PutMapping("/me")
+  @PutMapping
   public ResponseEntity<EditUserInfoResponseDto> editMyInfo (
-      EditUserInfoRequestDto editInfoRequest,
-      @RequestHeader Map<String, Object> requestHeader
+      @RequestHeader Map<String, Object> requestHeader,
+      @RequestBody EditUserInfoRequestDto editUserInfoRequest
     ) {
+    if(!requestHeader.containsKey(AUTHORIZATION_HEADER)) {
+      return ResponseEntity
+        .status(HttpStatus.UNAUTHORIZED)
+        .body(null);
+    }
 
-    if(!requestHeader.containsKey(HttpHeaders.AUTHORIZATION)) {
-      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+    String token = (String) requestHeader.get(AUTHORIZATION_HEADER);
+    UserDto user = authService.getLoggedInUserInfo(token);
+
+    if(user == null || user.getId() != editUserInfoRequest.getId()) {
+      return ResponseEntity
+        .status(HttpStatus.BAD_REQUEST)
+        .body(null);
     }
 
     return ResponseEntity
         .status(HttpStatus.CREATED)
-        .body(userService.editUserInfo(editInfoRequest));
+        .body(userService.editUserInfo(editUserInfoRequest));
   }
 
   @PatchMapping("/profile")
