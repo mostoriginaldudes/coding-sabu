@@ -1,9 +1,11 @@
 package com.mostoriginaldudes.codingsabubackend.controller;
 
+import com.mostoriginaldudes.codingsabubackend.dto.LessonDto;
 import com.mostoriginaldudes.codingsabubackend.dto.UserDto;
 import com.mostoriginaldudes.codingsabubackend.dto.request.EditUserInfoRequestDto;
 import com.mostoriginaldudes.codingsabubackend.dto.response.EditUserInfoResponseDto;
 import com.mostoriginaldudes.codingsabubackend.service.auth.AuthService;
+import com.mostoriginaldudes.codingsabubackend.service.lesson.LessonService;
 import com.mostoriginaldudes.codingsabubackend.service.user.UserService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -11,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.Path;
+import java.util.List;
 import java.util.Map;
 
 import static com.mostoriginaldudes.codingsabubackend.util.constant.Constant.AUTHORIZATION_HEADER;
@@ -20,10 +24,16 @@ import static com.mostoriginaldudes.codingsabubackend.util.constant.Constant.AUT
 public class UserController {
   private final UserService userService;
   private final AuthService authService;
+  private final LessonService lessonService;
 
-  public UserController(UserService userService, AuthService authService) {
+  public UserController(
+    UserService userService,
+    AuthService authService,
+    LessonService lessonService
+  ) {
     this.userService = userService;
     this.authService = authService;
+    this.lessonService = lessonService;
   }
 
   @PutMapping("/me")
@@ -72,5 +82,27 @@ public class UserController {
     } else {
       return ResponseEntity.ok(teacher);
     }
+  }
+
+  @GetMapping("/{userId}/lessons")
+  public ResponseEntity<List<LessonDto>> myLessons (
+    @RequestHeader Map<String, Object> requestHeader,
+    @PathVariable int userId
+  ) {
+    if (!requestHeader.containsKey(AUTHORIZATION_HEADER)) {
+      return ResponseEntity
+        .status(HttpStatus.UNAUTHORIZED)
+        .body(null);
+    }
+
+    List<LessonDto> lessons = lessonService.getMyLessons(userId);
+
+    if(lessons.isEmpty()) {
+      return ResponseEntity
+        .status(HttpStatus.NO_CONTENT)
+        .body(lessons);
+    }
+
+    return ResponseEntity.ok(lessons);
   }
 }

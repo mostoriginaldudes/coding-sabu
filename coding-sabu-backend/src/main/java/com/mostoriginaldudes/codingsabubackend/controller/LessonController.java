@@ -96,30 +96,6 @@ public class LessonController {
       .body(lesson);
   }
 
-  @GetMapping("/me")
-  public ResponseEntity<List<LessonDto>> myLessons (
-    @RequestHeader Map<String, Object> requestHeader
-  ) {
-    if (!requestHeader.containsKey(AUTHORIZATION_HEADER)) {
-      return ResponseEntity
-        .status(HttpStatus.UNAUTHORIZED)
-        .body(null);
-    }
-
-    String token = (String) requestHeader.get(AUTHORIZATION_HEADER);
-    UserDto user = authService.getLoggedInUserInfo(token);
-
-    List<LessonDto> lessons = lessonService.getMyLessons(user.getId());
-
-    if(lessons.isEmpty()) {
-      return ResponseEntity
-        .status(HttpStatus.NO_CONTENT)
-        .body(lessons);
-    }
-
-    return ResponseEntity.ok(lessons);
-  }
-
   @GetMapping("/{lessonId}/students")
   public ResponseEntity<List<UserDto>> studentsInMyLesson(
     @RequestHeader Map<String, Object> requestHeader,
