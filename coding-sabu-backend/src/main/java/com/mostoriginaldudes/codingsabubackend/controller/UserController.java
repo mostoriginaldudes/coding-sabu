@@ -35,6 +35,20 @@ public class UserController {
     this.lessonService = lessonService;
   }
 
+  @GetMapping
+  public ResponseEntity<UserDto> myInfo(@RequestHeader Map<String, Object> requestHeader) {
+    if(!requestHeader.containsKey(AUTHORIZATION_HEADER)) {
+      return ResponseEntity
+        .status(HttpStatus.UNAUTHORIZED)
+        .body(null);
+    }
+
+    String token = (String) requestHeader.get(AUTHORIZATION_HEADER);
+    UserDto user = authService.getLoggedInUserInfo(token);
+
+    return ResponseEntity.ok(user);
+  }
+
   @PutMapping
   public ResponseEntity<EditUserInfoResponseDto> editMyInfo (
       @RequestHeader Map<String, Object> requestHeader,
@@ -82,7 +96,7 @@ public class UserController {
       .body(profileImageUrl);
   }
 
-  @GetMapping("/@{nickname}?userType={userType}")
+  @GetMapping("/@{nickname}")
   public ResponseEntity<UserDto> searchTeacher(
     @PathVariable String nickname,
     @RequestParam(defaultValue = "teacher") String userType
