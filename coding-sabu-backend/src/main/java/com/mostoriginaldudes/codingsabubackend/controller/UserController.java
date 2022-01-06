@@ -95,7 +95,9 @@ public class UserController {
     UserDto teacher = userService.getTeacherInfo(nickname);
 
     if(teacher == null) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+      return ResponseEntity
+        .status(HttpStatus.NOT_FOUND)
+        .body(null);
     } else {
       return ResponseEntity.ok(teacher);
     }
