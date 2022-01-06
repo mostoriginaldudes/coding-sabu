@@ -120,7 +120,7 @@ public class LessonController {
   }
 
   @GetMapping("/lesson/{lessonId}/students")
-  public ResponseEntity<List<UserDto>> students(
+  public ResponseEntity<List<UserDto>> studentsInMyLesson(
     @RequestHeader Map<String, Object> requestHeader,
     @PathVariable int lessonId
   ) {
