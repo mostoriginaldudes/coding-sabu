@@ -11,6 +11,7 @@ const UserMenuContainer = styled.ul`
   position: absolute;
   top: ${sizes.unitBig + 4}px;
   right: 0;
+  background-color: ${colors.white};
 `;
 
 const UserMenuList = styled.li`
