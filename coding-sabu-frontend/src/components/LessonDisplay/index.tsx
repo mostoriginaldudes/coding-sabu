@@ -82,8 +82,9 @@ type ImagePath = { imagePath: string | undefined };
 const LessonDisplayThumbnail = styled.li<ImagePath>`
   width: 50%;
   height: 100%;
+  background-color: ${colors.black};
   background-image: url(${({ imagePath }) => imagePath});
-  background-size: cover;
+  background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
 `;
