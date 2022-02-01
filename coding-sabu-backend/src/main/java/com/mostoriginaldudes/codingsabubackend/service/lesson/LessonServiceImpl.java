@@ -3,18 +3,16 @@ package com.mostoriginaldudes.codingsabubackend.service.lesson;
 import com.mostoriginaldudes.codingsabubackend.dto.LessonDto;
 import com.mostoriginaldudes.codingsabubackend.dto.UserDto;
 import com.mostoriginaldudes.codingsabubackend.respository.LessonRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class LessonServiceImpl implements LessonService {
   private final LessonRepository lessonRepository;
-
-  public LessonServiceImpl(LessonRepository lessonRepository) {
-    this.lessonRepository = lessonRepository;
-  }
 
   @Override
   public List<LessonDto> getAllLessons(int page) {

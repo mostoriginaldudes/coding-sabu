@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mostoriginaldudes.codingsabubackend.respository.QnaRepository">
+  <insert
+    id="createQuestion"
+    parameterType="QuestionDto"
+    keyProperty="id"
+    useGeneratedKeys="true"
+  >
+    INSERT INTO lesson_question (
+     lesson_id
+     ,writer_id
+     ,title
+     ,article
+    ) VALUES (
+     #{lessonId}
+     ,#{writerId}
+     ,#{title}
+     ,#{article}
+    )
+  </insert>
+</mapper>
