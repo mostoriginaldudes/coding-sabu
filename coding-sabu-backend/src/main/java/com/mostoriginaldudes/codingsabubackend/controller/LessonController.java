@@ -5,6 +5,7 @@ import com.mostoriginaldudes.codingsabubackend.dto.UserDto;
 import com.mostoriginaldudes.codingsabubackend.dto.request.RegisterLessonRequestDto;
 import com.mostoriginaldudes.codingsabubackend.service.auth.AuthService;
 import com.mostoriginaldudes.codingsabubackend.service.lesson.LessonService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,14 +17,10 @@ import static com.mostoriginaldudes.codingsabubackend.util.constant.Constant.AUT
 
 @RestController
 @RequestMapping("/lesson")
+@RequiredArgsConstructor
 public class LessonController {
   private final LessonService lessonService;
   private final AuthService authService;
-
-  public LessonController(LessonService lessonService, AuthService authService) {
-    this.lessonService = lessonService;
-    this.authService = authService;
-  }
 
   @GetMapping("/all")
   public ResponseEntity<List<LessonDto>> allLessons(@RequestParam(required = false, defaultValue = "0") int page) {

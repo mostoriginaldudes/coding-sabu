@@ -5,6 +5,7 @@ import com.mostoriginaldudes.codingsabubackend.dto.request.EditUserInfoRequestDt
 import com.mostoriginaldudes.codingsabubackend.dto.response.EditUserInfoResponseDto;
 import com.mostoriginaldudes.codingsabubackend.respository.UserRepository;
 import com.mostoriginaldudes.codingsabubackend.util.auth.Security;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,15 +15,12 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
   private final UserRepository userRepository;
 
   @Value("${server.asset.img}")
   private String filePath;
-
-  public UserServiceImpl(UserRepository userRepository) {
-    this.userRepository = userRepository;
-  }
 
   @Override
   @Transactional
@@ -32,7 +30,7 @@ public class UserServiceImpl implements UserService {
     userRepository.editUserInfo(editUserInfoRequest);
 
     UserDto user = getUserInfo(editUserInfoRequest.getId());
-    return new EditUserInfoResponseDto.Builder()
+    return EditUserInfoResponseDto.builder()
       .id(user.getId())
       .email(user.getEmail())
       .nickname(user.getNickname())
@@ -40,7 +38,7 @@ public class UserServiceImpl implements UserService {
       .phoneNum(user.getPhoneNum())
       .description(user.getDescription())
       .profileImage(user.getProfileImage())
-      .builder();
+      .build();
   }
 
   @Override

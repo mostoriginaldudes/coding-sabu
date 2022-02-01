@@ -7,6 +7,7 @@ import com.mostoriginaldudes.codingsabubackend.dto.response.EditUserInfoResponse
 import com.mostoriginaldudes.codingsabubackend.service.auth.AuthService;
 import com.mostoriginaldudes.codingsabubackend.service.lesson.LessonService;
 import com.mostoriginaldudes.codingsabubackend.service.user.UserService;
+import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.http.parser.HttpParser;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,20 +21,11 @@ import static com.mostoriginaldudes.codingsabubackend.util.constant.Constant.AUT
 
 @RestController
 @RequestMapping("/user")
+@RequiredArgsConstructor
 public class UserController {
   private final UserService userService;
   private final AuthService authService;
   private final LessonService lessonService;
-
-  public UserController(
-    UserService userService,
-    AuthService authService,
-    LessonService lessonService
-  ) {
-    this.userService = userService;
-    this.authService = authService;
-    this.lessonService = lessonService;
-  }
 
   @GetMapping
   public ResponseEntity<UserDto> myInfo(@RequestHeader Map<String, Object> requestHeader) {

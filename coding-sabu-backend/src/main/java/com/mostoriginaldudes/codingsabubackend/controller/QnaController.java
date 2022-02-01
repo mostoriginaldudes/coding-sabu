@@ -16,10 +16,9 @@ import java.util.Map;
 import static com.mostoriginaldudes.codingsabubackend.util.constant.Constant.AUTHORIZATION_HEADER;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/lesson")
+@RequiredArgsConstructor
 public class QnaController {
-
   private final AuthService authService;
   private final QnaService qnaService;
 

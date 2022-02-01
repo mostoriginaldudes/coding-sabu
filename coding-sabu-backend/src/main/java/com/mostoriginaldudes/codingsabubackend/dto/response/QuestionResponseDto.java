@@ -1,6 +1,7 @@
 package com.mostoriginaldudes.codingsabubackend.dto.response;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter @Setter
 public class QuestionResponseDto {
