@@ -10,18 +10,15 @@ import com.mostoriginaldudes.codingsabubackend.respository.AuthRepository;
 import com.mostoriginaldudes.codingsabubackend.util.auth.JWT;
 import com.mostoriginaldudes.codingsabubackend.util.auth.Security;
 import io.jsonwebtoken.Claims;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
   private final AuthRepository authRepository;
   private final JWT jwt;
-
-  public AuthServiceImpl(AuthRepository authRepository, JWT jwt) {
-    this.authRepository = authRepository;
-    this.jwt = jwt;
-  }
 
   @Override
   public LoginResponseDto login(LoginRequestDto loginRequest) {
@@ -33,7 +30,7 @@ public class AuthServiceImpl implements AuthService {
     if (user == null) {
       return null;
     } else {
-      return new LoginResponseDto.Builder()
+      return LoginResponseDto.builder()
         .id(user.getId())
         .email(user.getEmail())
         .nickname(user.getNickname())
@@ -41,7 +38,7 @@ public class AuthServiceImpl implements AuthService {
         .phoneNum(user.getPhoneNum())
         .description(user.getDescription())
         .profileImage(user.getProfileImage())
-        .builder();
+        .build();
     }
   }
 
@@ -60,7 +57,7 @@ public class AuthServiceImpl implements AuthService {
       )
     );
 
-    return new SignupResponseDto.Builder()
+    return SignupResponseDto.builder()
       .id(user.getId())
       .email(user.getEmail())
       .nickname(user.getNickname())
@@ -68,7 +65,7 @@ public class AuthServiceImpl implements AuthService {
       .phoneNum(user.getPhoneNum())
       .description(user.getDescription())
       .profileImage(user.getProfileImage())
-      .builder();
+      .build();
   }
 
   private UserDto getMatchedUser(LoginRequestDto loginRequest) {

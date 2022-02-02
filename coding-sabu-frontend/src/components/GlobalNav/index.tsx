@@ -22,14 +22,13 @@ const RoundStyle = css`
 const HeaderContainer = styled.div`
   ${flexCenter}
   ${positionFixed}
-  background: {
-    image: url(${headerBackground});
-    position: center;
-    size: contain;
-    color: #eee;
-  }
+  background-image: url(${headerBackground});
+  background-position: center;
+  background-size: contain;
+  background-color: #eee;
   width: 100%;
   box-shadow: rgb(0 0 0 / 25%) 0px 0px 15px;
+  z-index: 10;
 `;
 
 const GlobalNavStyle = styled.nav`
@@ -43,7 +42,7 @@ const GlobalNavStyle = styled.nav`
 `;
 
 const EmphasisText = styled.h4`
-  font-size: 1.3rem;
+  font-size: 1rem;
 `;
 
 const Image = styled.img`
