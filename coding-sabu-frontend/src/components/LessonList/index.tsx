@@ -5,14 +5,7 @@ import LessonItem from 'components/LessonItem';
 import { Lesson } from 'types';
 import { flexCenter } from 'styles/module';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-
-export const PageTitle = styled.header`
-  width: 100%;
-  text-align: left;
-  border-bottom: 1px solid #707070;
-  padding-bottom: 20px;
-  margin-bottom: 20px;
-`;
+import UnderlineTitle from 'styles/UnderlineTitle';
 
 export const EmphasisText = styled.h3`
   font-size: 1.3rem;
@@ -48,9 +41,7 @@ const LessonList: FC<Props> = ({ history, lessons }) => {
 
   return (
     <>
-      <PageTitle>
-        <EmphasisText>수련 목록</EmphasisText>
-      </PageTitle>
+      <UnderlineTitle title="수련 목록" />
       <LessonListContainer>
         {lessons.map((lesson, index) => (
           <LessonListElement

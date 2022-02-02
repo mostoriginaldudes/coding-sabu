@@ -5,7 +5,7 @@ import { colors, media } from 'styles/theme';
 import { Lesson } from 'types';
 import { flexCenter } from 'styles/module';
 import { Link } from 'react-router-dom';
-import { EmphasisText, PageTitle as Title } from 'components/LessonList';
+import UnderlineTitle from 'styles/UnderlineTitle';
 import { HiChevronLeft, HiChevronRight } from 'react-icons/hi';
 
 const displayWidth = 1000;
@@ -17,13 +17,13 @@ const cardBorder = css`
   padding: 2em;
 `;
 
-const PageTitle = styled(Title)`
+const Title = styled(UnderlineTitle)`
   ${media.tablet`
     display:none;
   `}
 `;
 
-const LessonDisplayCarouselContainer = styled.div`
+const CarouselContainer = styled.div`
   height: 100%;
   position: relative;
   overflow: hidden;
@@ -32,7 +32,7 @@ const LessonDisplayCarouselContainer = styled.div`
   display: none;
   `};
 `;
-const LessonDisplayCarousel = styled.div`
+const Carousel = styled.div`
   width: fit-content;
   height: 100%;
   display: flex;
@@ -59,7 +59,7 @@ const ArrowRight = styled(HiChevronRight)`
   right: -1rem;
 `;
 
-const LessonsDisplayContainer = styled.ul`
+const Content = styled.ul`
   ${flexCenter}
   width: ${displayWidth}px;
   height: ${displayWidth / 2}px;
@@ -79,7 +79,7 @@ const LessonsDisplayContainer = styled.ul`
 `;
 
 type ImagePath = { imagePath: string | undefined };
-const LessonDisplayThumbnail = styled.li<ImagePath>`
+const Thumbnail = styled.li<ImagePath>`
   width: 50%;
   height: 100%;
   background-color: ${colors.black};
@@ -89,7 +89,7 @@ const LessonDisplayThumbnail = styled.li<ImagePath>`
   background-repeat: no-repeat;
 `;
 
-const LessonDisplayInfo = styled.li`
+const Info = styled.li`
   ${flexCenter}
   flex-direction: column;
   justify-content: space-between;
@@ -183,17 +183,15 @@ const LessonDisplay: FC<Props> = ({ lessons }) => {
   };
   return (
     <>
-      <PageTitle>
-        <EmphasisText>추천하는 수련</EmphasisText>
-      </PageTitle>
-      <LessonDisplayCarouselContainer>
+      <Title title="추천하는 수련" />
+      <CarouselContainer>
         <ArrowLeft
           onClick={moveCarouselToLeft}
           style={{
             cursor: `${lessonIndex === 0 ? 'not-allowed' : 'pointer'}`
           }}
         />
-        <LessonDisplayCarousel ref={carouselRef}>
+        <Carousel ref={carouselRef}>
           {lessons.map(
             ({
               lessonId,
@@ -202,9 +200,9 @@ const LessonDisplay: FC<Props> = ({ lessons }) => {
               teacher,
               lessonDescription
             }: Lesson) => (
-              <LessonsDisplayContainer key={lessonId}>
-                <LessonDisplayThumbnail imagePath={lessonThumbnailPath} />
-                <LessonDisplayInfo>
+              <Content key={lessonId}>
+                <Thumbnail imagePath={lessonThumbnailPath} />
+                <Info>
                   <div>
                     <h2>{lessonTitle}</h2>
                     <h3>{teacher}</h3>
@@ -215,11 +213,11 @@ const LessonDisplay: FC<Props> = ({ lessons }) => {
                       <Link to={`/lesson/${lessonId}`}>자세히 보기</Link>
                     </button>
                   </article>
-                </LessonDisplayInfo>
-              </LessonsDisplayContainer>
+                </Info>
+              </Content>
             )
           )}
-        </LessonDisplayCarousel>
+        </Carousel>
         <ArrowRight
           onClick={moveCarouselToRight}
           style={{
@@ -228,7 +226,7 @@ const LessonDisplay: FC<Props> = ({ lessons }) => {
             }`
           }}
         />
-      </LessonDisplayCarouselContainer>
+      </CarouselContainer>
     </>
   );
 };
