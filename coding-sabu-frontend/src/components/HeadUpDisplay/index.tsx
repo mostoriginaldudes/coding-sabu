@@ -46,10 +46,6 @@ const HeadUpDpWrapper = styled.div`
   }
 `;
 
-// interface Props {
-//   type: HudStatus;
-// }
-
 /**
  *  사용이 필요한 컴포넌트에서 아래 코드 호출
  *  dispatch(createActionVisibleHud())
