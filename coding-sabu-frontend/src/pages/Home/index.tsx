@@ -1,27 +1,38 @@
-import { FC, useState, useEffect } from 'react';
+import { FC, useEffect, useCallback, memo, useMemo } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import LessonDisplay from 'components/LessonDisplay';
 import LessonList from 'components/LessonList';
-import { fetchLessons } from 'apis';
+import { createActionFetchLessons } from 'store/lesson';
 import { Lesson } from 'types';
+import { RootState } from 'store';
+import { State as Lessons } from 'store/lesson';
+import HeadUpDisplay from 'components/HeadUpDisplay';
 
 const Home: FC = () => {
-  const [lessons, setLessons] = useState<Lesson[]>([]);
+  const { lessons } = useSelector<RootState, Lessons>(state => state.lesson);
+  const dispatch = useDispatch();
 
-  const fetchLessonData = async () => {
-    const fetchedLessons = await fetchLessons();
-    setLessons(fetchedLessons.data);
-  };
+  const dispatchLessons = useCallback(
+    () => dispatch(createActionFetchLessons()),
+    [dispatch]
+  );
+
+  const lessonsArray = useMemo(
+    () => (lessons.data === null ? ([] as Lesson[]) : lessons.data),
+    [lessons]
+  );
 
   useEffect(() => {
-    fetchLessonData();
-  }, []);
+    dispatchLessons();
+  }, [dispatchLessons]);
 
   return (
     <div>
-      <LessonDisplay lessons={lessons} />
-      <LessonList lessons={lessons} />
+      <HeadUpDisplay type="success" />
+      <LessonDisplay lessons={lessonsArray} />
+      <LessonList lessons={lessonsArray} />
     </div>
   );
 };
 
-export default Home;
+export default memo(Home);
