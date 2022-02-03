@@ -7,3 +7,5 @@ export interface Lesson {
   studentCount: number;
   lessonPrice: number;
 }
+
+export type HudStatus = 'success' | 'fail';

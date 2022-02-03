@@ -1,10 +1,14 @@
 import { FC } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import GlobalStyle from './styles/GlobalStyle';
-import GlobalNav from './components/GlobalNav';
+import { Provider } from 'react-redux';
+import store from 'store';
 import styled from '@emotion/styled';
-import { sizes } from './styles/theme';
+
+import GlobalNav from './components/GlobalNav';
 import Home from 'pages/Home';
+import GlobalStyle from './styles/GlobalStyle';
+import { sizes } from './styles/theme';
+import HeadUpDisplay from 'components/HeadUpDisplay';
 
 const Main = styled.main`
   width: calc(100% - 2rem);
@@ -14,17 +18,20 @@ const Main = styled.main`
 
 const App: FC = () => {
   return (
-    <Router>
-      <GlobalStyle />
-      <GlobalNav />
-      <Main>
-        <Switch>
-          <Route path="/" exact>
-            <Home />
-          </Route>
-        </Switch>
-      </Main>
-    </Router>
+    <Provider store={store}>
+      <Router>
+        <GlobalStyle />
+        <GlobalNav />
+        <Main>
+          <HeadUpDisplay />
+          <Switch>
+            <Route path="/" exact>
+              <Home />
+            </Route>
+          </Switch>
+        </Main>
+      </Router>
+    </Provider>
   );
 };
 

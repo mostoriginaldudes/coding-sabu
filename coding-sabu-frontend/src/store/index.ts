@@ -3,6 +3,7 @@ import ReduxThunk from 'redux-thunk';
 import logger from 'redux-logger';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import lessonReducer from './lesson';
+import uiReducer from './ui';
 
 export type ThunkAsyncState<T> = {
   loading: boolean;
@@ -11,7 +12,8 @@ export type ThunkAsyncState<T> = {
 };
 
 const rootReducer = combineReducers({
-  lesson: lessonReducer
+  lesson: lessonReducer,
+  ui: uiReducer
 });
 
 const store = createStore(
