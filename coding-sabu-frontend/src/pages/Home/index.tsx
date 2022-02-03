@@ -6,7 +6,6 @@ import { createActionFetchLessons } from 'store/lesson';
 import { Lesson } from 'types';
 import { RootState } from 'store';
 import { State as Lessons } from 'store/lesson';
-import HeadUpDisplay from 'components/HeadUpDisplay';
 
 const Home: FC = () => {
   const { lessons } = useSelector<RootState, Lessons>(state => state.lesson);
@@ -28,7 +27,6 @@ const Home: FC = () => {
 
   return (
     <div>
-      <HeadUpDisplay type="success" />
       <LessonDisplay lessons={lessonsArray} />
       <LessonList lessons={lessonsArray} />
     </div>
