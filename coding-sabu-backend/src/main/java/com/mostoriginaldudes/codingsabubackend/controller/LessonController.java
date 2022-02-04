@@ -2,7 +2,9 @@ package com.mostoriginaldudes.codingsabubackend.controller;
 
 import com.mostoriginaldudes.codingsabubackend.dto.LessonDto;
 import com.mostoriginaldudes.codingsabubackend.dto.UserDto;
+import com.mostoriginaldudes.codingsabubackend.dto.request.LessonRequestDto;
 import com.mostoriginaldudes.codingsabubackend.dto.request.RegisterLessonRequestDto;
+import com.mostoriginaldudes.codingsabubackend.dto.response.LessonResponseDto;
 import com.mostoriginaldudes.codingsabubackend.service.auth.AuthService;
 import com.mostoriginaldudes.codingsabubackend.service.lesson.LessonService;
 import lombok.RequiredArgsConstructor;
@@ -34,20 +36,19 @@ public class LessonController {
   }
 
   @GetMapping("/{lessonId}")
-  public ResponseEntity<LessonDto> lesson(@PathVariable int lessonId) {
-    LessonDto lesson = lessonService.getLesson(lessonId);
-    if (lesson == null) {
-      return ResponseEntity
-        .status(HttpStatus.NOT_FOUND)
-        .body(null);
+  public ResponseEntity<LessonResponseDto> lesson(@PathVariable int lessonId) {
+    LessonResponseDto responseDto = lessonService.getLesson(lessonId);
+
+    if(responseDto == null) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
-    return ResponseEntity.ok(lesson);
+    return ResponseEntity.ok(responseDto);
   }
 
   @PostMapping
-  public ResponseEntity<LessonDto> createLesson(
+  public ResponseEntity<LessonResponseDto> createLesson(
     @RequestHeader Map<String, Object> requestHeader,
-    @RequestBody LessonDto lesson
+    @RequestBody LessonRequestDto requestDto
   ) {
     if (!requestHeader.containsKey(AUTHORIZATION_HEADER)) {
       return ResponseEntity
@@ -58,7 +59,7 @@ public class LessonController {
     String token = (String) requestHeader.get(AUTHORIZATION_HEADER);
     UserDto user = authService.getLoggedInUserInfo(token);
 
-    if (user.getUserType().equals("student")) {
+    if ("student".equals(user.getUserType())) {
       return ResponseEntity
         .status(HttpStatus.BAD_REQUEST)
         .body(null);
@@ -66,11 +67,11 @@ public class LessonController {
 
     return ResponseEntity
       .status(HttpStatus.CREATED)
-      .body(lessonService.createLesson(lesson));
+      .body(lessonService.createLesson(requestDto, user.getId()));
   }
 
   @PostMapping("/{lessonId}/student")
-  public ResponseEntity<LessonDto> registerLesson(
+  public ResponseEntity<LessonResponseDto> registerLesson(
     @PathVariable int lessonId,
     @RequestHeader Map<String, Object> requestHeader,
     @RequestBody RegisterLessonRequestDto registerLessonRequest
@@ -81,16 +82,11 @@ public class LessonController {
         .body(null);
     }
 
-    LessonDto lesson = lessonService.registerLesson(lessonId, registerLessonRequest.getStudentId());
-    if (lesson == null) {
-      return ResponseEntity
-        .status(HttpStatus.BAD_REQUEST)
-        .body(null);
-    }
+    LessonResponseDto lessonResponseDto = lessonService.registerLesson(lessonId, registerLessonRequest.getStudentId());
 
     return ResponseEntity
       .status(HttpStatus.CREATED)
-      .body(lesson);
+      .body(lessonResponseDto);
   }
 
   @GetMapping("/{lessonId}/students")
