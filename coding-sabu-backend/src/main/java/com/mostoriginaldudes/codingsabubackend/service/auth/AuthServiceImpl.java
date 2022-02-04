@@ -9,7 +9,7 @@ import com.mostoriginaldudes.codingsabubackend.dto.response.LoginResponseDto;
 import com.mostoriginaldudes.codingsabubackend.dto.SignupDto;
 import com.mostoriginaldudes.codingsabubackend.dto.response.SignupResponseDto;
 import com.mostoriginaldudes.codingsabubackend.respository.AuthRepository;
-import com.mostoriginaldudes.codingsabubackend.util.auth.JWT;
+import com.mostoriginaldudes.codingsabubackend.util.auth.JsonWebToken;
 import com.mostoriginaldudes.codingsabubackend.util.auth.Security;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
   private final AuthRepository authRepository;
-  private final JWT jwt;
+  private final JsonWebToken jwt;
 
   @Override
   public LoginResponseDto login(LoginRequestDto loginRequest) {
