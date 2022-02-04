@@ -20,7 +20,7 @@
 
   <insert
     id="createLesson"
-    parameterType="com.mostoriginaldudes.codingsabubackend.dto.LessonDto"
+    parameterType="LessonDto"
     keyProperty="id"
     useGeneratedKeys="true"
   >
