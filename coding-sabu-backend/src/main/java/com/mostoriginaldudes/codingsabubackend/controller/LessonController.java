@@ -50,7 +50,6 @@ public class LessonController {
     @RequestHeader Map<String, Object> requestHeader,
     @ModelAttribute LessonRequestDto requestDto
   ) {
-    System.out.println(requestDto.toString());
     if (!requestHeader.containsKey(AUTHORIZATION_HEADER)) {
       return ResponseEntity
         .status(HttpStatus.UNAUTHORIZED)

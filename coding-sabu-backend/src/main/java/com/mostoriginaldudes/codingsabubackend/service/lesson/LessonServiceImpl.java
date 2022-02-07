@@ -63,7 +63,6 @@ public class LessonServiceImpl implements LessonService {
         .thumbnailUrl(thumbnailUrl)
         .build();
 
-    System.out.println(lesson.toString());
     lessonRepository.createLesson(lesson);
     return getLesson(lesson.getId());
   }
