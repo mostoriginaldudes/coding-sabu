@@ -2,10 +2,10 @@ import { FC, useEffect, useCallback, memo, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import LessonDisplay from 'components/LessonDisplay';
 import LessonList from 'components/LessonList';
-import { createActionFetchLessons } from 'store/lesson';
+import { State as Lessons, createActionFetchLessons } from 'store/lesson';
 import { Lesson } from 'types';
 import { RootState } from 'store';
-import { State as Lessons } from 'store/lesson';
+import UnderlineTitle from 'styles/UnderlineTitle';
 
 const Home: FC = () => {
   const { lessons } = useSelector<RootState, Lessons>(state => state.lesson);
