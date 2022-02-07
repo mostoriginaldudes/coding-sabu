@@ -4,12 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Getter
 @AllArgsConstructor
-public class LessonRequestDto implements Serializable {
+public class LessonRequestDto {
   private String title;
   private String description;
   private int price;
