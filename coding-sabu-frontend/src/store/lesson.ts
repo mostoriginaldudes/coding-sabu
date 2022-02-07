@@ -7,16 +7,23 @@ import { fetchLessons } from 'apis';
 const FETCH_LESSONS = 'lesson/FETCH_LESSONS' as const;
 const FETCH_LESSONS_SUCCESS = 'lesson/FETCH_LESSONS_SUCCESS' as const;
 const FETCH_LESSONS_FAIL = 'lesson/FETCH_LESSONS_FAIL' as const;
+const FETCH_MY_LESSONS = 'lesson/FETCH_MY_LESSONS' as const;
+const FETCH_MY_LESSONS_SUCCESS = 'lesson/FETCH_MY_LESSONS_SUCCESS' as const;
+const FETCH_MY_LESSONS_FAIL = 'lesson/FETCH_MY_LESSONS_FAIL' as const;
 
 // types
 export interface State {
   readonly lessons: ThunkAsyncState<Lesson[]>;
+  readonly mylessons: ThunkAsyncState<Lesson[]>;
 }
 
 type Action =
   | { type: typeof FETCH_LESSONS }
   | { type: typeof FETCH_LESSONS_SUCCESS; payload: Lesson[] }
-  | { type: typeof FETCH_LESSONS_FAIL; payload: Error };
+  | { type: typeof FETCH_LESSONS_FAIL; payload: Error }
+  | { type: typeof FETCH_MY_LESSONS }
+  | { type: typeof FETCH_MY_LESSONS_SUCCESS; payload: Lesson[] }
+  | { type: typeof FETCH_MY_LESSONS_FAIL; payload: Error };
 
 type FetchLessonsThunkAction = ThunkAction<void, State, null, Action>;
 
@@ -32,9 +39,25 @@ export const createActionFetchLessons =
     }
   };
 
+export const createActionFetchMyLessons =
+  (): FetchLessonsThunkAction => async dispatch => {
+    dispatch({ type: FETCH_MY_LESSONS });
+    try {
+      const mylessons = await fetchLessons();
+      dispatch({ type: FETCH_MY_LESSONS_SUCCESS, payload: mylessons.data });
+    } catch (error) {
+      dispatch({ type: FETCH_MY_LESSONS_FAIL, payload: error as Error });
+    }
+  };
+
 // initialState
 const initialState: State = {
   lessons: {
+    loading: false,
+    data: null,
+    error: null
+  },
+  mylessons: {
     loading: false,
     data: null,
     error: null
@@ -66,6 +89,33 @@ function lessonReducer(state = initialState, action: Action) {
       return {
         ...state,
         lessons: {
+          loading: false,
+          data: null,
+          error: action.payload
+        }
+      };
+    case FETCH_MY_LESSONS:
+      return {
+        ...state,
+        mylessons: {
+          loading: true,
+          data: null,
+          error: null
+        }
+      };
+    case FETCH_MY_LESSONS_SUCCESS:
+      return {
+        ...state,
+        mylessons: {
+          loading: false,
+          data: action.payload,
+          error: null
+        }
+      };
+    case FETCH_MY_LESSONS_FAIL:
+      return {
+        ...state,
+        mylessons: {
           loading: false,
           data: null,
           error: action.payload

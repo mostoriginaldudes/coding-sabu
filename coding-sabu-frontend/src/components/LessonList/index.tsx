@@ -5,7 +5,6 @@ import LessonItem from 'components/LessonItem';
 import { Lesson } from 'types';
 import { flexCenter } from 'styles/module';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import UnderlineTitle from 'styles/UnderlineTitle';
 
 export const EmphasisText = styled.h3`
   font-size: 1.3rem;
@@ -41,7 +40,6 @@ const LessonList: FC<Props> = ({ history, lessons }) => {
 
   return (
     <>
-      <UnderlineTitle title="수련 목록" />
       <LessonListContainer>
         {lessons.map((lesson, index) => (
           <LessonListElement

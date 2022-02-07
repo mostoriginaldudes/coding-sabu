@@ -9,3 +9,7 @@ export interface Lesson {
 }
 
 export type HudStatus = 'success' | 'fail';
+
+export type LessonFormAction =
+  | HTMLInputElement
+  | { name: 'description'; value: string };
