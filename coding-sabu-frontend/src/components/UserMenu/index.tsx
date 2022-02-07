@@ -18,10 +18,15 @@ const UserMenuList = styled.li`
   ${flexCenter}
   width: 100%;
   height: 36px;
+  cursor: pointer;
   &:hover {
     background-color: ${colors.yellow[4]};
   }
-  cursor: pointer;
+  & > a {
+    width: 100%;
+    height: 100%;
+    ${flexCenter}
+  }
 `;
 
 interface Props {
@@ -45,7 +50,7 @@ const UserMenu: FC<Props> = ({ visibleUserMenu, setVisibleUserMenu }) => {
             <Link to="/mypage">내 정보</Link>
           </UserMenuList>
           <UserMenuList>
-            <Link to="/myclass">내 가르침</Link>
+            <Link to="/myteaching">내 가르침</Link>
           </UserMenuList>
           <UserMenuList>
             <Link to="/logout">로그아웃</Link>
