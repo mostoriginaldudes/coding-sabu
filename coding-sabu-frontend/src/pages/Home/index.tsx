@@ -28,6 +28,7 @@ const Home: FC = () => {
   return (
     <div>
       <LessonDisplay lessons={lessonsArray} />
+      <UnderlineTitle title="수련 목록" />
       <LessonList lessons={lessonsArray} />
     </div>
   );
