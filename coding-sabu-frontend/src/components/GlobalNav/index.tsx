@@ -108,7 +108,7 @@ const GlobalNav: FC = () => {
             />
           </Link>
           <ButtonToMyClass radius={unitRegular} color="white">
-            <Link to="/myclass">수련 관리</Link>
+            <Link to="/mylesson">수련 관리</Link>
           </ButtonToMyClass>
           <FlexRow role="toggleMenu" onClick={toggleUserMenu}>
             <UserProfileImage
