@@ -32,6 +32,7 @@
     ,description
     ,price
     ,terminated_at
+    ,thumbnail_url
     ) VALUES (
     id
     ,#{teacherId}
@@ -39,6 +40,7 @@
     ,#{description}
     ,#{price}
     ,#{terminatedAt}
+    ,#{thumbnailUrl}
     )
   </insert>
 
