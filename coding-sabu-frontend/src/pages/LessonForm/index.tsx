@@ -5,7 +5,8 @@ import {
   useReducer,
   useState,
   ChangeEvent,
-  SyntheticEvent
+  SyntheticEvent,
+  useMemo
 } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from '@emotion/styled';
@@ -76,7 +77,7 @@ interface State {
   title: string;
   price: string;
   description: string;
-  terminatedAt: string;
+  terminatedAt: Date;
 }
 
 const reducer: Reducer<State, Action> = (state, action) => {
@@ -88,7 +89,7 @@ const reducer: Reducer<State, Action> = (state, action) => {
     case 'description':
       return { ...state, description: action.value };
     case 'terminatedAt':
-      return { ...state, terminatedAt: action.value };
+      return { ...state, terminatedAt: new Date(action.value) };
     default:
       return state;
   }
@@ -101,15 +102,21 @@ const LessonForm: FC = () => {
     title: '',
     price: '',
     description: '',
-    terminatedAt: ''
+    terminatedAt: new Date()
   });
 
   const onSubmit = useCallback((e: SyntheticEvent) => {
     e.preventDefault();
   }, []);
+
   const onChange = useCallback(
     ({ target }: { target: Action }) => dispatch(target as Action),
     [dispatch]
+  );
+
+  const convertDateTimeToString = useMemo(
+    () => state.terminatedAt.toJSON().slice(0, -3),
+    [state]
   );
 
   const uploadThumbnail = useCallback((e: ChangeEvent<HTMLInputElement>) => {
@@ -140,7 +147,7 @@ const LessonForm: FC = () => {
               name="terminatedAt"
               type="datetime-local"
               label="종료일"
-              value={state.terminatedAt}
+              value={convertDateTimeToString}
               onChange={onChange}
             />
           </InputContainer>
