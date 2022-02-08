@@ -98,6 +98,8 @@ const reducer: Reducer<State, Action> = (state, action) => {
 const LessonForm: FC = () => {
   const history = useHistory();
   const [imgUrl, setImageUrl] = useState<string>('');
+  const hasBeenUploaded = useMemo(() => imgUrl === '', [imgUrl]);
+
   const [state, dispatch] = useReducer(reducer, {
     title: '',
     price: '',
@@ -119,11 +121,18 @@ const LessonForm: FC = () => {
     [state]
   );
 
-  const uploadThumbnail = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files![0];
-    const lessonImageUrl = URL.createObjectURL(file);
-    setImageUrl(lessonImageUrl);
-  }, []);
+  const uploadThumbnail = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files![0];
+      const lessonImageUrl = URL.createObjectURL(file);
+      setImageUrl(lessonImageUrl);
+    },
+    [setImageUrl]
+  );
+
+  const backToPreviousPage = useCallback(() => {
+    history.goBack();
+  }, [history]);
 
   return (
     <div>
@@ -154,7 +163,9 @@ const LessonForm: FC = () => {
             />
           </InputContainer>
           <ThumbnailContainer imgUrl={imgUrl}>
-            <label htmlFor="lessonFile">수련 소개 이미지 업로드</label>
+            {hasBeenUploaded && (
+              <label htmlFor="lessonFile">수련 소개 이미지 업로드</label>
+            )}
             <ThumbnailInput
               type="file"
               id="lessonFile"
