@@ -175,7 +175,7 @@ const LessonForm: FC = () => {
             color="white"
             radius={5}
             height={3}
-            onClick={() => history.goBack()}
+            onClick={backToPreviousPage}
           >
             취소
           </Button>
