@@ -75,7 +75,7 @@ public class LessonController {
   public ResponseEntity<LessonResponseDto> registerLesson(
     @PathVariable int lessonId,
     @RequestHeader Map<String, Object> requestHeader,
-    @RequestBody RegisterLessonRequestDto registerLessonRequest
+    @RequestBody RegisterLessonRequestDto requestDto
   ) {
     if (!requestHeader.containsKey(AUTHORIZATION_HEADER)) {
       return ResponseEntity
@@ -83,7 +83,7 @@ public class LessonController {
         .body(null);
     }
 
-    LessonResponseDto lessonResponseDto = lessonService.registerLesson(lessonId, registerLessonRequest.getStudentId());
+    LessonResponseDto lessonResponseDto = lessonService.registerLesson(lessonId, requestDto.getStudentId());
 
     return ResponseEntity
       .status(HttpStatus.CREATED)

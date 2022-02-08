@@ -27,7 +27,7 @@ public class QnaController {
   public ResponseEntity<QuestionDto> addQuestion(
     @PathVariable int lessonId,
     @RequestHeader Map<String, Object> requestHeader,
-    @RequestBody QuestionRequestDto questionRequest
+    @RequestBody QuestionRequestDto requestDto
   ) {
     if (!requestHeader.containsKey(AUTHORIZATION_HEADER)) {
       return ResponseEntity
@@ -44,11 +44,11 @@ public class QnaController {
         .body(null);
     }
 
-    questionRequest.setLessonId(lessonId);
-    questionRequest.setWriterId(user.getId());
+    requestDto.setLessonId(lessonId);
+    requestDto.setWriterId(user.getId());
 
     return ResponseEntity
       .status(HttpStatus.CREATED)
-      .body(qnaService.addQuestion(questionRequest));
+      .body(qnaService.addQuestion(requestDto));
   }
 }

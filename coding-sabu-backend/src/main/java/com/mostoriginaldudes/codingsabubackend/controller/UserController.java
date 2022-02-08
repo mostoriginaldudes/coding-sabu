@@ -44,7 +44,7 @@ public class UserController {
   @PutMapping
   public ResponseEntity<EditUserInfoResponseDto> editMyInfo (
       @RequestHeader Map<String, Object> requestHeader,
-      @RequestBody EditUserInfoRequestDto editUserInfoRequest
+      @RequestBody EditUserInfoRequestDto requestDto
     ) {
     if(!requestHeader.containsKey(AUTHORIZATION_HEADER)) {
       return ResponseEntity
@@ -55,7 +55,7 @@ public class UserController {
     String token = (String) requestHeader.get(AUTHORIZATION_HEADER);
     UserDto user = authService.getLoggedInUserInfo(token);
 
-    if(user == null || user.getId() != editUserInfoRequest.getId()) {
+    if(user == null || user.getId() != requestDto.getId()) {
       return ResponseEntity
         .status(HttpStatus.BAD_REQUEST)
         .body(null);
@@ -63,7 +63,7 @@ public class UserController {
 
     return ResponseEntity
         .status(HttpStatus.CREATED)
-        .body(userService.editUserInfo(editUserInfoRequest));
+        .body(userService.editUserInfo(requestDto));
   }
 
   @PatchMapping("/profile")
