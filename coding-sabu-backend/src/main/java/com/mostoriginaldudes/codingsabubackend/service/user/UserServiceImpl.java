@@ -4,7 +4,7 @@ import com.mostoriginaldudes.codingsabubackend.dto.UserDto;
 import com.mostoriginaldudes.codingsabubackend.dto.request.EditUserInfoRequestDto;
 import com.mostoriginaldudes.codingsabubackend.dto.response.EditUserInfoResponseDto;
 import com.mostoriginaldudes.codingsabubackend.respository.UserRepository;
-import com.mostoriginaldudes.codingsabubackend.util.auth.Security;
+import com.mostoriginaldudes.codingsabubackend.auth.Security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

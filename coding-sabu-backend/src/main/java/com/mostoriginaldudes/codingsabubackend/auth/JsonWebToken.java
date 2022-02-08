@@ -1,4 +1,4 @@
-package com.mostoriginaldudes.codingsabubackend.util.auth;
+package com.mostoriginaldudes.codingsabubackend.auth;
 
 import com.mostoriginaldudes.codingsabubackend.dto.response.LoginResponseDto;
 import io.jsonwebtoken.*;
