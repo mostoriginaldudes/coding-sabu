@@ -67,7 +67,7 @@ public class UserController {
 
   @PatchMapping("/profile")
   public ResponseEntity<String> uploadProfileImage (
-      @RequestParam MultipartFile multipartFile,
+      @RequestParam MultipartFile userProfile,
       @RequestHeader Map<String, Object> requestHeader
   ) {
     if(!requestHeader.containsKey(AUTHORIZATION_HEADER)) {
@@ -79,7 +79,7 @@ public class UserController {
     String token = (String) requestHeader.get(AUTHORIZATION_HEADER);
     UserDto user = authService.getLoggedInUserInfo(token);
 
-    String profileImageUrl = userService.uploadProfileImage(multipartFile);
+    String profileImageUrl = userService.uploadProfileImage(userProfile);
     userService.updateProfileImagePath(user.getId(), profileImageUrl);
 
     return ResponseEntity

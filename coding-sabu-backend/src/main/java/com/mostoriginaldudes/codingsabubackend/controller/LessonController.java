@@ -1,6 +1,5 @@
 package com.mostoriginaldudes.codingsabubackend.controller;
 
-import com.mostoriginaldudes.codingsabubackend.dto.LessonDto;
 import com.mostoriginaldudes.codingsabubackend.dto.UserDto;
 import com.mostoriginaldudes.codingsabubackend.dto.request.LessonRequestDto;
 import com.mostoriginaldudes.codingsabubackend.dto.request.RegisterLessonRequestDto;

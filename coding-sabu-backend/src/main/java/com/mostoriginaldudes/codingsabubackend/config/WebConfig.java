@@ -14,7 +14,7 @@ public class WebConfig implements WebMvcConfigurer {
   private String allowCorsUrl;
 
   @Value("${file.upload.location}")
-  private String imagePath;
+  private String location;
 
   @Override
   public void addCorsMappings(CorsRegistry registry) {
@@ -27,7 +27,7 @@ public class WebConfig implements WebMvcConfigurer {
   @Override
   public void addResourceHandlers(ResourceHandlerRegistry registry) {
     registry.addResourceHandler("/static/images/**")
-      .addResourceLocations("file:///" + imagePath)
+      .addResourceLocations("file:///" + location)
       .setCachePeriod(3600)
       .resourceChain(true)
       .addResolver(new PathResourceResolver());

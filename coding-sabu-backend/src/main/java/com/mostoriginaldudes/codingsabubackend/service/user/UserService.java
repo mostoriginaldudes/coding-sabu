@@ -9,6 +9,6 @@ public interface UserService {
   EditUserInfoResponseDto editUserInfo(EditUserInfoRequestDto requestDto);
   UserDto getUserInfo(int id);
   String uploadProfileImage(MultipartFile profileImage);
-  String updateProfileImagePath(int id, String profileImagePath);
+  void updateProfileImagePath(int id, String profileImagePath);
   UserDto getTeacherInfo(String nickname);
 }

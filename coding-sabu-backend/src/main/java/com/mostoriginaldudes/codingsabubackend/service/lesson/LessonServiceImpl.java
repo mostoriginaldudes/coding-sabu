@@ -73,7 +73,8 @@ public class LessonServiceImpl implements LessonService {
   public String uploadLessonThumbnail(MultipartFile lessonThumbnail) {
     String imageFileName = lessonThumbnail.getOriginalFilename();
     String imagePath = UUID.randomUUID() + imageFileName;
-    String imageRealFilePath = fileUploadConfig.getLocation() + imagePath;
+    String imageRealFilePath = fileUploadConfig.getThumbnailLocation() + imagePath;
+    String imageUrl = fileUploadConfig.getThumbnailUrl() + imagePath;
 
     try {
       FileOutputStream fileOutputStream = new FileOutputStream(imageRealFilePath);
@@ -89,7 +90,7 @@ public class LessonServiceImpl implements LessonService {
       fileOutputStream.close();
       inputStream.close();
 
-      return "/static/images/" + imagePath;
+      return imageUrl;
 
     } catch(Exception e) {
       throw new RuntimeException("파일 업로드 에러 발생");
