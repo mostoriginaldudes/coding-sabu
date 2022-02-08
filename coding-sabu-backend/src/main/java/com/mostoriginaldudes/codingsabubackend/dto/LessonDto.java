@@ -7,9 +7,10 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Getter
 @NoArgsConstructor
+@Getter
 public class LessonDto {
+
   @Setter
   private int id;
   private int teacherId;

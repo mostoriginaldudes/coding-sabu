@@ -18,10 +18,11 @@ import java.util.Map;
 
 import static com.mostoriginaldudes.codingsabubackend.util.constant.Constant.AUTHORIZATION_HEADER;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/user")
-@RequiredArgsConstructor
 public class UserController {
+
   private final UserService userService;
   private final AuthService authService;
   private final LessonService lessonService;

@@ -7,8 +7,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository
 @Mapper
+@Repository
 public interface LessonRepository {
   List<LessonDto> getAllLessons(int page);
   LessonDto getLessonById(int id);

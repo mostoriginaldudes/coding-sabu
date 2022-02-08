@@ -3,8 +3,8 @@ package com.mostoriginaldudes.codingsabubackend.dto.request;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter
 @NoArgsConstructor
+@Getter
 public class LessonNoticeRequestDto {
   private String lessonNoticeArticle;
 }

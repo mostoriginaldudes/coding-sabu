@@ -14,9 +14,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 
-@Service
 @RequiredArgsConstructor
+@Service
 public class UserServiceImpl implements UserService {
+  
   private final UserRepository userRepository;
 
   @Value("${server.asset.img}")

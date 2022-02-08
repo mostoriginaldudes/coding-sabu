@@ -5,8 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 public class LessonNoticeResponseDto {
   private final int id;

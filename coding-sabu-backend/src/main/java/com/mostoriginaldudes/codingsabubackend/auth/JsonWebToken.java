@@ -15,6 +15,7 @@ import static com.mostoriginaldudes.codingsabubackend.util.constant.Constant.TOK
 
 @Component
 public class JsonWebToken {
+
   @Value("${spring.jwt.secret}")
   private String key;
   private SecretKey secretKey;

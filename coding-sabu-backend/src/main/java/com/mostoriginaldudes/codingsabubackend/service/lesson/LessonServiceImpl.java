@@ -17,9 +17,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-@Service
 @RequiredArgsConstructor
+@Service
 public class LessonServiceImpl implements LessonService {
+
   private final LessonRepository lessonRepository;
   private final FileUploadConfig fileUploadConfig;
 

@@ -7,9 +7,9 @@ import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@Getter
 @Builder
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+@Getter
 public class LessonResponseDto {
   private final int id;
   private final int teacherId;

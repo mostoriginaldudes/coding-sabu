@@ -5,8 +5,8 @@ import com.mostoriginaldudes.codingsabubackend.dto.request.EditUserInfoRequestDt
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
-@Repository
 @Mapper
+@Repository
 public interface UserRepository {
   UserDto getUserInfoById(int id);
   void editUserInfo(EditUserInfoRequestDto editUserInfoRequest);

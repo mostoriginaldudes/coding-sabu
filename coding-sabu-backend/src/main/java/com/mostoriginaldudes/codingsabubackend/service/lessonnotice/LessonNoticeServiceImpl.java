@@ -13,8 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
 public class LessonNoticeServiceImpl implements LessonNoticeService {
 
   private final LessonNoticeRepository lessonNoticeRepository;

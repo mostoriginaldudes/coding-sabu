@@ -3,7 +3,8 @@ package com.mostoriginaldudes.codingsabubackend.dto;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter @Setter
+@Setter
+@Getter
 public class UserDto {
   private int id;
   private String email;

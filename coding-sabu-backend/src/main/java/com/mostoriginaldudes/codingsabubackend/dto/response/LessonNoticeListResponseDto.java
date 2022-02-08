@@ -6,8 +6,8 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
-@Getter
 @RequiredArgsConstructor
+@Getter
 public class LessonNoticeListResponseDto {
   private final List<LessonNoticeDto> lessonNotices;
 }

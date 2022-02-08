@@ -3,8 +3,8 @@ package com.mostoriginaldudes.codingsabubackend.dto.request;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@Getter
 @AllArgsConstructor
+@Getter
 public class SignupRequestDto {
   private int id;
   private String email;

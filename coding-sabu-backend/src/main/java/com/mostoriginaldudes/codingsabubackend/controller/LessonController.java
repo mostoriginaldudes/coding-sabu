@@ -17,10 +17,11 @@ import java.util.Map;
 
 import static com.mostoriginaldudes.codingsabubackend.util.constant.Constant.AUTHORIZATION_HEADER;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/lesson")
-@RequiredArgsConstructor
 public class LessonController {
+
   private final LessonService lessonService;
   private final AuthService authService;
 

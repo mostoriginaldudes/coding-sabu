@@ -17,6 +17,7 @@ import static com.mostoriginaldudes.codingsabubackend.util.constant.Constant.AUT
 @RestController
 @RequestMapping("/lesson/{lessonId}/notice")
 public class LessonNoticeController {
+
   private final AuthService authService;
   private final LessonNoticeService lessonNoticeService;
 
