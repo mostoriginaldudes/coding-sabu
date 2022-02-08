@@ -94,4 +94,10 @@
     WHERE lesson.id = #{lessonId}
     AND lesson.teacher_id = #{teacherId}
   </select>
+
+  <select id="getStudentCount" resultType="_integer">
+    SELECT COUNT(*) AS student_count
+     FROM lesson_student
+     WHERE lesson_id = #{lessonId}
+  </select>
 </mapper>

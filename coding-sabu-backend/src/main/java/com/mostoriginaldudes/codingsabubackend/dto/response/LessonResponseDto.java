@@ -12,11 +12,12 @@ import java.time.LocalDateTime;
 @Getter
 public class LessonResponseDto {
   private final int id;
-  private final int teacherId;
+  private final String teacherName;
   private final String title;
   private final String description;
   private final int price;
   private final LocalDateTime createdAt;
   private final LocalDateTime terminatedAt;
   private final String thumbnailUrl;
+  private final int studentCount;
 }
