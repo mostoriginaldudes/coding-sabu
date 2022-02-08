@@ -42,7 +42,9 @@ public class LessonController {
     LessonResponseDto responseDto = lessonService.getLesson(lessonId);
 
     if(responseDto == null) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+      return ResponseEntity
+        .status(HttpStatus.NOT_FOUND)
+        .body(null);
     }
     return ResponseEntity.ok(responseDto);
   }
