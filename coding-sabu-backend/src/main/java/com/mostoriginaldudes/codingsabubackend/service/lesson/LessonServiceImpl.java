@@ -4,6 +4,7 @@ import com.mostoriginaldudes.codingsabubackend.config.FileUploadConfig;
 import com.mostoriginaldudes.codingsabubackend.dto.LessonDto;
 import com.mostoriginaldudes.codingsabubackend.dto.UserDto;
 import com.mostoriginaldudes.codingsabubackend.dto.request.LessonRequestDto;
+import com.mostoriginaldudes.codingsabubackend.dto.response.LessonListResponseDto;
 import com.mostoriginaldudes.codingsabubackend.dto.response.LessonResponseDto;
 import com.mostoriginaldudes.codingsabubackend.respository.LessonRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +26,8 @@ public class LessonServiceImpl implements LessonService {
   private final FileUploadConfig fileUploadConfig;
 
   @Override
-  public List<LessonDto> getAllLessons(int page) {
-    return lessonRepository.getAllLessons(page);
+  public LessonListResponseDto getAllLessons(int page) {
+     return new LessonListResponseDto(lessonRepository.getAllLessons(page));
   }
 
   @Override
@@ -108,8 +109,8 @@ public class LessonServiceImpl implements LessonService {
   }
 
   @Override
-  public List<LessonDto> getMyLessons(int userId) {
-    return lessonRepository.getMyLessonsByUserId(userId);
+  public LessonListResponseDto getMyLessons(int userId) {
+    return new LessonListResponseDto(lessonRepository.getMyLessonsByUserId(userId));
   }
 
   @Override

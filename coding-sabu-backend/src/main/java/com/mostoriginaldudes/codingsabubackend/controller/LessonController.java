@@ -4,6 +4,7 @@ import com.mostoriginaldudes.codingsabubackend.dto.LessonDto;
 import com.mostoriginaldudes.codingsabubackend.dto.UserDto;
 import com.mostoriginaldudes.codingsabubackend.dto.request.LessonRequestDto;
 import com.mostoriginaldudes.codingsabubackend.dto.request.RegisterLessonRequestDto;
+import com.mostoriginaldudes.codingsabubackend.dto.response.LessonListResponseDto;
 import com.mostoriginaldudes.codingsabubackend.dto.response.LessonResponseDto;
 import com.mostoriginaldudes.codingsabubackend.service.auth.AuthService;
 import com.mostoriginaldudes.codingsabubackend.service.lesson.LessonService;
@@ -26,14 +27,14 @@ public class LessonController {
   private final AuthService authService;
 
   @GetMapping("/all")
-  public ResponseEntity<List<LessonDto>> allLessons(@RequestParam(required = false, defaultValue = "0") int page) {
-    List<LessonDto> lessons = lessonService.getAllLessons(page);
-    if(lessons.isEmpty()) {
+  public ResponseEntity<LessonListResponseDto> allLessons(@RequestParam(required = false, defaultValue = "0") int page) {
+    LessonListResponseDto responseDto = lessonService.getAllLessons(page);
+    if(responseDto.getLessons().isEmpty()) {
       return ResponseEntity
         .status(HttpStatus.NO_CONTENT)
-        .body(lessons);
+        .body(responseDto);
     }
-    return ResponseEntity.ok(lessons);
+    return ResponseEntity.ok(responseDto);
   }
 
   @GetMapping("/{lessonId}")
@@ -83,11 +84,11 @@ public class LessonController {
         .body(null);
     }
 
-    LessonResponseDto lessonResponseDto = lessonService.registerLesson(lessonId, requestDto.getStudentId());
+    LessonResponseDto responseDto = lessonService.registerLesson(lessonId, requestDto.getStudentId());
 
     return ResponseEntity
       .status(HttpStatus.CREATED)
-      .body(lessonResponseDto);
+      .body(responseDto);
   }
 
   @GetMapping("/{lessonId}/students")

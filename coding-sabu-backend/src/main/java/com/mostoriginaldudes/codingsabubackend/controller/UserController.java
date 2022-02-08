@@ -1,9 +1,9 @@
 package com.mostoriginaldudes.codingsabubackend.controller;
 
-import com.mostoriginaldudes.codingsabubackend.dto.LessonDto;
 import com.mostoriginaldudes.codingsabubackend.dto.UserDto;
 import com.mostoriginaldudes.codingsabubackend.dto.request.EditUserInfoRequestDto;
 import com.mostoriginaldudes.codingsabubackend.dto.response.EditUserInfoResponseDto;
+import com.mostoriginaldudes.codingsabubackend.dto.response.LessonListResponseDto;
 import com.mostoriginaldudes.codingsabubackend.service.auth.AuthService;
 import com.mostoriginaldudes.codingsabubackend.service.lesson.LessonService;
 import com.mostoriginaldudes.codingsabubackend.service.user.UserService;
@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
 import java.util.Map;
 
 import static com.mostoriginaldudes.codingsabubackend.util.constant.Constant.AUTHORIZATION_HEADER;
@@ -110,7 +109,7 @@ public class UserController {
   }
 
   @GetMapping("/{userId}/lessons")
-  public ResponseEntity<List<LessonDto>> myLessons (
+  public ResponseEntity<LessonListResponseDto> myLessons (
     @RequestHeader Map<String, Object> requestHeader,
     @PathVariable int userId
   ) {
@@ -120,14 +119,14 @@ public class UserController {
         .body(null);
     }
 
-    List<LessonDto> lessons = lessonService.getMyLessons(userId);
+    LessonListResponseDto responseDto = lessonService.getMyLessons(userId);
 
-    if(lessons.isEmpty()) {
+    if(responseDto.getLessons().isEmpty()) {
       return ResponseEntity
         .status(HttpStatus.NO_CONTENT)
-        .body(lessons);
+        .body(responseDto);
     }
 
-    return ResponseEntity.ok(lessons);
+    return ResponseEntity.ok(responseDto);
   }
 }
