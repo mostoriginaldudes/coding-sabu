@@ -67,8 +67,8 @@ public class UserController {
 
   @PatchMapping("/profile")
   public ResponseEntity<String> uploadProfileImage (
-      @RequestParam MultipartFile userProfile,
-      @RequestHeader Map<String, Object> requestHeader
+      @RequestHeader Map<String, Object> requestHeader,
+      @RequestParam MultipartFile userProfile
   ) {
     if(!requestHeader.containsKey(AUTHORIZATION_HEADER)) {
       return ResponseEntity
@@ -110,8 +110,8 @@ public class UserController {
 
   @GetMapping("/{userId}/lessons")
   public ResponseEntity<LessonListResponseDto> myLessons (
-    @RequestHeader Map<String, Object> requestHeader,
-    @PathVariable int userId
+    @PathVariable int userId,
+    @RequestHeader Map<String, Object> requestHeader
   ) {
     if (!requestHeader.containsKey(AUTHORIZATION_HEADER)) {
       return ResponseEntity
