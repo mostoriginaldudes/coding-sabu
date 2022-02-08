@@ -134,12 +134,14 @@ const LessonForm: FC = () => {
             <Input
               name="title"
               label="수련 이름"
+              placeholder="수련 제목을 입력해주세요."
               value={state.title}
               onChange={onChange}
             />
             <Input
               name="price"
               label="수련 가치"
+              placeholder="수련 가격을 입력해주세요."
               value={state.price}
               onChange={onChange}
             />
