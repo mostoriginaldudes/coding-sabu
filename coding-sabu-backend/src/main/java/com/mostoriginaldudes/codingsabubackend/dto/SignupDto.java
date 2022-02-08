@@ -16,7 +16,14 @@ public class SignupDto {
   private final String description;
 
   @Builder
-  public SignupDto(String email, String password, String nickname, String userType, String phoneNum, String description) {
+  public SignupDto(
+    String email,
+    String password,
+    String nickname,
+    String userType,
+    String phoneNum,
+    String description
+  ) {
     this.email = email;
     this.password = password;
     this.nickname = nickname;
