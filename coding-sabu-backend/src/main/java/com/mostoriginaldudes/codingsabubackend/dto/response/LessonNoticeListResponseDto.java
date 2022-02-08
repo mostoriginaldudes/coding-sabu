@@ -4,10 +4,10 @@ import com.mostoriginaldudes.codingsabubackend.dto.LessonNoticeDto;
 
 import java.util.List;
 
-public class LessonNoticesResponseDto {
+public class LessonNoticeListResponseDto {
   private final List<LessonNoticeDto> lessonNotices;
 
-  public LessonNoticesResponseDto(List<LessonNoticeDto> lessonNotices) {
+  public LessonNoticeListResponseDto(List<LessonNoticeDto> lessonNotices) {
     this.lessonNotices = lessonNotices;
   }
 

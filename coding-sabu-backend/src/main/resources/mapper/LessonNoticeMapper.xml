@@ -10,7 +10,13 @@
     WHERE lesson_id = #{lessonId}
   </select>
 
-  <insert id="createLessonNotice" useGeneratedKeys="true" keyProperty="id" keyColumn="id" parameterType="LessonNoticeRequestDto">
+  <insert
+    id="createLessonNotice"
+    useGeneratedKeys="true"
+    keyProperty="id"
+    keyColumn="id"
+    parameterType="LessonNoticeRequestDto"
+  >
     INSERT INTO lesson_notice(
      id
      ,lesson_id

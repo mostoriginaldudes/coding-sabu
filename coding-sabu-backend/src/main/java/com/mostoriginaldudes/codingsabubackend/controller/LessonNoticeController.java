@@ -4,7 +4,7 @@ import com.mostoriginaldudes.codingsabubackend.dto.LessonNoticeDto;
 import com.mostoriginaldudes.codingsabubackend.dto.UserDto;
 import com.mostoriginaldudes.codingsabubackend.dto.request.LessonNoticeRequestDto;
 import com.mostoriginaldudes.codingsabubackend.dto.response.LessonNoticeResponseDto;
-import com.mostoriginaldudes.codingsabubackend.dto.response.LessonNoticesResponseDto;
+import com.mostoriginaldudes.codingsabubackend.dto.response.LessonNoticeListResponseDto;
 import com.mostoriginaldudes.codingsabubackend.service.auth.AuthService;
 import com.mostoriginaldudes.codingsabubackend.service.lessonnotice.LessonNoticeService;
 import org.springframework.http.HttpStatus;
@@ -28,7 +28,7 @@ public class LessonNoticeController {
   }
 
   @GetMapping
-  public ResponseEntity<LessonNoticesResponseDto> lessonNotice(@PathVariable int lessonId) {
+  public ResponseEntity<LessonNoticeListResponseDto> lessonNotice(@PathVariable int lessonId) {
     List<LessonNoticeDto> lessonNotices = lessonNoticeService.getLessonNotices(lessonId);
 
     if(lessonNotices.isEmpty()) {
@@ -37,14 +37,14 @@ public class LessonNoticeController {
         .body(null);
     }
 
-    return ResponseEntity.ok(new LessonNoticesResponseDto(lessonNotices));
+    return ResponseEntity.ok(new LessonNoticeListResponseDto(lessonNotices));
   }
 
   @PostMapping
   public ResponseEntity<LessonNoticeResponseDto> registerLessonNotice(
     @PathVariable int lessonId,
     @RequestHeader Map<String, Object> requestHeader,
-    @RequestBody LessonNoticeRequestDto lessonNoticeRequestDto
+    @RequestBody LessonNoticeRequestDto requestDto
     ) {
     if(!requestHeader.containsKey(AUTHORIZATION_HEADER)) {
       return ResponseEntity
@@ -61,10 +61,8 @@ public class LessonNoticeController {
         .body(null);
     }
 
-    LessonNoticeResponseDto lessonNoticeResponseDto = lessonNoticeService.createLessonNotice(lessonId, lessonNoticeRequestDto);
-
     return ResponseEntity
       .status(HttpStatus.CREATED)
-      .body(lessonNoticeResponseDto);
+      .body(lessonNoticeService.createLessonNotice(lessonId, requestDto));
   }
 }

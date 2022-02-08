@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface LessonNoticeService {
   List<LessonNoticeDto> getLessonNotices(int lessonId);
-  LessonNoticeResponseDto createLessonNotice(int lessonId, LessonNoticeRequestDto lessonNoticeRequestDto);
+  LessonNoticeResponseDto createLessonNotice(int lessonId, LessonNoticeRequestDto requestDto);
   boolean isMyLesson(int userId, int lessonId);
 }

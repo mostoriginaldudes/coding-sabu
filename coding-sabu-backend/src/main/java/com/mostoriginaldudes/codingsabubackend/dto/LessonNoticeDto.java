@@ -1,31 +1,22 @@
 package com.mostoriginaldudes.codingsabubackend.dto;
 
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@NoArgsConstructor
 public class LessonNoticeDto {
+  @Setter
   private int id;
   private int lessonId;
   private String lessonNoticeArticle;
 
-  public int getId() {
-    return id;
-  }
-
-  public void setId(int id) {
+  @Builder
+  public LessonNoticeDto(int id, int lessonId, String lessonNoticeArticle) {
     this.id = id;
-  }
-
-  public int getLessonId() {
-    return lessonId;
-  }
-
-  public void setLessonId(int lessonId) {
     this.lessonId = lessonId;
-  }
-
-  public String getLessonNoticeArticle() {
-    return lessonNoticeArticle;
-  }
-
-  public void setLessonNoticeArticle(String lessonNoticeArticle) {
     this.lessonNoticeArticle = lessonNoticeArticle;
   }
 }
