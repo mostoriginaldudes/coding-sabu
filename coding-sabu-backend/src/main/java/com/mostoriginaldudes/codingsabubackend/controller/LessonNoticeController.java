@@ -1,17 +1,15 @@
 package com.mostoriginaldudes.codingsabubackend.controller;
 
-import com.mostoriginaldudes.codingsabubackend.dto.LessonNoticeDto;
 import com.mostoriginaldudes.codingsabubackend.dto.UserDto;
 import com.mostoriginaldudes.codingsabubackend.dto.request.LessonNoticeRequestDto;
-import com.mostoriginaldudes.codingsabubackend.dto.response.LessonNoticeResponseDto;
 import com.mostoriginaldudes.codingsabubackend.dto.response.LessonNoticeListResponseDto;
+import com.mostoriginaldudes.codingsabubackend.dto.response.LessonNoticeResponseDto;
 import com.mostoriginaldudes.codingsabubackend.service.auth.AuthService;
 import com.mostoriginaldudes.codingsabubackend.service.lessonnotice.LessonNoticeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 import static com.mostoriginaldudes.codingsabubackend.util.constant.Constant.AUTHORIZATION_HEADER;
@@ -29,15 +27,15 @@ public class LessonNoticeController {
 
   @GetMapping
   public ResponseEntity<LessonNoticeListResponseDto> lessonNotice(@PathVariable int lessonId) {
-    List<LessonNoticeDto> lessonNotices = lessonNoticeService.getLessonNotices(lessonId);
+    LessonNoticeListResponseDto lessonNoticeResponse = lessonNoticeService.getLessonNotices(lessonId);
 
-    if(lessonNotices.isEmpty()) {
+    if(lessonNoticeResponse.getLessonNotices().isEmpty()) {
       return ResponseEntity
         .status(HttpStatus.NO_CONTENT)
         .body(null);
     }
 
-    return ResponseEntity.ok(new LessonNoticeListResponseDto(lessonNotices));
+    return ResponseEntity.ok(lessonNoticeResponse);
   }
 
   @PostMapping

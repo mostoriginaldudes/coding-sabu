@@ -1,6 +1,5 @@
 package com.mostoriginaldudes.codingsabubackend.dto.request;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

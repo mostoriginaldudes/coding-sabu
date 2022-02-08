@@ -3,6 +3,7 @@ package com.mostoriginaldudes.codingsabubackend.service.lessonnotice;
 import com.mostoriginaldudes.codingsabubackend.dto.LessonDto;
 import com.mostoriginaldudes.codingsabubackend.dto.LessonNoticeDto;
 import com.mostoriginaldudes.codingsabubackend.dto.request.LessonNoticeRequestDto;
+import com.mostoriginaldudes.codingsabubackend.dto.response.LessonNoticeListResponseDto;
 import com.mostoriginaldudes.codingsabubackend.dto.response.LessonNoticeResponseDto;
 import com.mostoriginaldudes.codingsabubackend.respository.LessonNoticeRepository;
 import com.mostoriginaldudes.codingsabubackend.respository.LessonRepository;
@@ -15,12 +16,14 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class LessonNoticeServiceImpl implements LessonNoticeService {
+
   private final LessonNoticeRepository lessonNoticeRepository;
   private final LessonRepository lessonRepository;
 
   @Override
-  public List<LessonNoticeDto> getLessonNotices(int lessonId) {
-    return lessonNoticeRepository.getLessonNoticeByLessonId(lessonId);
+  public LessonNoticeListResponseDto getLessonNotices(int lessonId) {
+    List<LessonNoticeDto> lessonNotice = lessonNoticeRepository.getLessonNoticeByLessonId(lessonId);
+    return new LessonNoticeListResponseDto(lessonNotice);
   }
 
   @Override
