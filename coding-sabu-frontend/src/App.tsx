@@ -15,7 +15,6 @@ import LessonForm from 'pages/LessonForm';
 
 const Main = styled.main`
   width: calc(100% - 2rem);
-  height: calc(100vh - 8em);
   max-width: ${sizes.desktop}px;
   margin: ${sizes.unitBig / 8}em auto 0;
 `;
