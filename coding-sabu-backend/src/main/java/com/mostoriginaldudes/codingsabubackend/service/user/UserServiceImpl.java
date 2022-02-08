@@ -1,5 +1,6 @@
 package com.mostoriginaldudes.codingsabubackend.service.user;
 
+import com.mostoriginaldudes.codingsabubackend.dto.EditUserInfoDto;
 import com.mostoriginaldudes.codingsabubackend.dto.UserDto;
 import com.mostoriginaldudes.codingsabubackend.dto.request.EditUserInfoRequestDto;
 import com.mostoriginaldudes.codingsabubackend.dto.response.EditUserInfoResponseDto;
@@ -17,7 +18,7 @@ import java.io.InputStream;
 @RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
-  
+
   private final UserRepository userRepository;
 
   @Value("${server.asset.img}")
@@ -25,12 +26,22 @@ public class UserServiceImpl implements UserService {
 
   @Override
   @Transactional
-  public EditUserInfoResponseDto editUserInfo(EditUserInfoRequestDto editUserInfoRequest) {
-    String encryptedPassword = Security.encrypt(editUserInfoRequest.getPassword());
-    editUserInfoRequest.setPassword(encryptedPassword);
-    userRepository.editUserInfo(editUserInfoRequest);
+  public EditUserInfoResponseDto editUserInfo(EditUserInfoRequestDto requestDto) {
+    String encryptedPassword = Security.encrypt(requestDto.getPassword());
 
-    UserDto user = getUserInfo(editUserInfoRequest.getId());
+    EditUserInfoDto editUserInfoDto = EditUserInfoDto.builder()
+      .id(requestDto.getId())
+      .password(encryptedPassword)
+      .nickname(requestDto.getNickname())
+      .phoneNum(requestDto.getPhoneNum())
+      .description(requestDto.getDescription())
+      .profileImage(requestDto.getProfileImage())
+      .build();
+
+    userRepository.editUserInfo(editUserInfoDto);
+
+    UserDto user = getUserInfo(editUserInfoDto.getId());
+
     return EditUserInfoResponseDto.builder()
       .id(user.getId())
       .email(user.getEmail())

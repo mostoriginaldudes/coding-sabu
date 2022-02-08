@@ -6,7 +6,7 @@ import com.mostoriginaldudes.codingsabubackend.dto.response.EditUserInfoResponse
 import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {
-  EditUserInfoResponseDto editUserInfo(EditUserInfoRequestDto editUserInfoRequest);
+  EditUserInfoResponseDto editUserInfo(EditUserInfoRequestDto requestDto);
   UserDto getUserInfo(int id);
   String uploadProfileImage(MultipartFile profileImage);
   String updateProfileImagePath(int id, String profileImagePath);
