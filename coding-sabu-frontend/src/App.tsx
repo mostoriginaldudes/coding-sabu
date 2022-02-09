@@ -12,6 +12,7 @@ import HeadUpDisplay from 'components/HeadUpDisplay';
 import MyTeachingLessons from 'pages/MyTeachingLessons';
 import MyJoiningLessons from 'pages/MyJoiningLessons';
 import LessonForm from 'pages/LessonForm';
+import LessonDetail from 'pages/LessonDetail';
 
 const Main = styled.main`
   width: calc(100% - 2rem);
@@ -28,18 +29,11 @@ const App: FC = () => {
         <Main>
           <HeadUpDisplay />
           <Switch>
-            <Route path="/" exact>
-              <Home />
-            </Route>
-            <Route path="/mylesson">
-              <MyJoiningLessons />
-            </Route>
-            <Route path="/myteaching">
-              <MyTeachingLessons />
-            </Route>
-            <Route path="/lesson/form">
-              <LessonForm />
-            </Route>
+            <Route path="/" component={Home} exact />
+            <Route path="/mylesson" component={MyJoiningLessons} />
+            <Route path="/myteaching" component={MyTeachingLessons} />
+            <Route path="/lesson/form" component={LessonForm} />
+            <Route path="/lesson/:id" component={LessonDetail} />
           </Switch>
         </Main>
       </Router>
