@@ -7,7 +7,7 @@ import { createActionInvisibleHud, State as UIState } from 'store/ui';
 import success from 'assets/images/success.svg';
 import fail from 'assets/images/fail.svg';
 import useTimeout from 'hooks/useTimeout';
-import { getModalRoot } from 'utils/utils';
+import { getModalRoot } from 'utils';
 import { flexCenter, positionFixed } from 'styles/module';
 
 const size = 160;

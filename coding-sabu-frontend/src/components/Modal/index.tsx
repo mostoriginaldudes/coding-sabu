@@ -1,10 +1,10 @@
 import { FC, useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { getModalRoot } from '../../utils/utils';
+import { getModalRoot } from 'utils';
 import { HiX } from 'react-icons/hi';
 import styled from '@emotion/styled';
-import { sizes, colors, media } from '../../styles/theme';
-import { flexCenter, positionFixed } from '../../styles/module';
+import { sizes, colors, media } from 'styles/theme';
+import { flexCenter, positionFixed } from 'styles/module';
 
 const modalMaskZIndex = 3;
 const ModalMask = styled.div`
