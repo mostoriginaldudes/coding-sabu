@@ -31,13 +31,13 @@ const LessonContainer = styled.div`
   `}
 `;
 
-const Thumbnail = styled.section<{ lessonThumbnailPath: string }>`
+const Thumbnail = styled.section<{ thumbnailUrl: string }>`
   width: 100%;
   height: ${thumbnailHeight}px;
-  background-image: url(${({ lessonThumbnailPath }) => lessonThumbnailPath});
+  background-image: url(${({ thumbnailUrl }) => thumbnailUrl});
   background-position: center;
   background-repeat: no-repeat;
-  background-size: cover;
+  background-size: auto;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
 
@@ -106,36 +106,26 @@ const EmphasisText = styled.div`
   font-weight: bold;
 `;
 
-export interface Props {
-  lessonId: number;
-  lessonThumbnailPath: string;
-  lessonTitle: string;
-  lessonDescription: string;
-  teacher: string;
-  studentCount: number;
-  lessonPrice: number;
-}
-
 const LessonItem: FC<Lesson> = ({
-  lessonThumbnailPath,
-  lessonTitle,
-  lessonDescription,
-  teacher,
-  studentCount,
-  lessonPrice
+  teacherName,
+  title,
+  description,
+  price,
+  thumbnailUrl,
+  studentCount
 }) => {
   return (
     <LessonContainer>
       <Thumbnail thumbnailUrl={concatHostToImagePath(thumbnailUrl)} />
       <LessonInfo>
         <LessonHeader>
-          <LessonTitle>{lessonTitle}</LessonTitle>
-          <TeacherName>{teacher}</TeacherName>
+          <LessonTitle>{title}</LessonTitle>
+          <TeacherName>{teacherName}</TeacherName>
         </LessonHeader>
-        <Description>{lessonDescription}</Description>
+        <Description>{description}</Description>
         <LessonFooter>
           <EmpahsisBlock>{studentCount}명</EmpahsisBlock>
-          <EmphasisText>{lessonPrice.toLocaleString()}원</EmphasisText>
+          <EmphasisText>{price.toLocaleString()}원</EmphasisText>
         </LessonFooter>
       </LessonInfo>
     </LessonContainer>

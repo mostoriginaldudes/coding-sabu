@@ -33,7 +33,7 @@ interface Props extends RouteComponentProps {
 }
 
 const LessonList: FC<Props> = ({ history, lessons }) => {
-  const pickOneLesson = (lessonId: Lesson['lessonId']) => {
+  const pickOneLesson = (lessonId: Lesson['id']) => {
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
     history.push(`/lesson/${lessonId}`);
   };
@@ -44,7 +44,7 @@ const LessonList: FC<Props> = ({ history, lessons }) => {
         {lessons.map((lesson, index) => (
           <LessonListElement
             key={index}
-            onClick={() => pickOneLesson(lesson.lessonId)}
+            onClick={() => pickOneLesson(lesson.id)}
           >
             <LessonItem {...lesson} />
           </LessonListElement>
