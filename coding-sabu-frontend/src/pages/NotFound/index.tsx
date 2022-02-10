@@ -1,9 +1,9 @@
-import { FC, useCallback } from 'react';
-import { useHistory } from 'react-router-dom';
+import { FC } from 'react';
 import styled from '@emotion/styled';
 import codingSabuAlert from 'assets/images/coding-sabu-alert.png';
 import { colors } from 'styles/theme';
 import Button from 'components/Button';
+import useRouting from 'hooks/useRouting';
 
 const Container = styled.div`
   width: 100%;
@@ -24,20 +24,14 @@ const ButtonToBack = styled(Button)`
 `;
 
 const NotFound: FC = () => {
-  const history = useHistory();
-  const backToPreviousPage = useCallback(() => history.goBack(), [history]);
+  const { back } = useRouting();
 
   return (
     <Container>
       <h2>요청하신 컨텐츠가 없습니다.</h2>
       <h4>올바른 컨텐츠를 요청해주세요.</h4>
       <img src={codingSabuAlert} alt="Not Found" />
-      <ButtonToBack
-        color="yellow"
-        radius={5}
-        height={3}
-        onClick={backToPreviousPage}
-      >
+      <ButtonToBack color="yellow" radius={5} height={3} onClick={back}>
         뒤로가기
       </ButtonToBack>
     </Container>

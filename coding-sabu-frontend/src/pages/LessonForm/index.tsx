@@ -8,38 +8,29 @@ import {
   SyntheticEvent,
   useMemo
 } from 'react';
-import { useHistory } from 'react-router-dom';
 import styled from '@emotion/styled';
-import UnderlineTitle from 'styles/UnderlineTitle';
 import Input from 'components/Input';
 import Editor from 'components/Editor';
 import Button from 'components/Button';
+import UnderlineTitle from 'styles/UnderlineTitle';
+import Row from 'styles/Row';
 import { FlexCol, flexCenter } from 'styles/module';
-import { colors } from 'styles/theme';
+import { colors, media } from 'styles/theme';
 import { LessonFormAction as Action } from 'types';
+import useRouting from 'hooks/useRouting';
 
 const Form = styled.form`
   ${flexCenter}
   flex-direction: column;
 `;
 
-const Row = styled.div`
-  ${flexCenter}
-  justify-content: space-between;
-  width: 100%;
-  margin: 1em 0;
-  & > div {
-    width: 100%;
-  }
-  & > button {
-    width: 45%;
-  }
-`;
-
 const InputContainer = styled(FlexCol)`
   width: 45%;
   height: 100%;
   margin-right: 5%;
+  ${media.tablet`
+    margin-right: 0;
+  `}
 `;
 
 const ThumbnailContainer = styled.div<LessonThumbnail>`
@@ -96,9 +87,9 @@ const reducer: Reducer<State, Action> = (state, action) => {
 };
 
 const LessonForm: FC = () => {
-  const history = useHistory();
   const [imgUrl, setImageUrl] = useState<string>('');
   const hasBeenUploaded = useMemo(() => imgUrl === '', [imgUrl]);
+  const { back } = useRouting();
 
   const [state, dispatch] = useReducer(reducer, {
     title: '',
@@ -121,18 +112,11 @@ const LessonForm: FC = () => {
     [state]
   );
 
-  const uploadThumbnail = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files![0];
-      const lessonImageUrl = URL.createObjectURL(file);
-      setImageUrl(lessonImageUrl);
-    },
-    [setImageUrl]
-  );
-
-  const backToPreviousPage = useCallback(() => {
-    history.goBack();
-  }, [history]);
+  const uploadThumbnail = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files![0];
+    const lessonImageUrl = URL.createObjectURL(file);
+    setImageUrl(lessonImageUrl);
+  };
 
   return (
     <div>
@@ -186,7 +170,7 @@ const LessonForm: FC = () => {
             color="white"
             radius={5}
             height={3}
-            onClick={backToPreviousPage}
+            onClick={back}
           >
             취소
           </Button>

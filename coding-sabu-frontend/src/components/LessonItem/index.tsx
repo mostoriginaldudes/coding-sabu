@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import { flexCenter } from 'styles/module';
 import { colors, media } from '../../styles/theme';
 import { Lesson } from 'types';
+import { concatHostToImagePath } from 'utils';
 
 const width = 200;
 const height = 300;
@@ -125,7 +126,7 @@ const LessonItem: FC<Lesson> = ({
 }) => {
   return (
     <LessonContainer>
-      <Thumbnail lessonThumbnailPath={lessonThumbnailPath} />
+      <Thumbnail thumbnailUrl={concatHostToImagePath(thumbnailUrl)} />
       <LessonInfo>
         <LessonHeader>
           <LessonTitle>{lessonTitle}</LessonTitle>
