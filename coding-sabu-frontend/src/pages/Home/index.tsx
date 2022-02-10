@@ -6,9 +6,10 @@ import { State as Lessons, createActionFetchLessons } from 'store/lesson';
 import { Lesson } from 'types';
 import { RootState } from 'store';
 import UnderlineTitle from 'styles/UnderlineTitle';
+import Loader from 'styles/Loader';
 
 const Home: FC = () => {
-  const { lessons } = useSelector<RootState, Lessons>(state => state.lesson);
+  const { loading, data } = useFetchLessonList();
   const dispatch = useDispatch();
 
   const dispatchLessons = useCallback(
@@ -27,7 +28,7 @@ const Home: FC = () => {
 
   return (
     <div>
-      <LessonDisplay lessons={lessonsArray} />
+      {loading && <Loader loading={loading} />}
       <UnderlineTitle title="수련 목록" />
       <LessonList lessons={lessonsArray} />
     </div>
