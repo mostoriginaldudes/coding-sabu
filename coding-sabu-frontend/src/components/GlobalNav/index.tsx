@@ -1,4 +1,4 @@
-import { useState, useCallback, FC } from 'react';
+import { useState, useCallback, FC, MouseEventHandler } from 'react';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 import { Link } from 'react-router-dom';
@@ -76,7 +76,7 @@ const ButtonToMyClass = styled(Button)`
 const GlobalNav: FC = () => {
   const [visibleUserMenu, setVisibleUserMenu] = useState<boolean>(false);
 
-  const toggleUserMenu = useCallback(
+  const toggleUserMenu = useCallback<MouseEventHandler<HTMLDivElement>>(
     e => {
       e.stopPropagation();
       setVisibleUserMenu(!visibleUserMenu);
