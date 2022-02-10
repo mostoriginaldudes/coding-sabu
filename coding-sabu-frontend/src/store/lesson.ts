@@ -1,7 +1,7 @@
 import { ThunkAsyncState } from '.';
 import { ThunkAction } from 'redux-thunk';
 import { Lesson } from 'types';
-import { fetchLessons } from 'apis';
+import { fetchLessonList } from 'apis';
 
 // constants
 const FETCH_LESSONS = 'lesson/FETCH_LESSONS' as const;
@@ -32,8 +32,8 @@ export const createActionFetchLessons =
   (): FetchLessonsThunkAction => async dispatch => {
     dispatch({ type: FETCH_LESSONS });
     try {
-      const lessons = await fetchLessons();
-      dispatch({ type: FETCH_LESSONS_SUCCESS, payload: lessons.data });
+      const data = await fetchLessonList();
+      dispatch({ type: FETCH_LESSONS_SUCCESS, payload: data.lessons });
     } catch (error) {
       dispatch({ type: FETCH_LESSONS_FAIL, payload: error as Error });
     }
@@ -43,8 +43,8 @@ export const createActionFetchMyLessons =
   (): FetchLessonsThunkAction => async dispatch => {
     dispatch({ type: FETCH_MY_LESSONS });
     try {
-      const mylessons = await fetchLessons();
-      dispatch({ type: FETCH_MY_LESSONS_SUCCESS, payload: mylessons.data });
+      const data = await fetchLessonList();
+      dispatch({ type: FETCH_MY_LESSONS_SUCCESS, payload: data.lessons });
     } catch (error) {
       dispatch({ type: FETCH_MY_LESSONS_FAIL, payload: error as Error });
     }
