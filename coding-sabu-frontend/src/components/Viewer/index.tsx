@@ -1,24 +1,19 @@
-import { FC } from 'react';
+import { FC, useEffect, useRef } from 'react';
 import { Viewer as ToastViewer } from '@toast-ui/react-editor';
-import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight';
-import colorSyntax from '@toast-ui/editor-plugin-color-syntax';
-import Prism from 'prismjs';
-import '@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-syntax.css';
-import '@toast-ui/editor/dist/toastui-editor.css';
-import '@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight.css';
-import 'prismjs/themes/prism.css';
 
 interface Props {
-  initialValue: string;
+  description: string;
 }
 
-const Viewer: FC<Props> = ({ initialValue }) => {
-  return (
-    <ToastViewer
-      initialValue={initialValue}
-      plugins={[colorSyntax, [codeSyntaxHighlight, { highlighter: Prism }]]}
-    />
-  );
+const Viewer: FC<Props> = ({ description }) => {
+  const toastViewerRef = useRef<ToastViewer>(null);
+
+  useEffect(() => {
+    const currentViewerRef = toastViewerRef.current;
+    return () => void currentViewerRef?.getInstance().destroy();
+  }, [toastViewerRef, description]);
+
+  return <ToastViewer initialValue={description} />;
 };
 
 export default Viewer;
