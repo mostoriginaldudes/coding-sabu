@@ -12,3 +12,6 @@ export const getModalRoot = () => {
 
   return attachModalRootElementToDom(createModalRootElement());
 };
+
+export const concatHostToImagePath = (path?: string) =>
+  `${process.env.REACT_APP_BASE_URL}${path}`;
