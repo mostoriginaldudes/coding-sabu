@@ -11,18 +11,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/auth")
-@RequiredArgsConstructor
 public class AuthController {
+
   private final AuthService authService;
 
   @PostMapping("/login")
-  public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequest) {
-    LoginResponseDto loginResponse = authService.login(loginRequest);
-    String authToken = authService.createAuthToken(loginResponse);
+  public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto requestDto) {
+    LoginResponseDto responseDto = authService.login(requestDto);
+    String authToken = authService.createAuthToken(responseDto);
 
-    if(loginResponse == null) {
+    if(responseDto == null) {
       return ResponseEntity
         .badRequest()
         .body(null);
@@ -30,7 +31,7 @@ public class AuthController {
       return ResponseEntity
         .status(HttpStatus.OK)
         .header(HttpHeaders.AUTHORIZATION, authToken)
-        .body(loginResponse);
+        .body(responseDto);
     }
   }
 
@@ -48,9 +49,9 @@ public class AuthController {
   }
 
   @PostMapping("/users")
-  public ResponseEntity<SignupResponseDto> signup(@RequestBody SignupRequestDto signupRequest) {
+  public ResponseEntity<SignupResponseDto> signup(@RequestBody SignupRequestDto requestDto) {
     return ResponseEntity
       .status(HttpStatus.CREATED)
-      .body(authService.signup(signupRequest));
+      .body(authService.signup(requestDto));
   }
 }

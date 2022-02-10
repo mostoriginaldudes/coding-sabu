@@ -1,4 +1,4 @@
-package com.mostoriginaldudes.codingsabubackend.util.auth;
+package com.mostoriginaldudes.codingsabubackend.auth;
 
 import org.springframework.stereotype.Component;
 
@@ -9,6 +9,7 @@ import static com.mostoriginaldudes.codingsabubackend.util.constant.Constant.ENC
 
 @Component
 public class Security {
+
   public static String encrypt(String text) {
     try {
       MessageDigest md = MessageDigest.getInstance(ENCRYPT_ALGORITHM);

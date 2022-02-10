@@ -1,50 +1,46 @@
 package com.mostoriginaldudes.codingsabubackend.controller;
 
-import com.mostoriginaldudes.codingsabubackend.dto.LessonNoticeDto;
 import com.mostoriginaldudes.codingsabubackend.dto.UserDto;
 import com.mostoriginaldudes.codingsabubackend.dto.request.LessonNoticeRequestDto;
+import com.mostoriginaldudes.codingsabubackend.dto.response.LessonNoticeListResponseDto;
 import com.mostoriginaldudes.codingsabubackend.dto.response.LessonNoticeResponseDto;
-import com.mostoriginaldudes.codingsabubackend.dto.response.LessonNoticesResponseDto;
 import com.mostoriginaldudes.codingsabubackend.service.auth.AuthService;
 import com.mostoriginaldudes.codingsabubackend.service.lessonnotice.LessonNoticeService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 import static com.mostoriginaldudes.codingsabubackend.util.constant.Constant.AUTHORIZATION_HEADER;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/lesson/{lessonId}/notice")
 public class LessonNoticeController {
+
   private final AuthService authService;
   private final LessonNoticeService lessonNoticeService;
 
-  public LessonNoticeController(LessonNoticeService lessonNoticeService, AuthService authService) {
-    this.authService = authService;
-    this.lessonNoticeService = lessonNoticeService;
-  }
-
   @GetMapping
-  public ResponseEntity<LessonNoticesResponseDto> lessonNotice(@PathVariable int lessonId) {
-    List<LessonNoticeDto> lessonNotices = lessonNoticeService.getLessonNotices(lessonId);
+  public ResponseEntity<LessonNoticeListResponseDto> lessonNotice(@PathVariable int lessonId) {
+    LessonNoticeListResponseDto responseDto = lessonNoticeService.getLessonNotices(lessonId);
 
-    if(lessonNotices.isEmpty()) {
+    if(responseDto.getLessonNotices().isEmpty()) {
       return ResponseEntity
         .status(HttpStatus.NO_CONTENT)
         .body(null);
     }
 
-    return ResponseEntity.ok(new LessonNoticesResponseDto(lessonNotices));
+    return ResponseEntity.ok(responseDto);
   }
 
   @PostMapping
   public ResponseEntity<LessonNoticeResponseDto> registerLessonNotice(
     @PathVariable int lessonId,
     @RequestHeader Map<String, Object> requestHeader,
-    @RequestBody LessonNoticeRequestDto lessonNoticeRequestDto
+    @RequestBody LessonNoticeRequestDto requestDto
     ) {
     if(!requestHeader.containsKey(AUTHORIZATION_HEADER)) {
       return ResponseEntity
@@ -61,10 +57,8 @@ public class LessonNoticeController {
         .body(null);
     }
 
-    LessonNoticeResponseDto lessonNoticeResponseDto = lessonNoticeService.createLessonNotice(lessonId, lessonNoticeRequestDto);
-
     return ResponseEntity
       .status(HttpStatus.CREATED)
-      .body(lessonNoticeResponseDto);
+      .body(lessonNoticeService.createLessonNotice(lessonId, requestDto));
   }
 }

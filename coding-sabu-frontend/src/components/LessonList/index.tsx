@@ -6,14 +6,6 @@ import { Lesson } from 'types';
 import { flexCenter } from 'styles/module';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
-export const PageTitle = styled.header`
-  width: 100%;
-  text-align: left;
-  border-bottom: 1px solid #707070;
-  padding-bottom: 20px;
-  margin-bottom: 20px;
-`;
-
 export const EmphasisText = styled.h3`
   font-size: 1.3rem;
   font-weight: bold;
@@ -41,21 +33,18 @@ interface Props extends RouteComponentProps {
 }
 
 const LessonList: FC<Props> = ({ history, lessons }) => {
-  const pickOneLesson = (lessonId: Lesson['lessonId']) => {
+  const pickOneLesson = (lessonId: Lesson['id']) => {
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
     history.push(`/lesson/${lessonId}`);
   };
 
   return (
     <>
-      <PageTitle>
-        <EmphasisText>수련 목록</EmphasisText>
-      </PageTitle>
       <LessonListContainer>
         {lessons.map((lesson, index) => (
           <LessonListElement
             key={index}
-            onClick={() => pickOneLesson(lesson.lessonId)}
+            onClick={() => pickOneLesson(lesson.id)}
           >
             <LessonItem {...lesson} />
           </LessonListElement>

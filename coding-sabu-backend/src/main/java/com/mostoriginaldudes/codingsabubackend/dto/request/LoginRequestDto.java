@@ -2,10 +2,9 @@ package com.mostoriginaldudes.codingsabubackend.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 
-@Getter @Setter
 @AllArgsConstructor
+@Getter
 public class LoginRequestDto {
   private String email;
   private String password;

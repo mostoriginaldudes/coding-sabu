@@ -20,7 +20,7 @@
 
   <insert
     id="createLesson"
-    parameterType="com.mostoriginaldudes.codingsabubackend.dto.LessonDto"
+    parameterType="LessonDto"
     keyProperty="id"
     useGeneratedKeys="true"
   >
@@ -32,6 +32,7 @@
     ,description
     ,price
     ,terminated_at
+    ,thumbnail_url
     ) VALUES (
     id
     ,#{teacherId}
@@ -39,6 +40,7 @@
     ,#{description}
     ,#{price}
     ,#{terminatedAt}
+    ,#{thumbnailUrl}
     )
   </insert>
 
@@ -91,5 +93,17 @@
     ON user.id = lesson_student.student_id
     WHERE lesson.id = #{lessonId}
     AND lesson.teacher_id = #{teacherId}
+  </select>
+
+  <select id="getStudentCount" resultType="_integer">
+    SELECT COUNT(*) AS student_count
+     FROM lesson_student
+     WHERE lesson_id = #{lessonId}
+  </select>
+
+  <select id="getTeachingLessons" resultType="LessonDto">
+    SELECT *
+    FROM lesson
+    WHERE teacher_id = #{userId}
   </select>
 </mapper>

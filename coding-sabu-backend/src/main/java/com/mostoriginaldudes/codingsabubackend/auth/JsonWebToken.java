@@ -1,4 +1,4 @@
-package com.mostoriginaldudes.codingsabubackend.util.auth;
+package com.mostoriginaldudes.codingsabubackend.auth;
 
 import com.mostoriginaldudes.codingsabubackend.dto.response.LoginResponseDto;
 import io.jsonwebtoken.*;
@@ -14,7 +14,8 @@ import static com.mostoriginaldudes.codingsabubackend.util.constant.Constant.SES
 import static com.mostoriginaldudes.codingsabubackend.util.constant.Constant.TOKEN_ISSUER;
 
 @Component
-public class JWT {
+public class JsonWebToken {
+
   @Value("${spring.jwt.secret}")
   private String key;
   private SecretKey secretKey;

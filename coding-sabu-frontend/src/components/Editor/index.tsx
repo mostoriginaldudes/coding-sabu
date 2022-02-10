@@ -1,4 +1,5 @@
-import { FC, useRef } from 'react';
+import { FC, useEffect, useCallback, useRef } from 'react';
+import { LessonFormAction as Action } from 'types';
 import { Editor as ToastEditor } from '@toast-ui/react-editor';
 import colorSyntax from '@toast-ui/editor-plugin-color-syntax';
 import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight';
@@ -7,17 +8,28 @@ import '@toast-ui/editor/dist/toastui-editor.css';
 import 'prismjs/themes/prism.css';
 import '@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight.css';
 import '@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-syntax.css';
+interface Props {
+  setValue: (value: Action) => void;
+}
 
-const Editor: FC = () => {
+const Editor: FC<Props> = ({ setValue }) => {
   const toastEditorRef = useRef<ToastEditor>(null);
-  const changeHandler = () => {
+  const editType = window.innerWidth <= 768 ? 'wysiwyg' : 'markdown';
+
+  const changeHandler = useCallback(() => {
     const markdown = toastEditorRef.current?.getInstance().getMarkdown();
-  };
+    setValue({ name: 'description', value: markdown! });
+  }, [setValue, toastEditorRef]);
+
+  useEffect(() => {
+    const currentEditorRef = toastEditorRef.current;
+    return () => void currentEditorRef?.getInstance().destroy();
+  }, []);
 
   return (
     <ToastEditor
       previewStyle="vertical"
-      initialEditType="markdown"
+      initialEditType={editType}
       height="600px"
       placeholder="내용을 작성해주세요."
       plugins={[colorSyntax, [codeSyntaxHighlight, { highlighter: Prism }]]}

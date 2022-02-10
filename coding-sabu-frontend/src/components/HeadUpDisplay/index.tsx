@@ -1,10 +1,13 @@
-import { useState, useEffect, useCallback, useRef, FC } from 'react';
+import { useEffect, useCallback, useRef, FC, memo } from 'react';
 import { createPortal } from 'react-dom';
+import { useSelector, useDispatch } from 'react-redux';
 import styled from '@emotion/styled';
-import success from '../../assets/images/success.svg';
-import fail from '../../assets/images/fail.svg';
-import useTimeout from '../../hooks/useTimeout';
-import { getModalRoot } from '../../utils/utils';
+import { RootState } from 'store';
+import { createActionInvisibleHud, State as UIState } from 'store/ui';
+import success from 'assets/images/success.svg';
+import fail from 'assets/images/fail.svg';
+import useTimeout from 'hooks/useTimeout';
+import { getModalRoot } from 'utils';
 import { flexCenter, positionFixed } from 'styles/module';
 
 const size = 160;
@@ -43,19 +46,28 @@ const HeadUpDpWrapper = styled.div`
   }
 `;
 
-interface Props {
-  type: 'success' | 'fail';
-}
-
-const HeadUpDisplay: FC<Props> = ({ type }) => {
-  const [visible, setVisible] = useState<boolean>(true);
-  const hideHeadUp = useCallback(
-    () => setVisible(!visible),
-    [visible, setVisible]
-  );
-  useTimeout(hideHeadUp, delay);
-
+/**
+ *  사용이 필요한 컴포넌트에서 아래 코드 호출
+ *  dispatch(createActionVisibleHud())
+ */
+const HeadUpDisplay: FC = () => {
   const modalTarget = useRef<HTMLDivElement>(document.createElement('div'));
+  const { visibleHud, hudStatusText } = useSelector<RootState, UIState>(
+    state => ({
+      visibleHud: state.ui.visibleHud,
+      hudStatusText: state.ui.hudStatusText
+    })
+  );
+
+  const dispatch = useDispatch();
+
+  const hideHeadUp = useCallback(() => {
+    if (visibleHud) {
+      dispatch(createActionInvisibleHud());
+    }
+  }, [visibleHud, dispatch]);
+
+  useTimeout(hideHeadUp, delay);
 
   useEffect(() => {
     const current = modalTarget.current;
@@ -68,15 +80,15 @@ const HeadUpDisplay: FC<Props> = ({ type }) => {
 
   return createPortal(
     <>
-      {visible && (
+      {visibleHud && (
         <HeadUpDpWrapper>
           <img
-            src={type === 'success' ? success : fail}
-            alt={type}
+            src={hudStatusText === 'success' ? success : fail}
+            alt={hudStatusText}
             width={size / 2}
           />
           <h4 data-testid="text">
-            {type === 'success' ? '완료' : '실패'}했습니다.
+            {hudStatusText === 'success' ? '완료' : '실패'}했습니다.
           </h4>
         </HeadUpDpWrapper>
       )}
@@ -85,4 +97,4 @@ const HeadUpDisplay: FC<Props> = ({ type }) => {
   );
 };
 
-export default HeadUpDisplay;
+export default memo(HeadUpDisplay);

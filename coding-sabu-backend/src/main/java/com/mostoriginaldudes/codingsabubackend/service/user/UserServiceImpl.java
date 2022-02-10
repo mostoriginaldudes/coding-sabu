@@ -1,35 +1,47 @@
 package com.mostoriginaldudes.codingsabubackend.service.user;
 
+import com.mostoriginaldudes.codingsabubackend.auth.Security;
+import com.mostoriginaldudes.codingsabubackend.config.FileUploadConfig;
+import com.mostoriginaldudes.codingsabubackend.dto.EditUserInfoDto;
 import com.mostoriginaldudes.codingsabubackend.dto.UserDto;
 import com.mostoriginaldudes.codingsabubackend.dto.request.EditUserInfoRequestDto;
 import com.mostoriginaldudes.codingsabubackend.dto.response.EditUserInfoResponseDto;
+import com.mostoriginaldudes.codingsabubackend.dto.response.LessonListResponseDto;
 import com.mostoriginaldudes.codingsabubackend.respository.UserRepository;
-import com.mostoriginaldudes.codingsabubackend.util.auth.Security;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.util.UUID;
 
-@Service
 @RequiredArgsConstructor
+@Service
 public class UserServiceImpl implements UserService {
-  private final UserRepository userRepository;
 
-  @Value("${server.asset.img}")
-  private String filePath;
+  private final UserRepository userRepository;
+  private final FileUploadConfig fileUploadConfig;
 
   @Override
   @Transactional
-  public EditUserInfoResponseDto editUserInfo(EditUserInfoRequestDto editUserInfoRequest) {
-    String encryptedPassword = Security.encrypt(editUserInfoRequest.getPassword());
-    editUserInfoRequest.setPassword(encryptedPassword);
-    userRepository.editUserInfo(editUserInfoRequest);
+  public EditUserInfoResponseDto editUserInfo(EditUserInfoRequestDto requestDto) {
+    String encryptedPassword = Security.encrypt(requestDto.getPassword());
 
-    UserDto user = getUserInfo(editUserInfoRequest.getId());
+    EditUserInfoDto editUserInfoDto = EditUserInfoDto.builder()
+      .id(requestDto.getId())
+      .password(encryptedPassword)
+      .nickname(requestDto.getNickname())
+      .phoneNum(requestDto.getPhoneNum())
+      .description(requestDto.getDescription())
+      .profileImage(requestDto.getProfileImage())
+      .build();
+
+    userRepository.editUserInfo(editUserInfoDto);
+
+    UserDto user = getUserInfo(editUserInfoDto.getId());
+
     return EditUserInfoResponseDto.builder()
       .id(user.getId())
       .email(user.getEmail())
@@ -50,10 +62,12 @@ public class UserServiceImpl implements UserService {
   @Transactional
   public String uploadProfileImage(MultipartFile profileImage) {
     String imageFileName = profileImage.getOriginalFilename();
-    String imageFilePath = filePath + imageFileName;
+    String imagePath = UUID.randomUUID() + imageFileName;
+    String imageRealFilePath = fileUploadConfig.getProfileLocation() + imagePath;
+    String imageUrl = fileUploadConfig.getProfileUrl() + imagePath;
 
     try {
-      FileOutputStream fileOutputStream = new FileOutputStream(imageFilePath);
+      FileOutputStream fileOutputStream = new FileOutputStream(imageRealFilePath);
       InputStream inputStream = profileImage.getInputStream();
 
       int fileReadCount = 0;
@@ -65,17 +79,18 @@ public class UserServiceImpl implements UserService {
 
       fileOutputStream.close();
       inputStream.close();
+
+      return imageUrl;
+
     } catch(Exception e) {
       throw new RuntimeException("파일 업로드 에러 발생");
     }
-    return imageFilePath;
   }
 
   @Override
   @Transactional
-  public String updateProfileImagePath(int id, String profileImagePath) {
+  public void updateProfileImagePath(int id, String profileImagePath) {
     userRepository.editProfileImage(id, profileImagePath);
-    return profileImagePath;
   }
 
   @Override

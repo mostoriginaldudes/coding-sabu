@@ -27,7 +27,7 @@
 
   <insert
     id="createUser"
-    parameterType="com.mostoriginaldudes.codingsabubackend.dto.request.SignupRequestDto"
+    parameterType="com.mostoriginaldudes.codingsabubackend.dto.SignupDto"
     useGeneratedKeys="true"
     keyProperty="id"
   >

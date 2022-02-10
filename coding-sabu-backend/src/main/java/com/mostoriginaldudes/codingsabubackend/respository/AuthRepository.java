@@ -1,15 +1,15 @@
 package com.mostoriginaldudes.codingsabubackend.respository;
 
+import com.mostoriginaldudes.codingsabubackend.dto.LoginDto;
 import com.mostoriginaldudes.codingsabubackend.dto.UserDto;
-import com.mostoriginaldudes.codingsabubackend.dto.request.LoginRequestDto;
-import com.mostoriginaldudes.codingsabubackend.dto.request.SignupRequestDto;
+import com.mostoriginaldudes.codingsabubackend.dto.SignupDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
-@Repository
 @Mapper
+@Repository
 public interface AuthRepository {
-  UserDto matchUser(LoginRequestDto loginRequest);
+  UserDto matchUser(LoginDto login);
   String checkIfExistEmail(String email);
-  void createUser(SignupRequestDto signupRequest);
+  int createUser(SignupDto signup);
 }

@@ -3,7 +3,8 @@ package com.mostoriginaldudes.codingsabubackend.dto.request;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter @Setter
+@Setter
+@Getter
 public class QuestionRequestDto {
   private int lessonId;
   private int writerId;

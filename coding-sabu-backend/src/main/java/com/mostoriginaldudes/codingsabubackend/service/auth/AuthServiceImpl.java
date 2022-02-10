@@ -1,31 +1,37 @@
 package com.mostoriginaldudes.codingsabubackend.service.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mostoriginaldudes.codingsabubackend.dto.LoginDto;
 import com.mostoriginaldudes.codingsabubackend.dto.UserDto;
 import com.mostoriginaldudes.codingsabubackend.dto.request.LoginRequestDto;
 import com.mostoriginaldudes.codingsabubackend.dto.request.SignupRequestDto;
 import com.mostoriginaldudes.codingsabubackend.dto.response.LoginResponseDto;
+import com.mostoriginaldudes.codingsabubackend.dto.SignupDto;
 import com.mostoriginaldudes.codingsabubackend.dto.response.SignupResponseDto;
 import com.mostoriginaldudes.codingsabubackend.respository.AuthRepository;
-import com.mostoriginaldudes.codingsabubackend.util.auth.JWT;
-import com.mostoriginaldudes.codingsabubackend.util.auth.Security;
+import com.mostoriginaldudes.codingsabubackend.auth.JsonWebToken;
+import com.mostoriginaldudes.codingsabubackend.auth.Security;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
 @RequiredArgsConstructor
+@Service
 public class AuthServiceImpl implements AuthService {
+
   private final AuthRepository authRepository;
-  private final JWT jwt;
+  private final JsonWebToken jwt;
 
   @Override
   public LoginResponseDto login(LoginRequestDto loginRequest) {
     String encryptedPassword = Security.encrypt(loginRequest.getPassword());
-    loginRequest.setPassword(encryptedPassword);
 
-    UserDto user = getMatchedUser(loginRequest);
+    UserDto user = getMatchedUser(LoginDto.builder()
+      .email(loginRequest.getEmail())
+      .password(encryptedPassword)
+      .build()
+    );
 
     if (user == null) {
       return null;
@@ -46,15 +52,22 @@ public class AuthServiceImpl implements AuthService {
   @Transactional
   public SignupResponseDto signup(SignupRequestDto signupRequest) {
     String encryptedPassword = Security.encrypt(signupRequest.getPassword());
-    signupRequest.setPassword(encryptedPassword);
 
-    authRepository.createUser(signupRequest);
+    authRepository.createUser(SignupDto.builder()
+      .email(signupRequest.getEmail())
+      .password(encryptedPassword)
+      .userType(signupRequest.getUserType())
+      .nickname(signupRequest.getNickname())
+      .phoneNum(signupRequest.getPhoneNum())
+      .description(signupRequest.getDescription())
+      .build()
+    );
 
     UserDto user = getMatchedUser(
-      new LoginRequestDto(
-        signupRequest.getEmail(),
-        encryptedPassword
-      )
+      LoginDto.builder()
+        .email(signupRequest.getEmail())
+        .password(encryptedPassword)
+        .build()
     );
 
     return SignupResponseDto.builder()
@@ -68,13 +81,8 @@ public class AuthServiceImpl implements AuthService {
       .build();
   }
 
-  private UserDto getMatchedUser(LoginRequestDto loginRequest) {
-    return authRepository.matchUser(
-        new LoginRequestDto(
-          loginRequest.getEmail(),
-          loginRequest.getPassword()
-        )
-    );
+  private UserDto getMatchedUser(LoginDto login) {
+    return authRepository.matchUser(login);
   }
 
   @Override

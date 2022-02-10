@@ -1,8 +1,10 @@
 package com.mostoriginaldudes.codingsabubackend.controller;
 
-import com.mostoriginaldudes.codingsabubackend.dto.LessonDto;
 import com.mostoriginaldudes.codingsabubackend.dto.UserDto;
+import com.mostoriginaldudes.codingsabubackend.dto.request.LessonRequestDto;
 import com.mostoriginaldudes.codingsabubackend.dto.request.RegisterLessonRequestDto;
+import com.mostoriginaldudes.codingsabubackend.dto.response.LessonListResponseDto;
+import com.mostoriginaldudes.codingsabubackend.dto.response.LessonResponseDto;
 import com.mostoriginaldudes.codingsabubackend.service.auth.AuthService;
 import com.mostoriginaldudes.codingsabubackend.service.lesson.LessonService;
 import lombok.RequiredArgsConstructor;
@@ -15,39 +17,41 @@ import java.util.Map;
 
 import static com.mostoriginaldudes.codingsabubackend.util.constant.Constant.AUTHORIZATION_HEADER;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/lesson")
-@RequiredArgsConstructor
 public class LessonController {
+
   private final LessonService lessonService;
   private final AuthService authService;
 
   @GetMapping("/all")
-  public ResponseEntity<List<LessonDto>> allLessons(@RequestParam(required = false, defaultValue = "0") int page) {
-    List<LessonDto> lessons = lessonService.getAllLessons(page);
-    if(lessons.isEmpty()) {
+  public ResponseEntity<LessonListResponseDto> allLessons(@RequestParam(required = false, defaultValue = "0") int page) {
+    LessonListResponseDto responseDto = lessonService.getAllLessons(page);
+    if(responseDto.getLessons().isEmpty()) {
       return ResponseEntity
         .status(HttpStatus.NO_CONTENT)
-        .body(lessons);
+        .body(responseDto);
     }
-    return ResponseEntity.ok(lessons);
+    return ResponseEntity.ok(responseDto);
   }
 
   @GetMapping("/{lessonId}")
-  public ResponseEntity<LessonDto> lesson(@PathVariable int lessonId) {
-    LessonDto lesson = lessonService.getLesson(lessonId);
-    if (lesson == null) {
+  public ResponseEntity<LessonResponseDto> lesson(@PathVariable int lessonId) {
+    LessonResponseDto responseDto = lessonService.getLesson(lessonId);
+
+    if(responseDto == null) {
       return ResponseEntity
         .status(HttpStatus.NOT_FOUND)
         .body(null);
     }
-    return ResponseEntity.ok(lesson);
+    return ResponseEntity.ok(responseDto);
   }
 
   @PostMapping
-  public ResponseEntity<LessonDto> createLesson(
+  public ResponseEntity<LessonResponseDto> createLesson(
     @RequestHeader Map<String, Object> requestHeader,
-    @RequestBody LessonDto lesson
+    @ModelAttribute LessonRequestDto requestDto
   ) {
     if (!requestHeader.containsKey(AUTHORIZATION_HEADER)) {
       return ResponseEntity
@@ -58,7 +62,7 @@ public class LessonController {
     String token = (String) requestHeader.get(AUTHORIZATION_HEADER);
     UserDto user = authService.getLoggedInUserInfo(token);
 
-    if (user.getUserType().equals("student")) {
+    if ("student".equals(user.getUserType())) {
       return ResponseEntity
         .status(HttpStatus.BAD_REQUEST)
         .body(null);
@@ -66,14 +70,14 @@ public class LessonController {
 
     return ResponseEntity
       .status(HttpStatus.CREATED)
-      .body(lessonService.createLesson(lesson));
+      .body(lessonService.createLesson(requestDto, user.getId()));
   }
 
   @PostMapping("/{lessonId}/student")
-  public ResponseEntity<LessonDto> registerLesson(
+  public ResponseEntity<LessonResponseDto> registerLesson(
     @PathVariable int lessonId,
     @RequestHeader Map<String, Object> requestHeader,
-    @RequestBody RegisterLessonRequestDto registerLessonRequest
+    @RequestBody RegisterLessonRequestDto requestDto
   ) {
     if (!requestHeader.containsKey(AUTHORIZATION_HEADER)) {
       return ResponseEntity
@@ -81,16 +85,11 @@ public class LessonController {
         .body(null);
     }
 
-    LessonDto lesson = lessonService.registerLesson(lessonId, registerLessonRequest.getStudentId());
-    if (lesson == null) {
-      return ResponseEntity
-        .status(HttpStatus.BAD_REQUEST)
-        .body(null);
-    }
+    LessonResponseDto responseDto = lessonService.registerLesson(lessonId, requestDto.getStudentId());
 
     return ResponseEntity
       .status(HttpStatus.CREATED)
-      .body(lesson);
+      .body(responseDto);
   }
 
   @GetMapping("/{lessonId}/students")

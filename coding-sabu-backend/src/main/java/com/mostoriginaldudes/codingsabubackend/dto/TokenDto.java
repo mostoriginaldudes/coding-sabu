@@ -5,9 +5,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-@Getter
 @Builder
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+@Getter
 public class TokenDto {
   private final int id;
   private final String email;

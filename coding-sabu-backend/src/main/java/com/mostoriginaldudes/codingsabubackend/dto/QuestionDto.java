@@ -4,8 +4,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter @Setter
+@Setter
 @Builder
+@Getter
 public class QuestionDto {
   private int id;
   private int lessonId;
