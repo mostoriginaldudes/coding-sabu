@@ -92,7 +92,7 @@ public class UserController {
     @PathVariable String nickname,
     @RequestParam(defaultValue = "teacher") String userType
   ) {
-    if(!userType.equals("teacher")) {
+    if(!"teacher".equals(userType)) {
       return ResponseEntity
         .status(HttpStatus.BAD_REQUEST)
         .body(null);
