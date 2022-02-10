@@ -2,7 +2,7 @@ import { FC, useState, useEffect, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from '@emotion/styled';
 
-import { fetchLessons } from 'apis';
+import { fetchLessonList } from 'apis';
 import LessonList from 'components/LessonList';
 import { Lesson } from 'types';
 import UnderlineTitle from 'styles/UnderlineTitle';
@@ -11,6 +11,7 @@ import Button from 'components/Button';
 const Container = styled.div`
   position: relative;
 `;
+
 const CreateLessonButton = styled(Button)`
   position: absolute;
   right: 0;
@@ -22,8 +23,8 @@ const MyTeachingLessons: FC = () => {
   const [teachingLessons, setTeachingLessons] = useState<Lesson[]>([]);
 
   const fetchMyTeachingLessons = useCallback(async () => {
-    const lessons = await fetchLessons();
-    setTeachingLessons(lessons.data);
+    const data = await fetchLessonList();
+    setTeachingLessons(data.lessons);
   }, [setTeachingLessons]);
 
   const goToLessonForm = useCallback(() => {

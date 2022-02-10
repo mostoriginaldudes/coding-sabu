@@ -8,7 +8,7 @@ import { State as Lessons, createActionFetchMyLessons } from 'store/lesson';
 
 // 리덕스 쓸 필요가 있는지 고민해보자
 const MyJoiningLessons: FC = () => {
-  const { mylessons } = useSelector<RootState, Lessons>(state => state.lesson);
+  const { lessons } = useSelector<RootState, Lessons>(state => state.lesson);
   const dispatch = useDispatch();
 
   const dispatchMyLessons = useCallback(
@@ -17,8 +17,8 @@ const MyJoiningLessons: FC = () => {
   );
 
   const mylessonsArray = useMemo(
-    () => (mylessons.data === null ? ([] as Lesson[]) : mylessons.data),
-    [mylessons]
+    () => (lessons.data === null ? ([] as Lesson[]) : lessons.data),
+    [lessons]
   );
 
   useEffect(() => {
