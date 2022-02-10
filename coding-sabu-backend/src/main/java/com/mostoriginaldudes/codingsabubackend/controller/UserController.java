@@ -129,4 +129,18 @@ public class UserController {
 
     return ResponseEntity.ok(responseDto);
   }
+
+  @GetMapping("/{teacherId}/teaching")
+  public ResponseEntity<LessonListResponseDto> lessonsBelongToTeacher(
+    @PathVariable int teacherId,
+    @RequestHeader Map<String, Object> requestHeader
+  ) {
+    if (!requestHeader.containsKey(AUTHORIZATION_HEADER)) {
+      return ResponseEntity
+        .status(HttpStatus.UNAUTHORIZED)
+        .body(null);
+    }
+
+    return ResponseEntity.ok(lessonService.getTeachingLesson(teacherId));
+  }
 }

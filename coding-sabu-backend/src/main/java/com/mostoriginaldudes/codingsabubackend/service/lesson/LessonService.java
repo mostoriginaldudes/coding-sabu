@@ -16,4 +16,5 @@ public interface LessonService {
   LessonResponseDto registerLesson(int lessonId, int studentId);
   LessonListResponseDto getMyLessons(int userId);
   List<UserDto> getStudentsInMyClass(int lessonId, int teacherId);
+  LessonListResponseDto getTeachingLesson(int teacherId);
 }

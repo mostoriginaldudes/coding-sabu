@@ -161,4 +161,10 @@ public class LessonServiceImpl implements LessonService {
   public List<UserDto> getStudentsInMyClass(int lessonId, int teacherId) {
     return lessonRepository.getStudentsInMyLessonByTeacherId(lessonId, teacherId);
   }
+
+  @Override
+  public LessonListResponseDto getTeachingLesson(int teacherId) {
+    List<LessonDto> lessons = lessonRepository.getTeachingLessons(teacherId);
+    return new LessonListResponseDto(addStudentCountAndTeacherName(lessons));
+  }
 }

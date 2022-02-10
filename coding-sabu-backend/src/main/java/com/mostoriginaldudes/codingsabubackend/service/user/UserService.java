@@ -3,6 +3,7 @@ package com.mostoriginaldudes.codingsabubackend.service.user;
 import com.mostoriginaldudes.codingsabubackend.dto.UserDto;
 import com.mostoriginaldudes.codingsabubackend.dto.request.EditUserInfoRequestDto;
 import com.mostoriginaldudes.codingsabubackend.dto.response.EditUserInfoResponseDto;
+import com.mostoriginaldudes.codingsabubackend.dto.response.LessonListResponseDto;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {

@@ -100,4 +100,10 @@
      FROM lesson_student
      WHERE lesson_id = #{lessonId}
   </select>
+
+  <select id="getTeachingLessons" resultType="LessonDto">
+    SELECT *
+    FROM lesson
+    WHERE teacher_id = #{userId}
+  </select>
 </mapper>
