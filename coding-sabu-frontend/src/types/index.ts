@@ -23,3 +23,17 @@ export interface LessonListResponse {
 export interface LessonResponse {
   lesson: Lesson;
 }
+
+export interface User {
+  id: number;
+  email: string;
+  userType: 'teacher' | 'student';
+  nickname: string;
+  phoneNum: string;
+  description: string;
+  profileImage: string | null;
+}
+
+export type LoginInfo = Pick<User, 'email'> & Record<'password', string>;
+
+export type SignupInfo = Pick<LoginInfo, 'password'> & Omit<User, 'id'>;

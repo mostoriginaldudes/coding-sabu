@@ -1,19 +1,7 @@
 import httpRequest from 'apis/instance';
+import { LoginInfo, SignupInfo } from 'types';
 
 export const login = (requestBody: LoginInfo) =>
-  email: string;
-  password: string;
-}
-
-interface SignupRequestBody extends LoginRequestBody {
-  userType: 'teacher' | 'student';
-  nickname: string;
-  phoneNum: string;
-  description: string;
-  profileImage: string | null;
-}
-
-export const login = (requestBody: LoginRequestBody) =>
   httpRequest.post('/auth/login', requestBody);
 
 export const signup = (requestBody: SignupInfo) =>
