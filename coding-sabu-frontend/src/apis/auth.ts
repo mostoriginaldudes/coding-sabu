@@ -1,6 +1,6 @@
 import httpRequest from 'apis/instance';
 
-interface LoginRequestBody {
+export const login = (requestBody: LoginInfo) =>
   email: string;
   password: string;
 }
@@ -16,5 +16,5 @@ interface SignupRequestBody extends LoginRequestBody {
 export const login = (requestBody: LoginRequestBody) =>
   httpRequest.post('/auth/login', requestBody);
 
-export const signup = (requestBody: SignupRequestBody) =>
+export const signup = (requestBody: SignupInfo) =>
   httpRequest.post('/auth/users', requestBody);
