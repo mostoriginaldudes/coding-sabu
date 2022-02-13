@@ -34,6 +34,26 @@ export interface User {
   profileImage: string | null;
 }
 
-export type LoginInfo = Pick<User, 'email'> & Record<'password', string>;
+export interface LoginInfo {
+  email: string;
+  password: string;
+}
 
-export type SignupInfo = Pick<LoginInfo, 'password'> & Omit<User, 'id'>;
+export interface SignupFormInfo {
+  email: string;
+  password: string;
+  passwordCheck: string;
+  userType: 'teacher' | 'student';
+  nickname: string;
+  phoneNum: string;
+  description: string;
+}
+
+export interface SignupInfo {
+  email: string;
+  password: string;
+  userType: 'teacher' | 'student';
+  nickname: string;
+  phoneNum: string;
+  description: string;
+}
