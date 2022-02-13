@@ -45,7 +45,6 @@ export const carouselArrowStyle = css`
   top: calc(250px - 2.5rem);
   opacity: 0.7;
   cursor: pointer;
-  z-index: 10;
 `;
 
 export const ArrowLeft = styled(HiChevronLeft)`
@@ -105,15 +104,15 @@ export const Info = styled.div`
     width: 100%;
     margin-bottom: 20px;
 
-    & > h2,
-    h3 {
-      width: 230px;
+    & > h3,
+    h4 {
+      width: 240px;
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
     }
 
-    & > h3 {
+    & > h4 {
       text-align: right;
     }
   }
@@ -130,7 +129,7 @@ export const Info = styled.div`
     & > p {
       display: -webkit-box;
       width: 100%;
-      height: 194px;
+      height: 220px;
       margin: 0;
       font-size: 0.8em;
       text-overflow: ellipsis;

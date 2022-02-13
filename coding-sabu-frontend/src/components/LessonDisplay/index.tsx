@@ -63,8 +63,8 @@ const LessonDisplay: FC<Props> = ({ lessons }) => {
                 <Thumbnail imgUrl={concatHostToImagePath(thumbnailUrl)} />
                 <Info>
                   <div>
-                    <h2>{title}</h2>
-                    <h3>{teacherName}</h3>
+                    <h3>{title}</h3>
+                    <h4>{teacherName}</h4>
                   </div>
                   <article>
                     <p>{description}</p>
