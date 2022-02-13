@@ -7,5 +7,5 @@ export const login = (loginInfo: LoginInfo) =>
 export const signup = (signupInfo: SignupInfo) =>
   httpRequest.post('/auth/users', signupInfo);
 
-export const signup = (requestBody: SignupInfo) =>
-  httpRequest.post('/auth/users', requestBody);
+export const checkEmail = (email: string) =>
+  httpRequest.get(`/auth/user/email/${email}`);
