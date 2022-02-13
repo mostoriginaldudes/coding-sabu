@@ -1,74 +1,71 @@
-import { FC, useState, useCallback } from 'react';
-import Modal from '../Modal';
-import Input from '../Input';
-import styled from '@emotion/styled';
+import { FC, useCallback, useEffect, memo } from 'react';
+import { useDispatch } from 'react-redux';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import Modal from 'components/Modal';
+import Input from 'components/Input';
 import Button from 'components/Button';
-import { media } from 'styles/theme';
-import { flexCenter } from '../../styles/module';
-
-const LoginFormContainer = styled.div``;
-
-const LoginFormElement = styled.form``;
-
-const ButtonContainer = styled.div`
-  ${flexCenter}
-  justify-content: space-between;
-  & > button {
-    width: 100%;
-    &:first-of-type {
-      margin-right: 10px;
-    }
-  }
-  ${media.tablet`
-    flex-direction: column;
-    justify-content: flex-start;
-    & > button {
-      &:first-of-type {
-        margin: 2em 0 ;
-      }
-    }
-  `}
-`;
+import { ThunkAsyncState } from 'store';
+import { createActionLogin } from 'store/auth';
+import { createActionInvisibleAuthForm } from 'store/ui';
+import { LoginInfo, User } from 'types';
+import formValidationOptions from './formValidationOptions';
+import { ButtonContainer, InputError } from './LoginForm.style';
 
 interface Props {
-  setRenderedModal: (renderedModal: 'signup') => void;
+  visibleAuthForm: boolean;
+  setModalToRender: (modalType: 'signup') => void;
+  user: ThunkAsyncState<User>;
 }
 
-const LoginForm: FC<Props> = ({ setRenderedModal }) => {
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
+const LoginForm: FC<Props> = ({ visibleAuthForm, setModalToRender, user }) => {
+  const {
+    register,
+    handleSubmit,
+    clearErrors,
+    formState: { errors }
+  } = useForm<LoginInfo>({ mode: 'onChange' });
 
-  const submitHandler = useCallback(event => {
-    event.preventDefault();
-  }, []);
+  const dispatch = useDispatch();
 
-  const updateEmail = useCallback(
-    ({ target }: { target: HTMLInputElement }) => setEmail(target.value),
-    [setEmail]
+  const closeLoginForm = useCallback(
+    () => dispatch(createActionInvisibleAuthForm()),
+    [dispatch]
   );
-  const updatePassword = useCallback(
-    ({ target }: { target: HTMLInputElement }) => setPassword(target.value),
-    [setPassword]
-  );
+
+  const onSubmit: SubmitHandler<LoginInfo> = loginInfo => {
+    dispatch(createActionLogin(loginInfo));
+  };
+
+  useEffect(() => {
+    return () => {
+      clearErrors();
+    };
+  }, [clearErrors]);
 
   return (
-    <Modal modalTitle="로그인">
-      <LoginFormContainer>
-        <LoginFormElement onSubmit={submitHandler}>
+    <Modal
+      modalTitle="로그인"
+      visibleModal={visibleAuthForm}
+      closeModal={closeLoginForm}
+    >
+      <div>
+        <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <Input
             type="email"
-            name="email"
-            label="email"
-            value={email}
-            onChange={updateEmail}
+            label="이메일"
+            placeholder="example@email.com"
+            {...register('email', formValidationOptions.email)}
           />
+          {errors.email && <InputError>{errors.email.message}</InputError>}
           <Input
             type="password"
-            name="password"
-            label="password"
-            value={password}
-            onChange={updatePassword}
+            label="비밀번호"
+            placeholder="영문 대소문자, 숫자, 특수문자 포함(! @ # $)"
+            {...register('password', formValidationOptions.password)}
           />
+          {errors.password && (
+            <InputError>{errors.password.message}</InputError>
+          )}
           <ButtonContainer>
             <Button color="yellow" radius={10} height={2.5}>
               로그인
@@ -77,15 +74,15 @@ const LoginForm: FC<Props> = ({ setRenderedModal }) => {
               color="black"
               radius={10}
               height={2.5}
-              onClick={() => setRenderedModal('signup')}
+              onClick={() => setModalToRender('signup')}
             >
               회원가입
             </Button>
           </ButtonContainer>
-        </LoginFormElement>
-      </LoginFormContainer>
+        </form>
+      </div>
     </Modal>
   );
 };
 
-export default LoginForm;
+export default memo(LoginForm);

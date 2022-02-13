@@ -4,6 +4,7 @@ import logger from 'redux-logger';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import lessonReducer from './lesson';
 import uiReducer from './ui';
+import authReducer from './auth';
 
 export type ThunkAsyncState<T> = {
   loading: boolean;
@@ -13,7 +14,8 @@ export type ThunkAsyncState<T> = {
 
 const rootReducer = combineReducers({
   lesson: lessonReducer,
-  ui: uiReducer
+  ui: uiReducer,
+  auth: authReducer
 });
 
 const store = createStore(

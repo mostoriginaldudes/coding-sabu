@@ -24,9 +24,9 @@ type Action =
   | { type: typeof LOGIN_SUCCESS; payload: User }
   | { type: typeof LOGIN_FAIL; payload: Error }
   | { type: typeof SIGNUP }
-  | { type: typeof SIGNUP_SUCCESS; payload: User }
+  | { type: typeof SIGNUP_SUCCESS }
   | { type: typeof SIGNUP_FAIL; payload: Error }
-  | { type: typeof SET_TOKEN; payload: Pick<State, 'token'> }
+  | { type: typeof SET_TOKEN; payload: string | null }
   | { type: typeof LOGOUT };
 
 type AuthThunkAction = ThunkAction<void, State, null, Action>;
@@ -37,7 +37,7 @@ export const createActionLogin =
   async dispatch => {
     dispatch({ type: LOGIN });
     try {
-      const user = await login(loginInfo);
+      const user: User = await login(loginInfo);
       dispatch({ type: LOGIN_SUCCESS, payload: user });
     } catch (error) {
       dispatch({ type: LOGIN_FAIL, payload: error as Error });
@@ -49,14 +49,19 @@ export const createActionSignup =
   async dispatch => {
     dispatch({ type: SIGNUP });
     try {
-      const user = await signup(signupInfo);
-      dispatch({ type: SIGNUP_SUCCESS, payload: user });
+      await signup(signupInfo);
+      dispatch({ type: SIGNUP_SUCCESS });
     } catch (error) {
       dispatch({ type: SIGNUP_FAIL, payload: error as Error });
     }
   };
 
 export const createActionLogout = () => ({ type: LOGOUT });
+
+export const createActionSetToken = (token: Pick<State, 'token'>) => ({
+  type: SET_TOKEN,
+  payload: token
+});
 
 // state
 const initialState: State = {
@@ -69,10 +74,7 @@ const initialState: State = {
 };
 
 // reducer
-export default function authReducer(
-  state: State = initialState,
-  action: Action
-) {
+export default function authReducer(state = initialState, action: Action) {
   switch (action.type) {
     case LOGIN:
       return {
@@ -115,7 +117,7 @@ export default function authReducer(
         ...state,
         user: {
           loading: false,
-          data: action.payload,
+          data: null,
           error: null
         }
       };
@@ -136,7 +138,6 @@ export default function authReducer(
     case LOGOUT:
       return {
         ...state,
-        token: null,
         user: {
           loading: false,
           data: null,

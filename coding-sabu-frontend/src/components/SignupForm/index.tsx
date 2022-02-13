@@ -1,28 +1,17 @@
-import { FC, FormEventHandler } from 'react';
+import { FC, useEffect, useCallback, memo, useRef } from 'react';
+import { useDispatch } from 'react-redux';
+import { useForm, SubmitHandler } from 'react-hook-form';
 import styled from '@emotion/styled';
-import Modal from '../Modal';
-import Input from '../Input';
-import Button from '../Button';
-import { media } from 'styles/theme';
+import Modal from 'components/Modal';
+import Input from 'components/Input';
+import Button from 'components/Button';
+import { createActionInvisibleAuthForm } from 'store/ui';
+import { ThunkAsyncState } from 'store';
+import { colors, media } from 'styles/theme';
 import { flexCenter } from 'styles/module';
-
-const SignupContainer = styled.div``;
-const SignupFormElement = styled.form``;
-const SignupEmailWrapper = styled.div`
-  position: relative;
-  & > button {
-    font-size: 14px;
-    height: 3em;
-    position: absolute;
-    top: 1em;
-    right: 0;
-    box-shadow: none;
-    &:active,
-    &:hover {
-      box-shadow: none;
-    }
-  }
-`;
+import { LoginInfo, SignupFormInfo, SignupInfo, User } from 'types';
+import formValidationOptions from './formValidationOptions';
+import { createActionLogin, createActionSignup } from 'store/auth';
 
 const SignupButtonWrapper = styled.div`
   ${flexCenter}
@@ -44,67 +33,188 @@ const SignupButtonWrapper = styled.div`
   `}
 `;
 
+const RadioContainer = styled.ol`
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  margin: 1em auto;
+  & > li {
+    display: flex;
+  }
+`;
+
+const RadioButton = styled.input`
+  background-color: ${colors.white};
+  &:checked {
+    appearance: none;
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 100%;
+    margin-right: 0.1rem;
+    background-color: ${colors.yellow[4]};
+  }
+`;
+
+const RadioLabel = styled.label`
+  font-size: 0.8rem;
+`;
+
+const InputError = styled.p`
+  font-size: 0.7rem;
+  font-weight: bold;
+  color: ${colors.red[7]};
+`;
+
 interface Props {
-  setRenderedModal: (renderedModal: 'login') => void;
+  visibleAuthForm: boolean;
+  setModalToRender: (modalType: 'login') => void;
+  user: ThunkAsyncState<User>;
 }
 
-const SignupForm: FC<Props> = ({ setRenderedModal }) => {
-  const onSubmitTemp: FormEventHandler<HTMLFormElement> = event => {
-    event.preventDefault();
+const SignupForm: FC<Props> = ({ visibleAuthForm, setModalToRender }) => {
+  const dispatch = useDispatch();
+  const {
+    register,
+    handleSubmit,
+    clearErrors,
+    watch,
+    formState: { errors }
+  } = useForm<SignupFormInfo>({ mode: 'onChange' });
+
+  const password = useRef<string>('');
+  password.current = watch('password', '');
+
+  const isMatchPassword = (passwordCheck: string) =>
+    passwordCheck === password.current || '비밀번호가 일치하지 않습니다.';
+
+  const onSubmit: SubmitHandler<SignupFormInfo> = async ({
+    passwordCheck,
+    ...signupProps
+  }) => {
+    await dispatch(createActionSignup(signupProps as SignupInfo));
+
+    await dispatch(
+      createActionLogin({
+        email: signupProps.email,
+        password: signupProps.password
+      } as LoginInfo)
+    );
   };
-  const onChangeTemp = ({ target }: { target: HTMLInputElement }) =>
-    console.log(target.value);
+
+  const closeSignupForm = useCallback(
+    () => dispatch(createActionInvisibleAuthForm()),
+    [dispatch]
+  );
+
+  useEffect(() => {
+    return () => {
+      clearErrors();
+      setModalToRender('login');
+    };
+  }, [clearErrors, setModalToRender]);
 
   return (
-    <Modal modalTitle="수련생 등록">
-      <SignupContainer>
-        <SignupFormElement onSubmit={onSubmitTemp}>
-          <SignupEmailWrapper>
-            <Input type="email" label="이메일" onChange={onChangeTemp} />
-            <Button color="black">중복 확인</Button>
-          </SignupEmailWrapper>
-          <Input label="비밀번호" type="password" onChange={onChangeTemp} />
+    <Modal
+      modalTitle="수련생 등록"
+      visibleModal={visibleAuthForm}
+      closeModal={closeSignupForm}
+    >
+      <div>
+        <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <Input
-            label="비밀번호 확인"
+            type="email"
+            label="이메일"
+            placeholder="example@email.com"
+            {...register('email', formValidationOptions.email)}
+          />
+          {errors.email && <InputError>{errors.email.message}</InputError>}
+          <Input
+            label="비밀번호"
             type="password"
-            onChange={onChangeTemp}
+            placeholder="영문 대소문자, 숫자, 특수문자 포함(! @ # $)"
+            {...register('password', formValidationOptions.password)}
           />
-          <Input label="이름" name="name" type="text" onChange={onChangeTemp} />
+          {errors.password && (
+            <InputError>{errors.password.message}</InputError>
+          )}
           <Input
+            type="password"
+            label="비밀번호 확인"
+            placeholder="비밀번호를 한번 더 입력해주세요."
+            {...register('passwordCheck', {
+              ...formValidationOptions.password,
+              validate: { isMatchPassword }
+            })}
+          />
+          {errors.passwordCheck && (
+            <InputError>{errors.passwordCheck.message}</InputError>
+          )}
+          <Input
+            type="text"
             label="닉네임"
-            name="nickname"
-            type="text"
-            onChange={onChangeTemp}
+            placeholder="닉네임을 입력해주세요."
+            {...register('nickname', formValidationOptions.nickname)}
           />
+          {errors.nickname && (
+            <InputError>{errors.nickname.message}</InputError>
+          )}
           <Input
+            type="text"
             label="전화번호"
-            type="number"
-            max={2}
-            onChange={onChangeTemp}
+            placeholder="010-0000-0000"
+            {...register('phoneNum', formValidationOptions.phoneNum)}
           />
+          {errors.phoneNum && (
+            <InputError>{errors.phoneNum.message}</InputError>
+          )}
           <Input
-            label="자기소개"
             type="text"
-            onChange={onChangeTemp}
+            label="자기소개"
+            placeholder="자기소개를 입력해주세요."
+            {...register('description', formValidationOptions.description)}
             height={5}
           />
+          {errors.description && (
+            <InputError>{errors.description.message}</InputError>
+          )}
+          <RadioContainer>
+            <li>
+              <RadioButton
+                type="radio"
+                value="student"
+                id="student"
+                defaultChecked
+                {...register('userType')}
+              />
+              <RadioLabel htmlFor="student">학생입니다.</RadioLabel>
+            </li>
+            <li>
+              <RadioButton
+                type="radio"
+                value="teacher"
+                id="teacher"
+                {...register('userType')}
+              />
+              <RadioLabel htmlFor="teacher">선생님입니다.</RadioLabel>
+            </li>
+          </RadioContainer>
           <SignupButtonWrapper>
-            <Button color="yellow" radius={5} height={2.5}>
+            <Button type="submit" color="yellow" radius={5} height={2.5}>
               회원가입
             </Button>
             <Button
               color="white"
               radius={5}
               height={2.5}
-              onClick={() => setRenderedModal('login')}
+              onClick={() => setModalToRender('login')}
             >
               뒤로
             </Button>
           </SignupButtonWrapper>
-        </SignupFormElement>
-      </SignupContainer>
+        </form>
+      </div>
     </Modal>
   );
 };
 
-export default SignupForm;
+export default memo(SignupForm);

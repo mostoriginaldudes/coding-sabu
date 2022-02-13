@@ -1,4 +1,4 @@
-import { FC, useState, useEffect, useRef } from 'react';
+import { FC, memo, ReactNode, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { getModalRoot } from 'utils';
 import { HiX } from 'react-icons/hi';
@@ -26,7 +26,7 @@ const ModalContainer = styled.div`
   }
   background-color: ${colors.white};
   border-radius: 5px;
-  z-index: ${modalMaskZIndex + 1};
+  z-index: ${modalMaskZIndex + 7};
   box-shadow: 1px 12px 15px -4px rgba(0, 0, 0, 0.62);
   top: 50%;
   left: 50%;
@@ -89,16 +89,25 @@ const ModalBody = styled.article`
 
 interface Props {
   modalTitle: string;
+  visibleModal: boolean;
+  closeModal: () => void;
+  children: ReactNode;
 }
 
-const Modal: FC<Props> = ({ modalTitle, children }) => {
+const Modal: FC<Props> = ({
+  modalTitle,
+  visibleModal,
+  closeModal,
+  children
+}) => {
   const modalTarget = useRef<HTMLDivElement>(document.createElement('div'));
-  const [visibleModal, setVisibleModal] = useState<boolean>(true);
 
   useEffect(() => {
     const modalRoot = getModalRoot();
     modalRoot.appendChild(modalTarget.current);
-    return () => void document.body.removeChild(modalRoot);
+    return () => {
+      document.body.removeChild(modalRoot);
+    };
   }, []);
 
   return createPortal(
@@ -109,7 +118,7 @@ const Modal: FC<Props> = ({ modalTitle, children }) => {
           <ModalContainer>
             <ModalHeader>
               <ModalTitle>{modalTitle}</ModalTitle>
-              <ModalClose onClick={() => setVisibleModal(false)}>
+              <ModalClose onClick={closeModal}>
                 <HiX fontSize="2em" />
               </ModalClose>
             </ModalHeader>
@@ -122,4 +131,4 @@ const Modal: FC<Props> = ({ modalTitle, children }) => {
   );
 };
 
-export default Modal;
+export default memo(Modal);
