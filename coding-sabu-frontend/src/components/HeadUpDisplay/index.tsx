@@ -58,20 +58,15 @@ const HeadUpDisplay: FC = () => {
     dispatch(createActionInvisibleHud());
   }, [dispatch]);
 
-  const appendHeadUpDisplayToModal = () => {
-    const modalRoot = getModalRoot();
-    modalRoot.appendChild(modalTarget.current);
-  };
-
-  const removeHeadUpDisplayFromModal = () => {
-    const modalRoot = getModalRoot();
-    modalRoot.removeChild(modalTarget.current);
-  };
-
   useEffect(() => {
-    appendHeadUpDisplayToModal();
+    const modalRoot = getModalRoot();
+    const current = modalTarget.current;
+    modalRoot.appendChild(current);
+
     setTimeout(hideHeadUp, delay);
-    return removeHeadUpDisplayFromModal;
+    return () => {
+      modalRoot.removeChild(current);
+    };
   }, [visibleHud, hideHeadUp]);
 
   return createPortal(

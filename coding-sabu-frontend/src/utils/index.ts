@@ -1,8 +1,9 @@
 export const getModalRoot = () => {
   const createModalRootElement = () => {
-    const modalRootElement = document.createElement('div');
+    const modalRootElement =
+      document.getElementById('modal') || document.createElement('div');
     modalRootElement.setAttribute('id', 'modal');
-    return modalRootElement;
+    return modalRootElement as HTMLDivElement;
   };
 
   const attachModalRootElementToDom = (modalRootElement: HTMLDivElement) => {
