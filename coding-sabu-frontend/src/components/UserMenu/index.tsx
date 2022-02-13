@@ -1,9 +1,10 @@
 import { FC, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import styled from '@emotion/styled';
-import { colors, sizes } from '../../styles/theme';
-import { flexCenter } from '../../styles/module';
-import useClickOutside from '../../hooks/useClickOutside';
+import { colors, sizes } from 'styles/theme';
+import { flexCenter } from 'styles/module';
+import useClickOutside from 'hooks/useClickOutside';
+import { User } from 'types';
 
 const UserMenuContainer = styled.ul`
   width: 163px;
@@ -30,11 +31,16 @@ const UserMenuList = styled.li`
 `;
 
 interface Props {
+  userInfo: User | null;
   visibleUserMenu: boolean;
   setVisibleUserMenu: (visibleUserMenu: boolean) => void;
 }
 
-const UserMenu: FC<Props> = ({ visibleUserMenu, setVisibleUserMenu }) => {
+const UserMenu: FC<Props> = ({
+  userInfo,
+  visibleUserMenu,
+  setVisibleUserMenu
+}) => {
   const offUserMenu = useCallback(() => {
     setVisibleUserMenu(false);
   }, [setVisibleUserMenu]);
@@ -50,8 +56,13 @@ const UserMenu: FC<Props> = ({ visibleUserMenu, setVisibleUserMenu }) => {
             <Link to="/mypage">내 정보</Link>
           </UserMenuList>
           <UserMenuList>
-            <Link to="/myteaching">내 가르침</Link>
+            <Link to="/mylesson">내 수련</Link>
           </UserMenuList>
+          {userInfo?.userType === 'teacher' && (
+            <UserMenuList>
+              <Link to="/myteaching">내 가르침</Link>
+            </UserMenuList>
+          )}
           <UserMenuList>
             <Link to="/logout">로그아웃</Link>
           </UserMenuList>
