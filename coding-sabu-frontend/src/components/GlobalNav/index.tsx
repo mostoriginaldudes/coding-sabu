@@ -1,7 +1,26 @@
-import { useState, useCallback, FC, MouseEventHandler } from 'react';
+import {
+  FC,
+  useState,
+  useEffect,
+  useCallback,
+  memo,
+  MouseEventHandler,
+  useMemo
+} from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { AiFillCaretDown as DownArrow } from 'react-icons/ai';
-import UserMenu from '../UserMenu';
+import LoginForm from 'components/LoginForm';
+import SignupForm from 'components/SignupForm';
+import Button from 'components/Button';
+import UserMenu from 'components/UserMenu';
+import { RootState } from 'store';
+import {
+  createActionInvisibleAuthForm,
+  createActionStatusTextHud,
+  createActionVisibleAuthForm,
+  createActionVisibleHud
+} from 'store/ui';
 import logo from 'assets/images/logo.svg';
 import { FlexRow } from 'styles/module';
 import {
@@ -18,7 +37,20 @@ import {
 } from './GlobalNav.style';
 
 const GlobalNav: FC = () => {
+  const [authModalType, setAuthModalType] = useState<'login' | 'signup'>(
+    'login'
+  );
   const [visibleUserMenu, setVisibleUserMenu] = useState<boolean>(false);
+  const { user, visibleAuthForm } = useSelector((state: RootState) => ({
+    user: state.auth.user,
+    visibleAuthForm: state.ui.visibleAuthForm
+  }));
+  const dispatch = useDispatch();
+
+  const setModalToRender = useCallback(
+    modalType => setAuthModalType(modalType),
+    [setAuthModalType]
+  );
 
   const toggleUserMenu = useCallback<MouseEventHandler<HTMLDivElement>>(
     e => {
@@ -27,6 +59,29 @@ const GlobalNav: FC = () => {
     },
     [visibleUserMenu, setVisibleUserMenu]
   );
+
+  const showAuthForm = useCallback(
+    () => dispatch(createActionVisibleAuthForm()),
+    [dispatch]
+  );
+
+  const isLoggedIn = useMemo(() => Boolean(user.data), [user]);
+
+  const displayLoginSuccessResult = useCallback(() => {
+    dispatch(createActionStatusTextHud('success'));
+    dispatch(createActionVisibleHud());
+    dispatch(createActionInvisibleAuthForm());
+  }, [dispatch]);
+
+  const displayLoginFailResult = useCallback(() => {
+    dispatch(createActionStatusTextHud('fail'));
+    dispatch(createActionVisibleHud());
+  }, [dispatch]);
+
+  useEffect(() => {
+    user.data && displayLoginSuccessResult();
+    user.error && displayLoginFailResult();
+  }, [user, displayLoginSuccessResult, displayLoginFailResult]);
 
   return (
     <HeaderContainer data-testid="header">
@@ -51,25 +106,49 @@ const GlobalNav: FC = () => {
               role="search"
             />
           </Link>
-          <ButtonToMyClass radius={unitRegular} color="white">
-            <Link to="/mylesson">수련 관리</Link>
-          </ButtonToMyClass>
-          <FlexRow role="toggleMenu" onClick={toggleUserMenu}>
-            <UserProfileImage
-              color={white}
-              fontSize={unitRegular / 3}
-              cursor="pointer"
-            />
-            <DownArrow cursor="pointer" />
-            <UserMenu
-              visibleUserMenu={visibleUserMenu}
-              setVisibleUserMenu={setVisibleUserMenu}
-            />
-          </FlexRow>
+          {isLoggedIn && (
+            <ButtonToMyClass radius={unitRegular} color="white">
+              <Link to="/mylesson">수련 관리</Link>
+            </ButtonToMyClass>
+          )}
+          {isLoggedIn ? (
+            <FlexRow role="toggleMenu" onClick={toggleUserMenu}>
+              <UserProfileImage
+                color={white}
+                fontSize={unitRegular / 3}
+                cursor="pointer"
+              />
+              <DownArrow cursor="pointer" />
+              <UserMenu
+                userInfo={user.data}
+                visibleUserMenu={visibleUserMenu}
+                setVisibleUserMenu={setVisibleUserMenu}
+              />
+            </FlexRow>
+          ) : (
+            <>
+              <Button color="black" radius={15} onClick={showAuthForm}>
+                로그인
+              </Button>
+              {authModalType === 'login' ? (
+                <LoginForm
+                  setModalToRender={setModalToRender}
+                  visibleAuthForm={visibleAuthForm}
+                  user={user}
+                />
+              ) : (
+                <SignupForm
+                  setModalToRender={setModalToRender}
+                  visibleAuthForm={visibleAuthForm}
+                  user={user}
+                />
+              )}
+            </>
+          )}
         </FlexRow>
       </GlobalNavStyle>
     </HeaderContainer>
   );
 };
 
-export default GlobalNav;
+export default memo(GlobalNav);
