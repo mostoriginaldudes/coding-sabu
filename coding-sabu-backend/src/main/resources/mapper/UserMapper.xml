@@ -22,6 +22,12 @@
     id = #{id}
   </update>
 
+  <select id="getPassword" resultType="string">
+    SELECT password
+    FROM user
+    WHERE id = #{id}
+  </select>
+
   <update id="editProfileImage">
     UPDATE user
     SET

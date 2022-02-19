@@ -3,11 +3,10 @@ package com.mostoriginaldudes.codingsabubackend.service.user;
 import com.mostoriginaldudes.codingsabubackend.dto.UserDto;
 import com.mostoriginaldudes.codingsabubackend.dto.request.EditUserInfoRequestDto;
 import com.mostoriginaldudes.codingsabubackend.dto.response.EditUserInfoResponseDto;
-import com.mostoriginaldudes.codingsabubackend.dto.response.LessonListResponseDto;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {
-  EditUserInfoResponseDto editUserInfo(EditUserInfoRequestDto requestDto);
+  EditUserInfoResponseDto editUserInfo(EditUserInfoRequestDto requestDto, MultipartFile profileImage);
   UserDto getUserInfo(int id);
   String uploadProfileImage(MultipartFile profileImage);
   void updateProfileImagePath(int id, String profileImagePath);

@@ -6,7 +6,6 @@ import com.mostoriginaldudes.codingsabubackend.dto.EditUserInfoDto;
 import com.mostoriginaldudes.codingsabubackend.dto.UserDto;
 import com.mostoriginaldudes.codingsabubackend.dto.request.EditUserInfoRequestDto;
 import com.mostoriginaldudes.codingsabubackend.dto.response.EditUserInfoResponseDto;
-import com.mostoriginaldudes.codingsabubackend.dto.response.LessonListResponseDto;
 import com.mostoriginaldudes.codingsabubackend.respository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.util.Optional;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -26,22 +26,22 @@ public class UserServiceImpl implements UserService {
 
   @Override
   @Transactional
-  public EditUserInfoResponseDto editUserInfo(EditUserInfoRequestDto requestDto) {
-    String encryptedPassword = Security.encrypt(requestDto.getPassword());
+  public EditUserInfoResponseDto editUserInfo(EditUserInfoRequestDto requestDto, MultipartFile profileImage) {
+    String profileUrl = getProfileOrElseOld(requestDto, profileImage);
+    String encryptedPassword = getEncryptedOrElseOld(requestDto);
 
-    EditUserInfoDto editUserInfoDto = EditUserInfoDto.builder()
+    EditUserInfoDto userInfo = EditUserInfoDto.builder()
       .id(requestDto.getId())
       .password(encryptedPassword)
       .nickname(requestDto.getNickname())
       .phoneNum(requestDto.getPhoneNum())
       .description(requestDto.getDescription())
-      .profileImage(requestDto.getProfileImage())
+      .profileImage(profileUrl)
       .build();
 
-    userRepository.editUserInfo(editUserInfoDto);
+    userRepository.editUserInfo(userInfo);
 
-    UserDto user = getUserInfo(editUserInfoDto.getId());
-
+    UserDto user = getUserInfo(requestDto.getId());
     return EditUserInfoResponseDto.builder()
       .id(user.getId())
       .email(user.getEmail())
@@ -53,13 +53,34 @@ public class UserServiceImpl implements UserService {
       .build();
   }
 
+  private String getEncryptedOrElseOld(EditUserInfoRequestDto requestDto) {
+    String oldPassword = userRepository.getPassword(requestDto.getId());
+    Optional<String> newPassword = Optional.ofNullable(requestDto.getPassword());
+
+    String encryptedPassword = oldPassword;
+    if(!requestDto.getPassword().isEmpty() && newPassword.isPresent()) {
+      encryptedPassword = Security.encrypt(newPassword.get());
+    }
+
+    return encryptedPassword;
+  }
+
+  private String getProfileOrElseOld(EditUserInfoRequestDto requestDto, MultipartFile profileImage) {
+    UserDto user = getUserInfo(requestDto.getId());
+
+    if(profileImage == null) {
+      return user.getProfileImage();
+    } else {
+      return uploadProfileImage(profileImage);
+    }
+  }
+
   @Override
   public UserDto getUserInfo(int id) {
     return userRepository.getUserInfoById(id);
   }
 
   @Override
-  @Transactional
   public String uploadProfileImage(MultipartFile profileImage) {
     String imageFileName = profileImage.getOriginalFilename();
     String imagePath = UUID.randomUUID() + imageFileName;
