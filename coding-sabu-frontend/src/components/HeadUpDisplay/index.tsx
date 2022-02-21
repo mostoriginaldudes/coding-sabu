@@ -55,19 +55,21 @@ const HeadUpDisplay: FC = () => {
   const dispatch = useDispatch();
 
   const hideHeadUp = useCallback(() => {
-    dispatch(createActionInvisibleHud());
-  }, [dispatch]);
+    visibleHud && dispatch(createActionInvisibleHud());
+  }, [visibleHud, dispatch]);
 
   useEffect(() => {
     const modalRoot = getModalRoot();
     const current = modalTarget.current;
     modalRoot.appendChild(current);
 
-    setTimeout(hideHeadUp, delay);
+    const timerId = setTimeout(hideHeadUp, delay);
+
     return () => {
       modalRoot.removeChild(current);
+      clearTimeout(timerId);
     };
-  }, [visibleHud, hideHeadUp]);
+  }, [hideHeadUp]);
 
   return createPortal(
     <>
