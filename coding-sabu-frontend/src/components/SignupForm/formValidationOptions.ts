@@ -1,18 +1,16 @@
-import Axios from 'axios';
-import debounce from 'lodash.debounce';
 import { checkEmail } from 'apis';
+import { AxiosError } from 'axios';
 
-const existSameEmail = debounce(async (email: string) => {
+const existSameEmail = async (email: string) => {
   try {
-    const response = await checkEmail(email);
-    const fetchedEmail = response.data;
+    const fetchedEmail = await checkEmail(email);
     return fetchedEmail !== email || '중복된 이메일입니다.';
   } catch (error) {
-    if (Axios.isAxiosError(error)) {
-      return error.response?.status !== 409 || '같은 이메일이 존재합니다.';
+    if ((error as AxiosError).response!.status !== 409) {
+      return '같은 이메일이 존재합니다.';
     }
   }
-}, 500);
+};
 
 const formValidationOptions = {
   email: {
