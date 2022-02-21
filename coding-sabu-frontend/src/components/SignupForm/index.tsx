@@ -78,6 +78,7 @@ const SignupForm: FC<Props> = ({ visibleAuthForm, setModalToRender }) => {
     handleSubmit,
     clearErrors,
     watch,
+    setFocus,
     formState: { errors }
   } = useForm<SignupFormInfo>({ mode: 'onChange' });
 
@@ -101,17 +102,17 @@ const SignupForm: FC<Props> = ({ visibleAuthForm, setModalToRender }) => {
     );
   };
 
-  const closeSignupForm = useCallback(
-    () => dispatch(createActionInvisibleAuthForm()),
-    [dispatch]
-  );
+  const closeSignupForm = useCallback(() => {
+    setModalToRender('login');
+    dispatch(createActionInvisibleAuthForm());
+  }, [dispatch, setModalToRender]);
 
   useEffect(() => {
+    setFocus('email');
     return () => {
       clearErrors();
-      setModalToRender('login');
     };
-  }, [clearErrors, setModalToRender]);
+  }, [clearErrors, setFocus]);
 
   return (
     <Modal
@@ -125,6 +126,7 @@ const SignupForm: FC<Props> = ({ visibleAuthForm, setModalToRender }) => {
             type="email"
             label="이메일"
             placeholder="example@email.com"
+            autoComplete="off"
             {...register('email', formValidationOptions.email)}
           />
           {errors.email && <InputError>{errors.email.message}</InputError>}
