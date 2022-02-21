@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, memo } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import styled from '@emotion/styled';
@@ -15,12 +15,15 @@ import HeadUpDisplay from 'components/HeadUpDisplay';
 import store from 'store';
 import GlobalStyle from 'styles/GlobalStyle';
 import { sizes } from 'styles/theme';
+import { injectStore } from 'apis/instance';
 
 const Main = styled.main`
   width: calc(100% - 2rem);
   max-width: ${sizes.desktop}px;
-  margin: ${sizes.unitBig / 8}em auto 0;
+  margin: ${sizes.unitBig / 8}em auto 2rem;
 `;
+
+injectStore(store);
 
 const App: FC = () => {
   return (
@@ -46,4 +49,4 @@ const App: FC = () => {
   );
 };
 
-export default App;
+export default memo(App);
