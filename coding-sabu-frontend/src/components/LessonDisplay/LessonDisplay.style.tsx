@@ -3,34 +3,30 @@ import { css } from '@emotion/react';
 import { HiChevronLeft, HiChevronRight } from 'react-icons/hi';
 import { flexCenter } from 'styles/module';
 import { colors, media } from 'styles/theme';
-import UnderlineTitle from 'styles/UnderlineTitle';
 
 export const displayWidth = 1000 as const;
 export const displaySpace = 20 as const;
 
-export const cardBorder = css`
-  border: 3px solid ${colors.black};
-  border-radius: 5px;
-  padding: 2em;
-`;
-
-export const Title = styled(UnderlineTitle)`
-  ${media.tablet`
-    display:none;
-  `}
-`;
-
-export const CarouselContainer = styled.div`
-  height: 100%;
-  position: relative;
-  overflow: hidden;
-
+const LessonDisplay = styled.div`
+  width: 100%;
   ${media.tablet`
     display: none;
   `};
 `;
 
-export const Carousel = styled.ol`
+const cardBorder = css`
+  border: 3px solid ${colors.black};
+  border-radius: 5px;
+  padding: 2em;
+`;
+
+const CarouselContainer = styled.div`
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+`;
+
+const Carousel = styled.ol`
   width: fit-content;
   height: 100%;
   display: flex;
@@ -38,7 +34,7 @@ export const Carousel = styled.ol`
   transition: transform 250ms ease-in-out;
 `;
 
-export const carouselArrowStyle = css`
+const carouselArrowStyle = css`
   font-size: 5rem;
   color: ${colors.gray[5]};
   position: absolute;
@@ -47,17 +43,17 @@ export const carouselArrowStyle = css`
   cursor: pointer;
 `;
 
-export const ArrowLeft = styled(HiChevronLeft)`
+const ArrowLeft = styled(HiChevronLeft)`
   ${carouselArrowStyle}
   left: -1rem;
 `;
 
-export const ArrowRight = styled(HiChevronRight)`
+const ArrowRight = styled(HiChevronRight)`
   ${carouselArrowStyle}
   right: -1rem;
 `;
 
-export const Content = styled.li`
+const Content = styled.li`
   ${flexCenter}
   width: ${displayWidth}px;
   height: ${displayWidth / 2}px;
@@ -80,7 +76,7 @@ interface Prop {
   imgUrl?: string;
 }
 
-export const Thumbnail = styled.div<Prop>`
+const Thumbnail = styled.div<Prop>`
   width: 50%;
   height: 100%;
   background-color: ${colors.black};
@@ -90,7 +86,7 @@ export const Thumbnail = styled.div<Prop>`
   background-repeat: no-repeat;
 `;
 
-export const Info = styled.div`
+const Info = styled.div`
   ${flexCenter}
   flex-direction: column;
   justify-content: space-between;
@@ -151,3 +147,15 @@ export const Info = styled.div`
     }
   }
 `;
+
+export {
+  LessonDisplay,
+  cardBorder,
+  CarouselContainer,
+  Carousel,
+  ArrowLeft,
+  ArrowRight,
+  Content,
+  Thumbnail,
+  Info
+};
