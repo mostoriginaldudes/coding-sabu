@@ -17,11 +17,12 @@ interface Props {
   user: ThunkAsyncState<User>;
 }
 
-const LoginForm: FC<Props> = ({ visibleAuthForm, setModalToRender, user }) => {
+const LoginForm: FC<Props> = ({ visibleAuthForm, setModalToRender }) => {
   const {
     register,
     handleSubmit,
     clearErrors,
+    setFocus,
     formState: { errors }
   } = useForm<LoginInfo>({ mode: 'onChange' });
 
@@ -37,10 +38,12 @@ const LoginForm: FC<Props> = ({ visibleAuthForm, setModalToRender, user }) => {
   };
 
   useEffect(() => {
+    visibleAuthForm && setFocus('email');
+
     return () => {
       clearErrors();
     };
-  }, [clearErrors]);
+  }, [visibleAuthForm, setFocus, clearErrors]);
 
   return (
     <Modal
