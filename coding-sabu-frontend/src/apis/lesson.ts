@@ -2,7 +2,7 @@ import httpRequest from 'apis/instance';
 import { LessonListResponse, LessonResponse } from 'types';
 
 export const fetchLessonList = (): Promise<LessonListResponse> =>
-  httpRequest.get('/lesson/all');
+  httpRequest.get('/lesson/all', { withCredentials: true });
 
 export const fetchMyLessonList = (): Promise<LessonListResponse> =>
   httpRequest.get('lesson/me');

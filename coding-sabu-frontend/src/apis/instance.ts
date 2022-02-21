@@ -1,23 +1,60 @@
-import Axios, { AxiosResponse } from 'axios';
+import Axios, {
+  AxiosInstance,
+  AxiosInterceptorManager,
+  AxiosRequestConfig,
+  AxiosResponse
+} from 'axios';
 
-const instance = Axios.create({
-  baseURL: process.env.REACT_APP_BASE_URL,
-  timeout: 15000
-});
-
-const responseBody = (response: AxiosResponse) => response.data;
-
-const requests = {
-  get: (url: string) => instance.get(url).then(responseBody),
-
-  post: (url: string, body: {}) => instance.post(url, body).then(responseBody),
-
-  put: (url: string, body: {}) => instance.put(url, body).then(responseBody),
-
-  patch: (url: string, body: {}) =>
-    instance.patch(url, body).then(responseBody),
-
-  delete: (url: string) => instance.delete(url).then(responseBody)
+import { createActionSetToken } from 'store/auth';
+import store from 'store';
+type Response<T = any> = {
+  response: T;
+  token?: string;
 };
 
-export default requests;
+interface HttpRequestInstance extends AxiosInstance {
+  interceptors: {
+    request: AxiosInterceptorManager<AxiosRequestConfig>;
+    response: AxiosInterceptorManager<AxiosResponse<Response>>;
+  };
+  head<T>(url: string, config?: AxiosRequestConfig): Promise<T>;
+  options<T>(url: string, config?: AxiosRequestConfig): Promise<T>;
+  get<T>(url: string, config?: AxiosRequestConfig): Promise<T>;
+  post<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T>;
+  put<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T>;
+  patch<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T>;
+  delete<T>(url: string, config?: AxiosRequestConfig): Promise<T>;
+}
+
+const instance: HttpRequestInstance = Axios.create({
+  baseURL: process.env.REACT_APP_BASE_URL,
+  timeout: 15000,
+  withCredentials: true
+});
+
+type Store = typeof store;
+
+let injectedStore: Store;
+export const injectStore = (_store: Store) => {
+  injectedStore = _store;
+};
+
+instance.interceptors.request.use(req => {
+  if (req && req.headers) {
+    req.headers.Authorization = injectedStore.getState().auth.token || '';
+  }
+  return req;
+});
+
+instance.interceptors.response.use(res => {
+  if (res.headers) {
+    if (!injectedStore.getState().auth.token) {
+      injectedStore.dispatch(
+        createActionSetToken(res.headers['authorization'])
+      );
+    }
+  }
+  return res.data;
+});
+
+export default instance;
