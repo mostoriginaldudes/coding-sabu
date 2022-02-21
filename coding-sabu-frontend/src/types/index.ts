@@ -31,7 +31,7 @@ export interface User {
   nickname: string;
   phoneNum: string;
   description: string;
-  profileImage: string | null;
+  profileImage: string;
 }
 
 export interface LoginInfo {
@@ -56,4 +56,15 @@ export interface SignupInfo {
   nickname: string;
   phoneNum: string;
   description: string;
+}
+
+export interface EditUserInfo {
+  readonly id: number;
+  readonly email: string;
+  password: string;
+  passwordCheck: string;
+  nickname: string;
+  phoneNum: string;
+  description: string;
+  profileImage: File;
 }
