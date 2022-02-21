@@ -3,10 +3,9 @@ import { AxiosError } from 'axios';
 
 const existSameEmail = async (email: string) => {
   try {
-    const fetchedEmail = await checkEmail(email);
-    return fetchedEmail !== email || '중복된 이메일입니다.';
+    await checkEmail(email);
   } catch (error) {
-    if ((error as AxiosError).response!.status !== 409) {
+    if ((error as AxiosError).response!.status === 409) {
       return '같은 이메일이 존재합니다.';
     }
   }
