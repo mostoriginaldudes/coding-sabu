@@ -1,3 +1,5 @@
+/** @jsxImportSource @emotion/react */
+import { FC } from 'react';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 import { AiOutlineUser } from 'react-icons/ai';
@@ -10,7 +12,7 @@ import headerBackground from 'assets/images/header-background.svg';
 export const { desktop, unitBig, unitRegular } = sizes;
 export const { gray, white } = colors;
 
-export const RoundStyle = css`
+export const roundStyle = css`
   border-radius: 50%;
 `;
 
@@ -44,19 +46,34 @@ export const Image = styled.img`
   width: fit-content;
 `;
 
-export const IconContainer = css`
+export const iconContainer = css`
   width: ${unitRegular}px;
   height: ${unitRegular}px;
   padding: 2px;
 `;
 
-export const UserProfileImage = styled(AiOutlineUser)`
+export const UserDefaultProfileImage = styled(AiOutlineUser)`
   ${flexCenter};
-  ${RoundStyle}
-  ${IconContainer}
+  ${roundStyle}
+  ${iconContainer}
   background-color: ${gray[4]};
   margin-left: 10px;
 `;
+
+const userProfileStyle = css`
+  ${flexCenter}
+  ${roundStyle}
+  ${iconContainer}
+  background-size: auto;
+  background-repeat: no-repeat;
+`;
+interface Props {
+  profileImageUrl?: string;
+}
+
+export const UserProfileImage: FC<Props> = ({ profileImageUrl }) => {
+  return <img src={profileImageUrl} alt="프로필 사진" css={userProfileStyle} />;
+};
 
 export const Search = styled(FaSearch)`
   margin-right: 10px;

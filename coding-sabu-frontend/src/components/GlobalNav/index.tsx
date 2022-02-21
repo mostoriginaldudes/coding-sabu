@@ -1,14 +1,6 @@
-import {
-  FC,
-  useState,
-  useEffect,
-  useCallback,
-  memo,
-  MouseEventHandler,
-  useMemo
-} from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 import { AiFillCaretDown as DownArrow } from 'react-icons/ai';
 import LoginForm from 'components/LoginForm';
 import SignupForm from 'components/SignupForm';
@@ -32,16 +24,18 @@ import {
   Search,
   unitRegular,
   ButtonToMyClass,
-  UserProfileImage,
-  white
+  UserDefaultProfileImage,
+  white,
+  UserProfileImage
 } from './GlobalNav.style';
 
-const GlobalNav: FC = () => {
+const GlobalNav: React.FC = () => {
   const [authModalType, setAuthModalType] = useState<'login' | 'signup'>(
     'login'
   );
   const [visibleUserMenu, setVisibleUserMenu] = useState<boolean>(false);
-  const { user, visibleAuthForm } = useSelector((state: RootState) => ({
+  const { token, user, visibleAuthForm } = useSelector((state: RootState) => ({
+    token: state.auth.token,
     user: state.auth.user,
     visibleAuthForm: state.ui.visibleAuthForm
   }));
@@ -52,7 +46,7 @@ const GlobalNav: FC = () => {
     [setAuthModalType]
   );
 
-  const toggleUserMenu = useCallback<MouseEventHandler<HTMLDivElement>>(
+  const toggleUserMenu = useCallback<React.MouseEventHandler<HTMLDivElement>>(
     e => {
       e.stopPropagation();
       setVisibleUserMenu(!visibleUserMenu);
@@ -65,7 +59,16 @@ const GlobalNav: FC = () => {
     [dispatch]
   );
 
-  const isLoggedIn = useMemo(() => Boolean(user.data), [user]);
+  // TODO 로그인 유지 기능
+  const isLoggedIn = useMemo(() => Boolean(token && user.data), [token, user]);
+
+  const profileImage = useMemo(
+    () =>
+      user.data?.profileImage === '/img/default.png'
+        ? false
+        : user.data?.profileImage,
+    [user]
+  );
 
   const displayLoginSuccessResult = useCallback(() => {
     dispatch(createActionStatusTextHud('success'));
@@ -79,8 +82,8 @@ const GlobalNav: FC = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    user.data && displayLoginSuccessResult();
-    user.error && displayLoginFailResult();
+    user.data && !user.error && displayLoginSuccessResult();
+    !user.data && user.error && displayLoginFailResult();
   }, [user, displayLoginSuccessResult, displayLoginFailResult]);
 
   return (
@@ -113,11 +116,16 @@ const GlobalNav: FC = () => {
           )}
           {isLoggedIn ? (
             <FlexRow role="toggleMenu" onClick={toggleUserMenu}>
-              <UserProfileImage
-                color={white}
-                fontSize={unitRegular / 3}
-                cursor="pointer"
-              />
+              {profileImage ? (
+                <UserProfileImage profileImageUrl={profileImage} />
+              ) : (
+                <UserDefaultProfileImage
+                  color={white}
+                  fontSize={unitRegular / 3}
+                  cursor="pointer"
+                />
+              )}
+
               <DownArrow cursor="pointer" />
               <UserMenu
                 userInfo={user.data}
@@ -151,4 +159,4 @@ const GlobalNav: FC = () => {
   );
 };
 
-export default memo(GlobalNav);
+export default React.memo(GlobalNav);
