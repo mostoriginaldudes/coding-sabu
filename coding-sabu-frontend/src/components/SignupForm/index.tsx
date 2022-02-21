@@ -126,7 +126,6 @@ const SignupForm: FC<Props> = ({ visibleAuthForm, setModalToRender }) => {
             type="email"
             label="이메일"
             placeholder="example@email.com"
-            autoComplete="off"
             {...register('email', formValidationOptions.email)}
           />
           {errors.email && <InputError>{errors.email.message}</InputError>}
