@@ -37,7 +37,7 @@ const InputBox = styled.input`
 interface Props extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
   color?: string;
-  onChange: ({ target }: { target: HTMLInputElement }) => void;
+  onChange?: ({ target }: { target: HTMLInputElement }) => void;
   height?: number;
 }
 
