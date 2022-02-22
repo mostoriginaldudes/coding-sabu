@@ -65,22 +65,21 @@ public class AuthServiceImpl implements AuthService {
 
   @Override
   @Transactional
-  public SignupResponseDto signup(SignupRequestDto signupRequest) {
-    String encryptedPassword = Security.encrypt(signupRequest.getPassword());
-
+  public SignupResponseDto signup(SignupRequestDto requestDto) {
+    String encryptedPassword = Security.encrypt(requestDto.getPassword());
     authRepository.createUser(SignupDto.builder()
-      .email(signupRequest.getEmail())
+      .email(requestDto.getEmail())
       .password(encryptedPassword)
-      .userType(signupRequest.getUserType())
-      .nickname(signupRequest.getNickname())
-      .phoneNum(signupRequest.getPhoneNum())
-      .description(signupRequest.getDescription())
+      .userType(requestDto.getUserType())
+      .nickname(requestDto.getNickname())
+      .phoneNum(requestDto.getPhoneNum())
+      .description(requestDto.getDescription())
       .build()
     );
 
     UserDto user = getMatchedUser(
       LoginDto.builder()
-        .email(signupRequest.getEmail())
+        .email(requestDto.getEmail())
         .password(encryptedPassword)
         .build()
     );
