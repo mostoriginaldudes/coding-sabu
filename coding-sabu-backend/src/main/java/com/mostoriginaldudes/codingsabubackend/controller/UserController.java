@@ -45,7 +45,6 @@ public class UserController {
     @ModelAttribute EditUserInfoRequestDto requestDto,
     @RequestParam(required = false) MultipartFile profileImage
   ) {
-    System.out.println("############# enter Controller ##############");
     return ResponseEntity
         .status(HttpStatus.CREATED)
         .body(userService.editUserInfo(requestDto, profileImage));
