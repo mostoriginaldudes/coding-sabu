@@ -1,69 +1,20 @@
-import { FC, useEffect, useCallback, memo, useRef } from 'react';
-import { useDispatch } from 'react-redux';
-import { useForm, SubmitHandler } from 'react-hook-form';
-import styled from '@emotion/styled';
+import { FC, useEffect, useCallback, memo } from 'react';
 import Modal from 'components/Modal';
 import Input from 'components/Input';
 import Button from 'components/Button';
-import { createActionInvisibleAuthForm } from 'store/ui';
-import { ThunkAsyncState } from 'store';
-import { colors, media } from 'styles/theme';
-import { flexCenter } from 'styles/module';
 import { LoginInfo, SignupFormInfo, SignupInfo, User } from 'types';
-import formValidationOptions from './formValidationOptions';
+
+import { useDispatch } from 'react-redux';
+import { ThunkAsyncState } from 'store';
 import { createActionLogin, createActionSignup } from 'store/auth';
+import { createActionInvisibleAuthForm } from 'store/ui';
+import { useForm, SubmitHandler } from 'react-hook-form';
 
-const SignupButtonWrapper = styled.div`
-  ${flexCenter}
-  justify-content: space-between;
-  & > button {
-    width: 100%;
-    &:first-of-type {
-      margin-right: 10px;
-    }
-  }
-  ${media.tablet`
-    flex-direction: column;
-    justify-content: flex-start;
-    & > button {
-      &:first-of-type {
-        margin: 2em 0 ;
-      }
-    }
-  `}
-`;
+import { yupResolver } from '@hookform/resolvers/yup';
+import validationSchema from 'utils/FormValidation/ValidationSchema';
 
-const RadioContainer = styled.ol`
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  margin: 1em auto;
-  & > li {
-    display: flex;
-  }
-`;
-
-const RadioButton = styled.input`
-  background-color: ${colors.white};
-  &:checked {
-    appearance: none;
-    width: 0.7rem;
-    height: 0.7rem;
-    border-radius: 100%;
-    margin-right: 0.1rem;
-    background-color: ${colors.yellow[4]};
-  }
-`;
-
-const RadioLabel = styled.label`
-  font-size: 0.8rem;
-`;
-
-const InputError = styled.p`
-  font-size: 0.7rem;
-  font-weight: bold;
-  color: ${colors.red[7]};
-`;
+import useScrollLock from 'hooks/useScrollLock';
+import * as Styled from './SignupForm.style';
 
 interface Props {
   visibleAuthForm: boolean;
@@ -77,29 +28,26 @@ const SignupForm: FC<Props> = ({ visibleAuthForm, setModalToRender }) => {
     register,
     handleSubmit,
     clearErrors,
-    watch,
     setFocus,
     formState: { errors }
-  } = useForm<SignupFormInfo>({ mode: 'onChange' });
-
-  const password = useRef<string>('');
-  password.current = watch('password', '');
-
-  const isMatchPassword = (passwordCheck: string) =>
-    passwordCheck === password.current || '비밀번호가 일치하지 않습니다.';
+  } = useForm<SignupFormInfo>({
+    mode: 'onChange',
+    resolver: yupResolver(validationSchema.getSignup())
+  });
 
   const onSubmit: SubmitHandler<SignupFormInfo> = async ({
     passwordCheck,
     ...signupProps
   }) => {
-    await dispatch(createActionSignup(signupProps as SignupInfo));
-
-    await dispatch(
-      createActionLogin({
-        email: signupProps.email,
-        password: signupProps.password
-      } as LoginInfo)
-    );
+    try {
+      await dispatch(createActionSignup(signupProps as SignupInfo));
+      await dispatch(
+        createActionLogin({
+          email: signupProps.email,
+          password: signupProps.password
+        } as LoginInfo)
+      );
+    } catch (error) {}
   };
 
   const closeSignupForm = useCallback(() => {
@@ -107,12 +55,18 @@ const SignupForm: FC<Props> = ({ visibleAuthForm, setModalToRender }) => {
     dispatch(createActionInvisibleAuthForm());
   }, [dispatch, setModalToRender]);
 
+  const openLoginForm = useCallback(() => {
+    setModalToRender('login');
+  }, [setModalToRender]);
+
+  useScrollLock(visibleAuthForm, [visibleAuthForm]);
+
   useEffect(() => {
-    setFocus('email');
+    visibleAuthForm && setFocus('email');
     return () => {
       clearErrors();
     };
-  }, [clearErrors, setFocus]);
+  }, [clearErrors, setFocus, visibleAuthForm]);
 
   return (
     <Modal
@@ -126,92 +80,98 @@ const SignupForm: FC<Props> = ({ visibleAuthForm, setModalToRender }) => {
             type="email"
             label="이메일"
             placeholder="example@email.com"
-            {...register('email', formValidationOptions.email)}
+            {...register('email')}
           />
-          {errors.email && <InputError>{errors.email.message}</InputError>}
+          {errors.email && (
+            <Styled.InputError>{errors.email.message}</Styled.InputError>
+          )}
           <Input
             label="비밀번호"
             type="password"
             placeholder="영문 대소문자, 숫자, 특수문자 포함(! @ # $)"
-            {...register('password', formValidationOptions.password)}
+            {...register('password')}
           />
           {errors.password && (
-            <InputError>{errors.password.message}</InputError>
+            <Styled.InputError>{errors.password.message}</Styled.InputError>
           )}
           <Input
             type="password"
             label="비밀번호 확인"
             placeholder="비밀번호를 한번 더 입력해주세요."
-            {...register('passwordCheck', {
-              ...formValidationOptions.password,
-              validate: { isMatchPassword }
-            })}
+            {...register('passwordCheck')}
           />
           {errors.passwordCheck && (
-            <InputError>{errors.passwordCheck.message}</InputError>
+            <Styled.InputError>
+              {errors.passwordCheck.message}
+            </Styled.InputError>
           )}
           <Input
             type="text"
             label="닉네임"
             placeholder="닉네임을 입력해주세요."
-            {...register('nickname', formValidationOptions.nickname)}
+            {...register('nickname')}
           />
           {errors.nickname && (
-            <InputError>{errors.nickname.message}</InputError>
+            <Styled.InputError>{errors.nickname.message}</Styled.InputError>
           )}
           <Input
             type="text"
             label="전화번호"
             placeholder="010-0000-0000"
-            {...register('phoneNum', formValidationOptions.phoneNum)}
+            {...register('phoneNum')}
           />
           {errors.phoneNum && (
-            <InputError>{errors.phoneNum.message}</InputError>
+            <Styled.InputError>{errors.phoneNum.message}</Styled.InputError>
           )}
           <Input
             type="text"
             label="자기소개"
             placeholder="자기소개를 입력해주세요."
-            {...register('description', formValidationOptions.description)}
+            {...register('description')}
             height={5}
           />
           {errors.description && (
-            <InputError>{errors.description.message}</InputError>
+            <Styled.InputError>{errors.description.message}</Styled.InputError>
           )}
-          <RadioContainer>
+          <Styled.RadioContainer>
             <li>
-              <RadioButton
+              <Styled.RadioButton
                 type="radio"
                 value="student"
                 id="student"
                 defaultChecked
                 {...register('userType')}
               />
-              <RadioLabel htmlFor="student">학생입니다.</RadioLabel>
+              <Styled.RadioLabel htmlFor="student">
+                수련생입니다.
+              </Styled.RadioLabel>
             </li>
             <li>
-              <RadioButton
+              <Styled.RadioButton
                 type="radio"
                 value="teacher"
                 id="teacher"
                 {...register('userType')}
               />
-              <RadioLabel htmlFor="teacher">선생님입니다.</RadioLabel>
+              <Styled.RadioLabel htmlFor="teacher">
+                사부님입니다.
+              </Styled.RadioLabel>
             </li>
-          </RadioContainer>
-          <SignupButtonWrapper>
+          </Styled.RadioContainer>
+          <Styled.SignupButtonWrapper>
             <Button type="submit" color="yellow" radius={5} height={2.5}>
               회원가입
             </Button>
             <Button
+              type="button"
               color="white"
               radius={5}
               height={2.5}
-              onClick={() => setModalToRender('login')}
+              onClick={openLoginForm}
             >
               뒤로
             </Button>
-          </SignupButtonWrapper>
+          </Styled.SignupButtonWrapper>
         </form>
       </div>
     </Modal>

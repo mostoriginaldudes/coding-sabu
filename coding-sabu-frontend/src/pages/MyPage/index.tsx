@@ -1,24 +1,20 @@
-import React, {
-  useState,
-  useEffect,
-  useCallback,
-  useMemo,
-  useRef
-} from 'react';
-import { Redirect } from 'react-router-dom';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { Redirect, RouteComponentProps } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import styled from '@emotion/styled';
 import Input from 'components/Input';
 import Button from 'components/Button';
+import { EditUserInfo } from 'types';
+import { RootState } from 'store';
+import { createActionEditUser } from 'store/auth';
+
+import FlexRow from 'styles/Row';
+import styled from '@emotion/styled';
 import { colors, media } from 'styles/theme';
 import { flexCenter } from 'styles/module';
-import { EditUserInfo } from 'types';
-import formValidationOptions from './formValidationOptions';
-import { createActionEditUser } from 'store/auth';
-import FlexRow from 'styles/Row';
-import { RootState } from 'store';
-import { RouteComponentProps } from 'react-router-dom';
+
+import { yupResolver } from '@hookform/resolvers/yup';
+import validationSchema from 'utils/FormValidation/ValidationSchema';
 
 const InputContainer = styled.div`
   display: flex;
@@ -116,10 +112,10 @@ const MyPage: React.FC<RouteComponentProps> = ({ history }) => {
     register,
     handleSubmit,
     clearErrors,
-    watch,
     formState: { errors }
   } = useForm<EditUserInfo>({
     mode: 'onChange',
+    resolver: yupResolver(validationSchema.getEditUser()),
     defaultValues: {
       id: user.data?.id,
       email: user.data?.email,
@@ -128,12 +124,6 @@ const MyPage: React.FC<RouteComponentProps> = ({ history }) => {
       description: user.data?.description
     }
   });
-
-  const password = useRef<string>('');
-  password.current = watch('password', '');
-
-  const isMatchPassword = (passwordCheck: string) =>
-    passwordCheck === password.current || '비밀번호가 일치하지 않습니다.';
 
   const onSubmit: SubmitHandler<EditUserInfo> = async (editUser, event) => {
     event?.preventDefault();
@@ -216,7 +206,7 @@ const MyPage: React.FC<RouteComponentProps> = ({ history }) => {
               label="새 비밀번호"
               type="password"
               placeholder="영문 대소문자, 숫자, 특수문자 포함(! @ # $)"
-              {...register('password', formValidationOptions.password)}
+              {...register('password')}
             />
             {errors.password && (
               <InputError>{errors.password.message}</InputError>
@@ -225,10 +215,7 @@ const MyPage: React.FC<RouteComponentProps> = ({ history }) => {
               type="password"
               label="새 비밀번호 확인"
               placeholder="비밀번호를 한번 더 입력해주세요."
-              {...register('passwordCheck', {
-                ...formValidationOptions.passwordCheck,
-                validate: { isMatchPassword }
-              })}
+              {...register('passwordCheck')}
             />
             {errors.passwordCheck && (
               <InputError>{errors.passwordCheck.message}</InputError>
@@ -240,7 +227,7 @@ const MyPage: React.FC<RouteComponentProps> = ({ history }) => {
             type="text"
             label="닉네임"
             placeholder="닉네임을 입력해주세요."
-            {...register('nickname', formValidationOptions.nickname)}
+            {...register('nickname')}
           />
           {errors.nickname && (
             <InputError>{errors.nickname.message}</InputError>
@@ -249,7 +236,7 @@ const MyPage: React.FC<RouteComponentProps> = ({ history }) => {
             type="text"
             label="전화번호"
             placeholder="010-0000-0000"
-            {...register('phoneNum', formValidationOptions.phoneNum)}
+            {...register('phoneNum')}
           />
           {errors.phoneNum && (
             <InputError>{errors.phoneNum.message}</InputError>
@@ -258,7 +245,7 @@ const MyPage: React.FC<RouteComponentProps> = ({ history }) => {
             type="text"
             label="자기소개"
             placeholder="자기소개를 입력해주세요."
-            {...register('description', formValidationOptions.description)}
+            {...register('description')}
             height={5}
           />
           {errors.description && (
