@@ -11,6 +11,7 @@ const ModalMask = styled.div`
   ${positionFixed}
   width: 100vw;
   height: 100vh;
+  overflow: hidden;
   background-color: rgba(255, 255, 255, 0.65);
   z-index: ${modalMaskZIndex};
   ${media.tablet`
@@ -20,10 +21,9 @@ const ModalMask = styled.div`
 
 const ModalContainer = styled.div`
   ${positionFixed}
-  min: {
-    width: ${sizes.desktop / 4}px;
-    width: ${sizes.desktop / 2}px;
-  }
+  min-width: ${sizes.desktop / 4}px;
+  max-width: ${sizes.desktop / 2}px;
+  max-height: 100%;
   background-color: ${colors.white};
   border-radius: 5px;
   z-index: ${modalMaskZIndex + 7};
@@ -31,6 +31,7 @@ const ModalContainer = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  overflow-y: auto;
   ${media.tablet`
     width: 100vw;
     height: 100vh;
@@ -47,21 +48,13 @@ const ModalHeader = styled.header`
   height: 3.5rem;
   background-color: ${colors.yellow[4]};
   padding: 0 10px;
-  border: {
-    top: {
-      left-radius: 5px;
-      right-radius: 5px;
-    }
-    bottom: 1px solid ${colors.black};
-  }
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  border-bottom: 1px solid ${colors.black};
   ${media.tablet`
     padding: 0 20px;
-    border: {
-      top: {
-        left-radius: 0;
-        right-radius: 0;
-      }
-    }
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
   `}
 `;
 
@@ -84,7 +77,8 @@ const ModalBody = styled.article`
   ${media.tablet`
     width: 100%;
     padding: 20px;
-  `}
+    margin-bottom: 20px;
+  `};
 `;
 
 interface Props {
