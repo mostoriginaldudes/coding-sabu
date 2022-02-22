@@ -1,12 +1,20 @@
 package com.mostoriginaldudes.codingsabubackend.config;
 
+import com.mostoriginaldudes.codingsabubackend.interceptor.AuthInterceptor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.resource.PathResourceResolver;
 
+import java.util.Arrays;
+import java.util.List;
+
+import static com.mostoriginaldudes.codingsabubackend.util.constant.Constant.AUTHORIZATION_HEADER;
+
+@RequiredArgsConstructor
+@EnableWebMvc
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
@@ -16,12 +24,21 @@ public class WebConfig implements WebMvcConfigurer {
   @Value("${file.upload.location}")
   private String location;
 
+  private final AuthInterceptor authInterceptor;
+
+  private final List<String> AddAuthInterceptorUrl = Arrays.asList(
+    "/user",
+    "/auth/logout"
+  );
+
   @Override
   public void addCorsMappings(CorsRegistry registry) {
     registry.addMapping("/**")
-            .allowedOrigins(allowCorsUrl)
-            .allowedMethods("*")
-            .maxAge(3000);
+      .allowedOrigins(allowCorsUrl)
+      .allowCredentials(true)
+      .allowedMethods("*")
+      .exposedHeaders(AUTHORIZATION_HEADER)
+      .maxAge(3000);
   }
 
   @Override
@@ -30,6 +47,18 @@ public class WebConfig implements WebMvcConfigurer {
       .addResourceLocations("file:///" + location)
       .setCachePeriod(3600)
       .resourceChain(true)
-      .addResolver(new PathResourceResolver());
+      .addResolver(pathResourceResolver());
+  }
+
+  @Bean
+  public PathResourceResolver pathResourceResolver() {
+    return new PathResourceResolver();
+  }
+
+  @Override
+  public void addInterceptors(InterceptorRegistry registry) {
+    registry.addInterceptor(authInterceptor)
+      .addPathPatterns(AddAuthInterceptorUrl);
+
   }
 }

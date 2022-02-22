@@ -6,7 +6,8 @@ import {
   useState,
   ChangeEvent,
   SyntheticEvent,
-  useMemo
+  useMemo,
+  useEffect
 } from 'react';
 import styled from '@emotion/styled';
 import Input from 'components/Input';
@@ -87,8 +88,8 @@ const reducer: Reducer<State, Action> = (state, action) => {
 };
 
 const LessonForm: FC = () => {
-  const [imgUrl, setImageUrl] = useState<string>('');
-  const hasBeenUploaded = useMemo(() => imgUrl === '', [imgUrl]);
+  const [imgUrl, setImgUrl] = useState<string>('');
+  const hasBeenUploaded = useMemo(() => imgUrl !== '', [imgUrl]);
   const { back } = useRouting();
 
   const [state, dispatch] = useReducer(reducer, {
@@ -114,9 +115,17 @@ const LessonForm: FC = () => {
 
   const uploadThumbnail = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files![0];
-    const lessonImageUrl = URL.createObjectURL(file);
-    setImageUrl(lessonImageUrl);
+    if (file) {
+      const lessonImgUrl = URL.createObjectURL(file);
+      setImgUrl(lessonImgUrl);
+    }
   };
+
+  useEffect(() => {
+    return () => {
+      imgUrl && URL.revokeObjectURL(imgUrl);
+    };
+  });
 
   return (
     <div>
@@ -147,7 +156,7 @@ const LessonForm: FC = () => {
             />
           </InputContainer>
           <ThumbnailContainer imgUrl={imgUrl}>
-            {hasBeenUploaded && (
+            {hasBeenUploaded || (
               <label htmlFor="lessonFile">수련 소개 이미지 업로드</label>
             )}
             <ThumbnailInput

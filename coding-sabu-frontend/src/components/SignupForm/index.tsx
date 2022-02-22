@@ -1,110 +1,181 @@
-import { FC, FormEventHandler } from 'react';
-import styled from '@emotion/styled';
-import Modal from '../Modal';
-import Input from '../Input';
-import Button from '../Button';
-import { media } from 'styles/theme';
-import { flexCenter } from 'styles/module';
+import { FC, useEffect, useCallback, memo } from 'react';
+import Modal from 'components/Modal';
+import Input from 'components/Input';
+import Button from 'components/Button';
+import { LoginInfo, SignupFormInfo, SignupInfo, User } from 'types';
 
-const SignupContainer = styled.div``;
-const SignupFormElement = styled.form``;
-const SignupEmailWrapper = styled.div`
-  position: relative;
-  & > button {
-    font-size: 14px;
-    height: 3em;
-    position: absolute;
-    top: 1em;
-    right: 0;
-    box-shadow: none;
-    &:active,
-    &:hover {
-      box-shadow: none;
-    }
-  }
-`;
+import { useDispatch } from 'react-redux';
+import { ThunkAsyncState } from 'store';
+import { createActionLogin, createActionSignup } from 'store/auth';
+import { createActionInvisibleAuthForm } from 'store/ui';
+import { useForm, SubmitHandler } from 'react-hook-form';
 
-const SignupButtonWrapper = styled.div`
-  ${flexCenter}
-  justify-content: space-between;
-  & > button {
-    width: 100%;
-    &:first-of-type {
-      margin-right: 10px;
-    }
-  }
-  ${media.tablet`
-    flex-direction: column;
-    justify-content: flex-start;
-    & > button {
-      &:first-of-type {
-        margin: 2em 0 ;
-      }
-    }
-  `}
-`;
+import { yupResolver } from '@hookform/resolvers/yup';
+import validationSchema from 'utils/FormValidation/ValidationSchema';
+
+import useScrollLock from 'hooks/useScrollLock';
+import * as Styled from './SignupForm.style';
 
 interface Props {
-  setRenderedModal: (renderedModal: 'login') => void;
+  visibleAuthForm: boolean;
+  setModalToRender: (modalType: 'login') => void;
+  user: ThunkAsyncState<User>;
 }
 
-const SignupForm: FC<Props> = ({ setRenderedModal }) => {
-  const onSubmitTemp: FormEventHandler<HTMLFormElement> = event => {
-    event.preventDefault();
+const SignupForm: FC<Props> = ({ visibleAuthForm, setModalToRender }) => {
+  const dispatch = useDispatch();
+  const {
+    register,
+    handleSubmit,
+    clearErrors,
+    setFocus,
+    formState: { errors }
+  } = useForm<SignupFormInfo>({
+    mode: 'onChange',
+    resolver: yupResolver(validationSchema.getSignup())
+  });
+
+  const onSubmit: SubmitHandler<SignupFormInfo> = async ({
+    passwordCheck,
+    ...signupProps
+  }) => {
+    try {
+      await dispatch(createActionSignup(signupProps as SignupInfo));
+      await dispatch(
+        createActionLogin({
+          email: signupProps.email,
+          password: signupProps.password
+        } as LoginInfo)
+      );
+    } catch (error) {}
   };
-  const onChangeTemp = ({ target }: { target: HTMLInputElement }) =>
-    console.log(target.value);
+
+  const closeSignupForm = useCallback(() => {
+    setModalToRender('login');
+    dispatch(createActionInvisibleAuthForm());
+  }, [dispatch, setModalToRender]);
+
+  const openLoginForm = useCallback(() => {
+    setModalToRender('login');
+  }, [setModalToRender]);
+
+  useScrollLock(visibleAuthForm, [visibleAuthForm]);
+
+  useEffect(() => {
+    visibleAuthForm && setFocus('email');
+    return () => {
+      clearErrors();
+    };
+  }, [clearErrors, setFocus, visibleAuthForm]);
 
   return (
-    <Modal modalTitle="수련생 등록">
-      <SignupContainer>
-        <SignupFormElement onSubmit={onSubmitTemp}>
-          <SignupEmailWrapper>
-            <Input type="email" label="이메일" onChange={onChangeTemp} />
-            <Button color="black">중복 확인</Button>
-          </SignupEmailWrapper>
-          <Input label="비밀번호" type="password" onChange={onChangeTemp} />
+    <Modal
+      modalTitle="수련생 등록"
+      visibleModal={visibleAuthForm}
+      closeModal={closeSignupForm}
+    >
+      <div>
+        <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <Input
-            label="비밀번호 확인"
+            type="email"
+            label="이메일"
+            placeholder="example@email.com"
+            {...register('email')}
+          />
+          {errors.email && (
+            <Styled.InputError>{errors.email.message}</Styled.InputError>
+          )}
+          <Input
+            label="비밀번호"
             type="password"
-            onChange={onChangeTemp}
+            placeholder="영문 대소문자, 숫자, 특수문자 포함(! @ # $)"
+            {...register('password')}
           />
-          <Input label="이름" name="name" type="text" onChange={onChangeTemp} />
+          {errors.password && (
+            <Styled.InputError>{errors.password.message}</Styled.InputError>
+          )}
           <Input
+            type="password"
+            label="비밀번호 확인"
+            placeholder="비밀번호를 한번 더 입력해주세요."
+            {...register('passwordCheck')}
+          />
+          {errors.passwordCheck && (
+            <Styled.InputError>
+              {errors.passwordCheck.message}
+            </Styled.InputError>
+          )}
+          <Input
+            type="text"
             label="닉네임"
-            name="nickname"
-            type="text"
-            onChange={onChangeTemp}
+            placeholder="닉네임을 입력해주세요."
+            {...register('nickname')}
           />
+          {errors.nickname && (
+            <Styled.InputError>{errors.nickname.message}</Styled.InputError>
+          )}
           <Input
+            type="text"
             label="전화번호"
-            type="number"
-            max={2}
-            onChange={onChangeTemp}
+            placeholder="010-0000-0000"
+            {...register('phoneNum')}
           />
+          {errors.phoneNum && (
+            <Styled.InputError>{errors.phoneNum.message}</Styled.InputError>
+          )}
           <Input
-            label="자기소개"
             type="text"
-            onChange={onChangeTemp}
+            label="자기소개"
+            placeholder="자기소개를 입력해주세요."
+            {...register('description')}
             height={5}
           />
-          <SignupButtonWrapper>
-            <Button color="yellow" radius={5} height={2.5}>
+          {errors.description && (
+            <Styled.InputError>{errors.description.message}</Styled.InputError>
+          )}
+          <Styled.RadioContainer>
+            <li>
+              <Styled.RadioButton
+                type="radio"
+                value="student"
+                id="student"
+                defaultChecked
+                {...register('userType')}
+              />
+              <Styled.RadioLabel htmlFor="student">
+                수련생입니다.
+              </Styled.RadioLabel>
+            </li>
+            <li>
+              <Styled.RadioButton
+                type="radio"
+                value="teacher"
+                id="teacher"
+                {...register('userType')}
+              />
+              <Styled.RadioLabel htmlFor="teacher">
+                사부님입니다.
+              </Styled.RadioLabel>
+            </li>
+          </Styled.RadioContainer>
+          <Styled.SignupButtonWrapper>
+            <Button type="submit" color="yellow" radius={5} height={2.5}>
               회원가입
             </Button>
             <Button
+              type="button"
               color="white"
               radius={5}
               height={2.5}
-              onClick={() => setRenderedModal('login')}
+              onClick={openLoginForm}
             >
               뒤로
             </Button>
-          </SignupButtonWrapper>
-        </SignupFormElement>
-      </SignupContainer>
+          </Styled.SignupButtonWrapper>
+        </form>
+      </div>
     </Modal>
   );
 };
 
-export default SignupForm;
+export default memo(SignupForm);

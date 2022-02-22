@@ -3,7 +3,6 @@ package com.mostoriginaldudes.codingsabubackend.controller;
 import com.mostoriginaldudes.codingsabubackend.dto.QuestionDto;
 import com.mostoriginaldudes.codingsabubackend.dto.UserDto;
 import com.mostoriginaldudes.codingsabubackend.dto.request.QuestionRequestDto;
-import com.mostoriginaldudes.codingsabubackend.dto.response.QuestionResponseDto;
 import com.mostoriginaldudes.codingsabubackend.service.auth.AuthService;
 import com.mostoriginaldudes.codingsabubackend.service.qna.QnaService;
 import lombok.RequiredArgsConstructor;

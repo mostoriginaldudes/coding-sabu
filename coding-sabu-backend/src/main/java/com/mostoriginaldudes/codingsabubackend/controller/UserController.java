@@ -41,28 +41,13 @@ public class UserController {
   }
 
   @PutMapping
-  public ResponseEntity<EditUserInfoResponseDto> editMyInfo (
-      @RequestHeader Map<String, Object> requestHeader,
-      @RequestBody EditUserInfoRequestDto requestDto
-    ) {
-    if(!requestHeader.containsKey(AUTHORIZATION_HEADER)) {
-      return ResponseEntity
-        .status(HttpStatus.UNAUTHORIZED)
-        .body(null);
-    }
-
-    String token = (String) requestHeader.get(AUTHORIZATION_HEADER);
-    UserDto user = authService.getLoggedInUserInfo(token);
-
-    if(user == null || user.getId() != requestDto.getId()) {
-      return ResponseEntity
-        .status(HttpStatus.BAD_REQUEST)
-        .body(null);
-    }
-
+  public ResponseEntity<EditUserInfoResponseDto> editMyInfo(
+    @ModelAttribute EditUserInfoRequestDto requestDto,
+    @RequestParam(required = false) MultipartFile profileImage
+  ) {
     return ResponseEntity
         .status(HttpStatus.CREATED)
-        .body(userService.editUserInfo(requestDto));
+        .body(userService.editUserInfo(requestDto, profileImage));
   }
 
   @PatchMapping("/profile")

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 public interface UserRepository {
   UserDto getUserInfoById(int id);
   void editUserInfo(EditUserInfoDto editUserInfo);
+  String getPassword(int id);
   void editProfileImage(int id, String profileImage);
   UserDto getTeacherByNickname(String nickname);
 }

@@ -3,18 +3,18 @@ import { createPortal } from 'react-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import styled from '@emotion/styled';
 import { RootState } from 'store';
-import { createActionInvisibleHud, State as UIState } from 'store/ui';
-import success from 'assets/images/success.svg';
-import fail from 'assets/images/fail.svg';
-import useTimeout from 'hooks/useTimeout';
+import { createActionInvisibleHud } from 'store/ui';
 import { getModalRoot } from 'utils';
 import { flexCenter, positionFixed } from 'styles/module';
+import success from 'assets/images/success.svg';
+import fail from 'assets/images/fail.svg';
 
 const size = 160;
 const delay = 3000;
 const HeadUpDpWrapper = styled.div`
   ${flexCenter}
   ${positionFixed}
+  z-index: 50;
   flex-direction: column;
   top: calc((100vh - ${size}px) / 2);
   left: calc((100vw - ${size}px) / 2);
@@ -46,37 +46,30 @@ const HeadUpDpWrapper = styled.div`
   }
 `;
 
-/**
- *  사용이 필요한 컴포넌트에서 아래 코드 호출
- *  dispatch(createActionVisibleHud())
- */
 const HeadUpDisplay: FC = () => {
   const modalTarget = useRef<HTMLDivElement>(document.createElement('div'));
-  const { visibleHud, hudStatusText } = useSelector<RootState, UIState>(
-    state => ({
-      visibleHud: state.ui.visibleHud,
-      hudStatusText: state.ui.hudStatusText
-    })
-  );
-
+  const { visibleHud, hudStatusText } = useSelector((state: RootState) => ({
+    visibleHud: state.ui.visibleHud,
+    hudStatusText: state.ui.hudStatusText
+  }));
   const dispatch = useDispatch();
 
   const hideHeadUp = useCallback(() => {
-    if (visibleHud) {
-      dispatch(createActionInvisibleHud());
-    }
+    visibleHud && dispatch(createActionInvisibleHud());
   }, [visibleHud, dispatch]);
 
-  useTimeout(hideHeadUp, delay);
-
   useEffect(() => {
-    const current = modalTarget.current;
     const modalRoot = getModalRoot();
-
+    const current = modalTarget.current;
     modalRoot.appendChild(current);
 
-    return () => void document.body.removeChild(modalRoot);
-  }, []);
+    const timerId = setTimeout(hideHeadUp, delay);
+
+    return () => {
+      modalRoot.removeChild(current);
+      clearTimeout(timerId);
+    };
+  }, [hideHeadUp]);
 
   return createPortal(
     <>

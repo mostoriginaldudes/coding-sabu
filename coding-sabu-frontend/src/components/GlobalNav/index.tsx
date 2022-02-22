@@ -1,88 +1,90 @@
-import { useState, useCallback, FC } from 'react';
-import styled from '@emotion/styled';
-import { css } from '@emotion/react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import logo from '../../assets/images/logo.svg';
-import headerBackground from '../../assets/images/header-background.svg';
-import { FaSearch } from 'react-icons/fa';
+import { useSelector, useDispatch } from 'react-redux';
 import { AiFillCaretDown as DownArrow } from 'react-icons/ai';
-import { AiOutlineUser } from 'react-icons/ai';
-import { sizes, colors, media } from '../../styles/theme';
-import Button from '../Button';
-import UserMenu from '../UserMenu';
-import { flexCenter, positionFixed, FlexRow } from '../../styles/module';
+import LoginForm from 'components/LoginForm';
+import SignupForm from 'components/SignupForm';
+import Button from 'components/Button';
+import UserMenu from 'components/UserMenu';
+import { RootState } from 'store';
+import {
+  createActionInvisibleAuthForm,
+  createActionStatusTextHud,
+  createActionVisibleAuthForm,
+  createActionVisibleHud
+} from 'store/ui';
+import logo from 'assets/images/logo.svg';
+import { FlexRow } from 'styles/module';
+import {
+  EmphasisText,
+  GlobalNavStyle,
+  gray,
+  HeaderContainer,
+  Image,
+  Search,
+  unitRegular,
+  ButtonToMyClass,
+  UserDefaultProfileImage,
+  white,
+  UserProfileImage
+} from './GlobalNav.style';
 
-const { desktop, unitBig, unitRegular } = sizes;
-const { gray, white } = colors;
-
-const RoundStyle = css`
-  border-radius: 50%;
-`;
-
-const HeaderContainer = styled.div`
-  ${flexCenter}
-  ${positionFixed}
-  background-image: url(${headerBackground});
-  background-position: center;
-  background-size: contain;
-  background-color: #eee;
-  width: 100%;
-  box-shadow: rgb(0 0 0 / 25%) 0px 0px 15px;
-  z-index: 10;
-`;
-
-const GlobalNavStyle = styled.nav`
-  ${flexCenter}
-  justify-content: space-between;
-  max-width: ${desktop}px;
-  width: calc(100% - 2rem);
-  height: ${unitBig}px;
-  margin: 0 auto;
-  position: relative;
-`;
-
-const EmphasisText = styled.h4`
-  font-size: 1rem;
-`;
-
-const Image = styled.img`
-  width: fit-content;
-`;
-
-const IconContainer = css`
-  width: ${unitRegular}px;
-  height: ${unitRegular}px;
-  padding: 2px;
-`;
-
-const UserProfileImage = styled(AiOutlineUser)`
-  ${flexCenter};
-  ${RoundStyle}
-  ${IconContainer}
-  background-color: ${gray[4]};
-  margin-left: 10px;
-`;
-
-const Search = styled(FaSearch)`
-  margin-right: 10px;
-`;
-
-const ButtonToMyClass = styled(Button)`
-  ${media.tablet`
-    display: none;
-  `}
-`;
-
-const GlobalNav: FC = () => {
+const GlobalNav: React.FC = () => {
+  const [authModalType, setAuthModalType] = useState<'login' | 'signup'>(
+    'login'
+  );
   const [visibleUserMenu, setVisibleUserMenu] = useState<boolean>(false);
+  const { token, user, visibleAuthForm } = useSelector((state: RootState) => ({
+    token: state.auth.token,
+    user: state.auth.user,
+    visibleAuthForm: state.ui.visibleAuthForm
+  }));
+  const dispatch = useDispatch();
 
-  const toggleUserMenu = useCallback(
+  const setModalToRender = useCallback(
+    modalType => setAuthModalType(modalType),
+    [setAuthModalType]
+  );
+
+  const toggleUserMenu = useCallback<React.MouseEventHandler<HTMLDivElement>>(
     e => {
       e.stopPropagation();
       setVisibleUserMenu(!visibleUserMenu);
     },
     [visibleUserMenu, setVisibleUserMenu]
   );
+
+  const showAuthForm = useCallback(
+    () => dispatch(createActionVisibleAuthForm()),
+    [dispatch]
+  );
+
+  // TODO 로그인 유지 기능
+  const isLoggedIn = useMemo(() => Boolean(token && user.data), [token, user]);
+
+  const profileImage = useMemo(
+    () =>
+      user.data?.profileImage === 'img/default.png'
+        ? false
+        : user.data?.profileImage,
+    [user]
+  );
+
+  const displayLoginSuccessResult = useCallback(() => {
+    dispatch(createActionStatusTextHud('success'));
+    dispatch(createActionVisibleHud());
+    dispatch(createActionInvisibleAuthForm());
+  }, [dispatch]);
+
+  const displayLoginFailResult = useCallback(() => {
+    dispatch(createActionStatusTextHud('fail'));
+    dispatch(createActionVisibleHud());
+  }, [dispatch]);
+
+  useEffect(() => {
+    user.data && !user.error && displayLoginSuccessResult();
+    !user.data && user.error && displayLoginFailResult();
+  }, [user, displayLoginSuccessResult, displayLoginFailResult]);
 
   return (
     <HeaderContainer data-testid="header">
@@ -107,25 +109,54 @@ const GlobalNav: FC = () => {
               role="search"
             />
           </Link>
-          <ButtonToMyClass radius={unitRegular} color="white">
-            <Link to="/mylesson">수련 관리</Link>
-          </ButtonToMyClass>
-          <FlexRow role="toggleMenu" onClick={toggleUserMenu}>
-            <UserProfileImage
-              color={white}
-              fontSize={unitRegular / 3}
-              cursor="pointer"
-            />
-            <DownArrow cursor="pointer" />
-            <UserMenu
-              visibleUserMenu={visibleUserMenu}
-              setVisibleUserMenu={setVisibleUserMenu}
-            />
-          </FlexRow>
+          {isLoggedIn && (
+            <ButtonToMyClass radius={unitRegular} color="white">
+              <Link to="/mylesson">수련 관리</Link>
+            </ButtonToMyClass>
+          )}
+          {isLoggedIn ? (
+            <FlexRow role="toggleMenu" onClick={toggleUserMenu}>
+              {profileImage ? (
+                <UserProfileImage profileImageUrl={profileImage} />
+              ) : (
+                <UserDefaultProfileImage
+                  color={white}
+                  fontSize={unitRegular / 3}
+                  cursor="pointer"
+                />
+              )}
+
+              <DownArrow cursor="pointer" />
+              <UserMenu
+                userInfo={user.data}
+                visibleUserMenu={visibleUserMenu}
+                setVisibleUserMenu={setVisibleUserMenu}
+              />
+            </FlexRow>
+          ) : (
+            <>
+              <Button color="black" radius={15} onClick={showAuthForm}>
+                로그인
+              </Button>
+              {authModalType === 'login' ? (
+                <LoginForm
+                  setModalToRender={setModalToRender}
+                  visibleAuthForm={visibleAuthForm}
+                  user={user}
+                />
+              ) : (
+                <SignupForm
+                  setModalToRender={setModalToRender}
+                  visibleAuthForm={visibleAuthForm}
+                  user={user}
+                />
+              )}
+            </>
+          )}
         </FlexRow>
       </GlobalNavStyle>
     </HeaderContainer>
   );
 };
 
-export default GlobalNav;
+export default React.memo(GlobalNav);

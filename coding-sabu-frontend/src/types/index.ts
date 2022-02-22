@@ -23,3 +23,48 @@ export interface LessonListResponse {
 export interface LessonResponse {
   lesson: Lesson;
 }
+
+export interface User {
+  id: number;
+  email: string;
+  userType: 'teacher' | 'student';
+  nickname: string;
+  phoneNum: string;
+  description: string;
+  profileImage: string;
+}
+
+export interface LoginInfo {
+  email: string;
+  password: string;
+}
+
+export interface SignupFormInfo {
+  email: string;
+  password: string;
+  passwordCheck: string;
+  userType: 'teacher' | 'student';
+  nickname: string;
+  phoneNum: string;
+  description: string;
+}
+
+export interface SignupInfo {
+  email: string;
+  password: string;
+  userType: 'teacher' | 'student';
+  nickname: string;
+  phoneNum: string;
+  description: string;
+}
+
+export interface EditUserInfo {
+  readonly id: number;
+  readonly email: string;
+  password: string;
+  passwordCheck: string;
+  nickname: string;
+  phoneNum: string;
+  description: string;
+  profileImage: File;
+}

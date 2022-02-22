@@ -54,7 +54,9 @@ const LessonDetail: FC<Props> = ({ match }) => {
   const { back } = useRouting();
 
   useEffect(() => {
-    const [lessonToShow] = data?.filter(lesson => lesson.id === parseInt(id));
+    const [lessonToShow] = data?.filter(
+      (lesson: Lesson) => lesson.id === parseInt(id)
+    );
     setLesson(lessonToShow);
   }, [id, data, setLesson]);
 

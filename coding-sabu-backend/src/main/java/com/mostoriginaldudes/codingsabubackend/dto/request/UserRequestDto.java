@@ -1,15 +1,16 @@
 package com.mostoriginaldudes.codingsabubackend.dto.request;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 
-@Setter
+@AllArgsConstructor
 @Getter
-public class EditUserInfoRequestDto {
+public class UserRequestDto {
   private int id;
   private String email;
-  private String password;
   private String nickname;
+  private String userType;
   private String phoneNum;
   private String description;
+  private String profileImage;
 }
