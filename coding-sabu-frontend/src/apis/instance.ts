@@ -39,19 +39,19 @@ export const injectStore = (_store: Store) => {
   injectedStore = _store;
 };
 
+const isSuccess = (status: number) => status === 200 || status === 201;
+
 instance.interceptors.request.use(req => {
   if (req && req.headers) {
-    req.headers.Authorization = injectedStore.getState().auth.token || '';
+    req.headers.authorization = injectedStore.getState().auth.token || '';
   }
   return req;
 });
 
 instance.interceptors.response.use(res => {
-  if (res.headers) {
+  if (res.headers && res.headers.authorization && isSuccess(res.status)) {
     if (!injectedStore.getState().auth.token) {
-      injectedStore.dispatch(
-        createActionSetToken(res.headers['authorization'])
-      );
+      injectedStore.dispatch(createActionSetToken(res.headers.authorization));
     }
   }
   return res.data;
