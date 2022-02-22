@@ -8,7 +8,7 @@ public class Constant {
   // Token
   public static final int EXPIRY_TIME = 30;
   public static final String TOKEN_ISSUER = "CodingSabu";
-  public static final String AUTHORIZATION_HEADER = HttpHeaders.AUTHORIZATION.toLowerCase();
+  public static final String AUTHORIZATION_HEADER = HttpHeaders.AUTHORIZATION;
 
   // Auth
   public static final String ENCRYPT_ALGORITHM = "SHA-256";
