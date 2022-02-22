@@ -64,7 +64,7 @@ const GlobalNav: React.FC = () => {
 
   const profileImage = useMemo(
     () =>
-      user.data?.profileImage === '/img/default.png'
+      user.data?.profileImage === 'img/default.png'
         ? false
         : user.data?.profileImage,
     [user]
