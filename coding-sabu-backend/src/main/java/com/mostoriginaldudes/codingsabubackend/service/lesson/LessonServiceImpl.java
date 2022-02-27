@@ -48,7 +48,6 @@ public class LessonServiceImpl implements LessonService {
         .description(requestDto.getDescription())
         .price(requestDto.getPrice())
         .createdAt(LocalDateTime.now())
-        .terminatedAt(requestDto.getTerminatedAt())
         .thumbnailUrl(thumbnailUrl)
         .build();
 
@@ -73,7 +72,7 @@ public class LessonServiceImpl implements LessonService {
       .description(lesson.getDescription())
       .price(lesson.getPrice())
       .createdAt(lesson.getCreatedAt())
-      .terminatedAt(lesson.getTerminatedAt())
+      .studentCount(studentCount)
       .thumbnailUrl(lesson.getThumbnailUrl())
       .build();
   }
@@ -139,7 +138,6 @@ public class LessonServiceImpl implements LessonService {
           .description(lesson.getDescription())
           .price(lesson.getPrice())
           .createdAt(lesson.getCreatedAt())
-          .terminatedAt(lesson.getTerminatedAt())
           .thumbnailUrl(lesson.getThumbnailUrl())
           .studentCount(getStudentCount(lesson.getId()))
           .build()

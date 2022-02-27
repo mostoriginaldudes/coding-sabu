@@ -31,7 +31,6 @@
     ,title
     ,description
     ,price
-    ,terminated_at
     ,thumbnail_url
     ) VALUES (
     id
@@ -39,7 +38,6 @@
     ,#{title}
     ,#{description}
     ,#{price}
-    ,#{terminatedAt}
     ,#{thumbnailUrl}
     )
   </insert>
@@ -65,7 +63,6 @@
     ,lesson.title AS title
     ,lesson.teacher_id AS teacher_id
     ,lesson.created_at AS created_at
-    ,lesson.terminated_at AS terminated_at
     ,lesson.description AS description
     ,lesson.price AS price
     FROM user
