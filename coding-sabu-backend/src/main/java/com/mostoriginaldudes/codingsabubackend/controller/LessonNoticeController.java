@@ -12,8 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
-
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/lesson/{lessonId}/notice")
@@ -38,17 +36,10 @@ public class LessonNoticeController {
   @PostMapping
   public ResponseEntity<LessonNoticeResponseDto> registerLessonNotice(
     @PathVariable int lessonId,
-    @RequestHeader Map<String, Object> requestHeader,
+    @RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken,
     @RequestBody LessonNoticeRequestDto requestDto
     ) {
-    if(!requestHeader.containsKey(HttpHeaders.AUTHORIZATION)) {
-      return ResponseEntity
-        .status(HttpStatus.UNAUTHORIZED)
-        .body(null);
-    }
-
-    String token = (String) requestHeader.get(HttpHeaders.AUTHORIZATION);
-    UserDto user = authService.getLoggedInUserInfo(token);
+    UserDto user = authService.getLoggedInUserInfo(accessToken);
 
     if(user == null || !lessonNoticeService.isMyLesson(user.getId(), lessonId)) {
       return ResponseEntity

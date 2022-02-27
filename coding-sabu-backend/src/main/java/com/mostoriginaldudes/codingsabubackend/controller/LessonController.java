@@ -7,6 +7,7 @@ import com.mostoriginaldudes.codingsabubackend.dto.response.LessonListResponseDt
 import com.mostoriginaldudes.codingsabubackend.dto.response.LessonResponseDto;
 import com.mostoriginaldudes.codingsabubackend.service.auth.AuthService;
 import com.mostoriginaldudes.codingsabubackend.service.lesson.LessonService;
+import com.mostoriginaldudes.codingsabubackend.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -14,8 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
-
 
 @RequiredArgsConstructor
 @RestController
@@ -24,10 +23,11 @@ public class LessonController {
 
   private final LessonService lessonService;
   private final AuthService authService;
+  private final UserService userService;
 
   @GetMapping("/all")
-  public ResponseEntity<LessonListResponseDto> allLessons(@RequestParam(required = false, defaultValue = "0") int page) {
-    LessonListResponseDto responseDto = lessonService.getAllLessons(page);
+  public ResponseEntity<LessonListResponseDto> allLessons() {
+    LessonListResponseDto responseDto = lessonService.getAllLessons();
     if(responseDto.getLessons().isEmpty()) {
       return ResponseEntity
         .status(HttpStatus.NO_CONTENT)
@@ -49,19 +49,8 @@ public class LessonController {
   }
 
   @PostMapping
-  public ResponseEntity<LessonResponseDto> createLesson(
-    @RequestHeader Map<String, Object> requestHeader,
-    @ModelAttribute LessonRequestDto requestDto
-  ) {
-    if (!requestHeader.containsKey(AUTHORIZATION_HEADER)) {
-      return ResponseEntity
-        .status(HttpStatus.UNAUTHORIZED)
-        .body(null);
-    }
-
-    String token = (String) requestHeader.get(AUTHORIZATION_HEADER);
-    UserDto user = authService.getLoggedInUserInfo(token);
-
+  public ResponseEntity<LessonResponseDto> createLesson(@ModelAttribute LessonRequestDto requestDto) {
+    UserDto user = userService.getUserInfo(requestDto.getTeacherId());
     if ("student".equals(user.getUserType())) {
       return ResponseEntity
         .status(HttpStatus.BAD_REQUEST)
@@ -70,21 +59,14 @@ public class LessonController {
 
     return ResponseEntity
       .status(HttpStatus.CREATED)
-      .body(lessonService.createLesson(requestDto, user.getId()));
+      .body(lessonService.createLesson(requestDto));
   }
 
   @PostMapping("/{lessonId}/student")
   public ResponseEntity<LessonResponseDto> registerLesson(
     @PathVariable int lessonId,
-    @RequestHeader Map<String, Object> requestHeader,
     @RequestBody RegisterLessonRequestDto requestDto
   ) {
-    if (!requestHeader.containsKey(AUTHORIZATION_HEADER)) {
-      return ResponseEntity
-        .status(HttpStatus.UNAUTHORIZED)
-        .body(null);
-    }
-
     LessonResponseDto responseDto = lessonService.registerLesson(lessonId, requestDto.getStudentId());
 
     return ResponseEntity
@@ -94,17 +76,10 @@ public class LessonController {
 
   @GetMapping("/{lessonId}/students")
   public ResponseEntity<List<UserDto>> studentsInMyLesson(
-    @RequestHeader Map<String, Object> requestHeader,
-    @PathVariable int lessonId
+    @PathVariable int lessonId,
+    @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization
   ) {
-    String token = String.valueOf(requestHeader.get(HttpHeaders.AUTHORIZATION));
-      return ResponseEntity
-        .status(HttpStatus.UNAUTHORIZED)
-        .body(null);
-    }
-
-    String token = (String) requestHeader.get(AUTHORIZATION_HEADER);
-    UserDto user = authService.getLoggedInUserInfo(token);
+    UserDto user = authService.getLoggedInUserInfo(authorization);
 
     if(user == null || user.getUserType().equals("student")) {
       return ResponseEntity
