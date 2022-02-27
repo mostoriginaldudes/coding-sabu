@@ -8,6 +8,7 @@ import com.mostoriginaldudes.codingsabubackend.dto.response.LessonResponseDto;
 import com.mostoriginaldudes.codingsabubackend.service.auth.AuthService;
 import com.mostoriginaldudes.codingsabubackend.service.lesson.LessonService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-import static com.mostoriginaldudes.codingsabubackend.util.constant.Constant.AUTHORIZATION_HEADER;
 
 @RequiredArgsConstructor
 @RestController
@@ -97,7 +97,7 @@ public class LessonController {
     @RequestHeader Map<String, Object> requestHeader,
     @PathVariable int lessonId
   ) {
-    if (!requestHeader.containsKey(AUTHORIZATION_HEADER)) {
+    String token = String.valueOf(requestHeader.get(HttpHeaders.AUTHORIZATION));
       return ResponseEntity
         .status(HttpStatus.UNAUTHORIZED)
         .body(null);

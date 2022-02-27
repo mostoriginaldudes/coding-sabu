@@ -8,14 +8,13 @@ import com.mostoriginaldudes.codingsabubackend.service.auth.AuthService;
 import com.mostoriginaldudes.codingsabubackend.service.lesson.LessonService;
 import com.mostoriginaldudes.codingsabubackend.service.user.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
-
-import static com.mostoriginaldudes.codingsabubackend.util.constant.Constant.AUTHORIZATION_HEADER;
 
 @RequiredArgsConstructor
 @RestController
@@ -28,13 +27,13 @@ public class UserController {
 
   @GetMapping
   public ResponseEntity<UserDto> myInfo(@RequestHeader Map<String, Object> requestHeader) {
-    if(!requestHeader.containsKey(AUTHORIZATION_HEADER)) {
+    if(!requestHeader.containsKey(HttpHeaders.AUTHORIZATION)) {
       return ResponseEntity
         .status(HttpStatus.UNAUTHORIZED)
         .body(null);
     }
 
-    String token = (String) requestHeader.get(AUTHORIZATION_HEADER);
+    String token = (String) requestHeader.get(HttpHeaders.AUTHORIZATION);
     UserDto user = authService.getLoggedInUserInfo(token);
 
     return ResponseEntity.ok(user);
@@ -55,13 +54,13 @@ public class UserController {
       @RequestHeader Map<String, Object> requestHeader,
       @RequestParam MultipartFile userProfile
   ) {
-    if(!requestHeader.containsKey(AUTHORIZATION_HEADER)) {
+    if(!requestHeader.containsKey(HttpHeaders.AUTHORIZATION)) {
       return ResponseEntity
         .status(HttpStatus.UNAUTHORIZED)
         .body(null);
     }
 
-    String token = (String) requestHeader.get(AUTHORIZATION_HEADER);
+    String token = (String) requestHeader.get(HttpHeaders.AUTHORIZATION);
     UserDto user = authService.getLoggedInUserInfo(token);
 
     String profileImageUrl = userService.uploadProfileImage(userProfile);
@@ -98,7 +97,7 @@ public class UserController {
     @PathVariable int userId,
     @RequestHeader Map<String, Object> requestHeader
   ) {
-    if (!requestHeader.containsKey(AUTHORIZATION_HEADER)) {
+    if (!requestHeader.containsKey(HttpHeaders.AUTHORIZATION)) {
       return ResponseEntity
         .status(HttpStatus.UNAUTHORIZED)
         .body(null);
@@ -120,7 +119,7 @@ public class UserController {
     @PathVariable int teacherId,
     @RequestHeader Map<String, Object> requestHeader
   ) {
-    if (!requestHeader.containsKey(AUTHORIZATION_HEADER)) {
+    if (!requestHeader.containsKey(HttpHeaders.AUTHORIZATION)) {
       return ResponseEntity
         .status(HttpStatus.UNAUTHORIZED)
         .body(null);

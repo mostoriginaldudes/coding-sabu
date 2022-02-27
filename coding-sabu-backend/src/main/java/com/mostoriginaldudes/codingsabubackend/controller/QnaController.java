@@ -6,13 +6,12 @@ import com.mostoriginaldudes.codingsabubackend.dto.request.QuestionRequestDto;
 import com.mostoriginaldudes.codingsabubackend.service.auth.AuthService;
 import com.mostoriginaldudes.codingsabubackend.service.qna.QnaService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
-
-import static com.mostoriginaldudes.codingsabubackend.util.constant.Constant.AUTHORIZATION_HEADER;
 
 @RequiredArgsConstructor
 @RestController
@@ -28,13 +27,13 @@ public class QnaController {
     @RequestHeader Map<String, Object> requestHeader,
     @RequestBody QuestionRequestDto requestDto
   ) {
-    if (!requestHeader.containsKey(AUTHORIZATION_HEADER)) {
+    if (!requestHeader.containsKey(HttpHeaders.AUTHORIZATION)) {
       return ResponseEntity
         .status(HttpStatus.UNAUTHORIZED)
         .body(null);
     }
 
-    String token = (String) requestHeader.get(AUTHORIZATION_HEADER);
+    String token = (String) requestHeader.get(HttpHeaders.AUTHORIZATION);
     UserDto user = authService.getLoggedInUserInfo(token);
 
     if ("student".equals(user.getUserType())) {

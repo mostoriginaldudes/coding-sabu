@@ -4,6 +4,7 @@ import com.mostoriginaldudes.codingsabubackend.auth.JsonWebToken;
 import com.mostoriginaldudes.codingsabubackend.exception.ExceptionCode;
 import com.mostoriginaldudes.codingsabubackend.exception.UnauthorizationException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -12,8 +13,6 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
-
-import static com.mostoriginaldudes.codingsabubackend.util.constant.Constant.AUTHORIZATION_HEADER;
 
 @RequiredArgsConstructor
 @Component
@@ -28,7 +27,7 @@ public class AuthInterceptor implements HandlerInterceptor {
     }
 
     try {
-      String accessToken = request.getHeader(AUTHORIZATION_HEADER);
+      String accessToken = request.getHeader(HttpHeaders.AUTHORIZATION);
 
       if(verifyAccessToken(accessToken)) {
         return true;
