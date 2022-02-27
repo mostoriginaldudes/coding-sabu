@@ -95,4 +95,16 @@ public class LessonController {
     }
     return ResponseEntity.ok(students);
   }
+
+  @GetMapping("/me")
+  public ResponseEntity<LessonListResponseDto> mylessons(@RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken) {
+    UserDto user = authService.getLoggedInUserInfo(accessToken);
+    return ResponseEntity.ok(lessonService.getMyLessons(user.getId()));
+  }
+
+  @GetMapping("/teachings")
+  public ResponseEntity<LessonListResponseDto> myTeachingLessons(@RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken) {
+    UserDto user = authService.getLoggedInUserInfo(accessToken);
+    return ResponseEntity.ok(lessonService.getTeachingLesson(user.getId()));
+  }
 }
