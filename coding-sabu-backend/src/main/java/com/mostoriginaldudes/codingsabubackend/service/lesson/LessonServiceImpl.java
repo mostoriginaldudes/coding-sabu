@@ -39,11 +39,11 @@ public class LessonServiceImpl implements LessonService {
 
   @Override
   @Transactional
-  public LessonResponseDto createLesson(LessonRequestDto requestDto, int teacherId) {
+  public LessonResponseDto createLesson(LessonRequestDto requestDto) {
     String thumbnailUrl = uploadLessonThumbnail(requestDto.getImageThumbnail());
 
     LessonDto lesson = LessonDto.builder()
-        .teacherId(teacherId)
+        .teacherId(requestDto.getTeacherId())
         .title(requestDto.getTitle())
         .description(requestDto.getDescription())
         .price(requestDto.getPrice())

@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Getter
 public class LessonRequestDto {
+  private int teacherId;
   private String title;
   private String description;
   private int price;
