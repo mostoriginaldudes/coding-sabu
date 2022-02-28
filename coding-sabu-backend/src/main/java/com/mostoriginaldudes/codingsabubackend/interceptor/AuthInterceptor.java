@@ -28,16 +28,10 @@ public class AuthInterceptor implements HandlerInterceptor {
 
     try {
       String accessToken = request.getHeader(HttpHeaders.AUTHORIZATION);
-
-      if(verifyAccessToken(accessToken)) {
-        return true;
-      } else {
-        response.sendError(HttpStatus.UNAUTHORIZED.value());
-        return false;
-      }
-
+      return verifyAccessToken(accessToken);
     } catch(Exception e) {
       e.printStackTrace();
+      response.sendError(HttpStatus.UNAUTHORIZED.value());
       return false;
     }
   }
