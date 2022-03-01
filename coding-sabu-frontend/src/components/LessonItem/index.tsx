@@ -1,7 +1,7 @@
-import { FC, memo } from 'react';
+import React, { useMemo } from 'react';
 import styled from '@emotion/styled';
 import { flexCenter } from 'styles/module';
-import { colors, media } from '../../styles/theme';
+import { colors, media } from 'styles/theme';
 import { Lesson } from 'types';
 import { concatHostToImagePath } from 'utils';
 
@@ -37,13 +37,13 @@ const Thumbnail = styled.section<{ thumbnailUrl: string }>`
   background-image: url(${({ thumbnailUrl }) => thumbnailUrl});
   background-position: center;
   background-repeat: no-repeat;
-  background-size: auto;
+  background-size: cover;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
 
   ${media.tablet`
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
   `}
 `;
 
@@ -64,29 +64,12 @@ const LessonHeader = styled.header`
   font-weight: bold;
 `;
 
-const LessonTitle = styled.h4`
+const LessonTitle = styled.h5`
   margin: 0;
 `;
 
 const TeacherName = styled.h5`
   margin: 0;
-`;
-
-const Description = styled.article`
-  display: -webkit-box;
-  width: 100%;
-  font-size: 0.8em;
-  line-height: 1.25em;
-  white-space: normal;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  word-break: break-all;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  margin: 10px 0;
-  ${media.tablet`
-    -webkit-line-clamp: 4;
-  `}
 `;
 
 const LessonFooter = styled.footer`
@@ -106,7 +89,7 @@ const EmphasisText = styled.div`
   font-weight: bold;
 `;
 
-const LessonItem: FC<Lesson> = ({
+const LessonItem: React.FC<Lesson> = ({
   teacherName,
   title,
   description,
@@ -114,6 +97,14 @@ const LessonItem: FC<Lesson> = ({
   thumbnailUrl,
   studentCount
 }) => {
+  const formattedPrice = useMemo(() => {
+    if (price === 0) {
+      return 'FREE';
+    } else {
+      return `${price.toLocaleString()}원`;
+    }
+  }, [price]);
+
   return (
     <LessonContainer>
       <Thumbnail thumbnailUrl={concatHostToImagePath(thumbnailUrl)} />
@@ -122,14 +113,13 @@ const LessonItem: FC<Lesson> = ({
           <LessonTitle>{title}</LessonTitle>
           <TeacherName>{teacherName}</TeacherName>
         </LessonHeader>
-        <Description>{description}</Description>
         <LessonFooter>
           <EmpahsisBlock>{studentCount}명</EmpahsisBlock>
-          <EmphasisText>{price.toLocaleString()}원</EmphasisText>
+          <EmphasisText>{formattedPrice}</EmphasisText>
         </LessonFooter>
       </LessonInfo>
     </LessonContainer>
   );
 };
 
-export default memo(LessonItem);
+export default React.memo(LessonItem);
