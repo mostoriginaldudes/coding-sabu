@@ -25,6 +25,7 @@ const LessonListElement = styled.li`
   ${flexCenter}
   flex-direction: column;
   justify-content: space-between;
+  cursor: pointer;
 `;
 
 interface Props {
