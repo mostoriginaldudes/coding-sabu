@@ -25,7 +25,7 @@ export const HeaderContainer = styled.div`
   background-color: #eee;
   width: 100%;
   box-shadow: rgb(0 0 0 / 25%) 0px 0px 15px;
-  z-index: 10;
+  z-index: 23;
 `;
 
 export const GlobalNavStyle = styled.nav`
