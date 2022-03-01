@@ -12,7 +12,7 @@ import { RootState } from 'store';
 import * as Styled from './LessonForm.style';
 import { createActionVisibleHud } from 'store/ui';
 import { yupResolver } from '@hookform/resolvers/yup';
-import validationSchema from 'utils/formValidation/lesson/ValidationSchema';
+import validationSchema from 'utils/FormValidation/lesson/ValidationSchema';
 import LESSON_SUCCESS from 'fixtures/lesson/success';
 import LESSON_FAIL from 'fixtures/lesson/fail';
 

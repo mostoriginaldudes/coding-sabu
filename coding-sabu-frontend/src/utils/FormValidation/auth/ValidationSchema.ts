@@ -1,5 +1,5 @@
 import * as yup from 'yup';
-import constraint from './Constraint';
+import constraint from 'utils/FormValidation/auth/Constraint';
 
 class ValidationSchema {
   private readonly login;
