@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, memo } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import validationSchema from 'utils/FormValidation/auth/ValidationSchema';
@@ -24,7 +24,7 @@ interface Props {
   user: ThunkAsyncState<User>;
 }
 
-const LoginForm: FC<Props> = ({ visibleAuthForm, setModalToRender }) => {
+const LoginForm: React.FC<Props> = ({ visibleAuthForm, setModalToRender }) => {
   const {
     register,
     handleSubmit,
@@ -99,4 +99,4 @@ const LoginForm: FC<Props> = ({ visibleAuthForm, setModalToRender }) => {
   );
 };
 
-export default memo(LoginForm);
+export default React.memo(LoginForm);

@@ -1,4 +1,4 @@
-import { FC, useState, useEffect, useCallback, memo } from 'react';
+import React, { useEffect, useCallback, useMemo } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import styled from '@emotion/styled';
 import NotFound from 'pages/NotFound';
@@ -42,11 +42,11 @@ const ViewerContainer = styled(Column)`
 
 interface Props extends RouteComponentProps<{ id: string }> {}
 
-interface LessonThumbnail {
+const LessonDetail: React.FC<Props> = ({ match }) => {
   imgUrl?: string;
 }
 
-const LessonDetail: FC<Props> = ({ match }) => {
+  const enrollLesson = async () => {
   const { id } = match.params;
   const { loading, data, error } = useFetchLessonList();
   const [lesson, setLesson] = useState<Lesson>();
@@ -101,4 +101,4 @@ const LessonDetail: FC<Props> = ({ match }) => {
   );
 };
 
-export default memo(LessonDetail);
+export default React.memo(LessonDetail);
