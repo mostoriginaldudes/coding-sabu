@@ -1,7 +1,5 @@
 package com.mostoriginaldudes.codingsabubackend.util.constant;
 
-import org.springframework.http.HttpHeaders;
-
 import java.util.UUID;
 
 public class Constant {
