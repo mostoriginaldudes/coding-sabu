@@ -1,5 +1,5 @@
 import * as yup from 'yup';
-import validateEmail from './validateUtils';
+import validateEmail from 'utils/FormValidation/common/validateUtils';
 
 class Constraint {
   private readonly email;
