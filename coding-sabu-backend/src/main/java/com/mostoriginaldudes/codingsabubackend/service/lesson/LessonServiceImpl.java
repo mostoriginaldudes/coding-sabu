@@ -64,6 +64,7 @@ public class LessonServiceImpl implements LessonService {
     }
 
     String teacherName = convertTeacherIdToNickname(lesson.getTeacherId());
+    int studentCount = getStudentCount(id);
 
     return LessonResponseDto.builder()
       .id(id)
@@ -87,7 +88,6 @@ public class LessonServiceImpl implements LessonService {
     try {
       FileOutputStream fileOutputStream = new FileOutputStream(imageRealFilePath);
       InputStream inputStream = lessonThumbnail.getInputStream();
-
       int fileReadCount = 0;
       byte[] imageFileBuffer = new byte[1024];
 
