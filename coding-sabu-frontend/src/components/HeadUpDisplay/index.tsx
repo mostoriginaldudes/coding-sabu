@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useRef, FC, memo } from 'react';
+import React, { useEffect, useCallback, useMemo, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import styled from '@emotion/styled';
@@ -46,7 +46,7 @@ const HeadUpDpWrapper = styled.div`
   }
 `;
 
-const HeadUpDisplay: FC = () => {
+const HeadUpDisplay: React.FC = () => {
   const modalTarget = useRef<HTMLDivElement>(document.createElement('div'));
   const { visibleHud, hudStatusText } = useSelector((state: RootState) => ({
     visibleHud: state.ui.visibleHud,
@@ -90,4 +90,4 @@ const HeadUpDisplay: FC = () => {
   );
 };
 
-export default memo(HeadUpDisplay);
+export default React.memo(HeadUpDisplay);
