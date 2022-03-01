@@ -63,6 +63,7 @@
     ,lesson.created_at AS created_at
     ,lesson.description AS description
     ,lesson.price AS price
+    ,lesson.thumbnail_url AS thumbnail_url
     FROM user
     INNER JOIN lesson_student
     ON user.id = lesson_student.student_id
