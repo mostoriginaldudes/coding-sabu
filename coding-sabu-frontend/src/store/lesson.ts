@@ -1,5 +1,6 @@
 import { ThunkAsyncState } from '.';
 import { ThunkAction } from 'redux-thunk';
+import { produce } from 'immer';
 import { Lesson } from 'types';
 import { fetchLessonList } from 'apis';
 
@@ -66,64 +67,98 @@ const initialState: State = {
 
 // reducer
 function lessonReducer(state = initialState, action: Action) {
-  switch (action.type) {
-    case FETCH_LESSONS:
-      return {
-        ...state,
-        lessons: {
+  return produce(state, draft => {
+    switch (action.type) {
+      case FETCH_LESSONS:
+        draft.lessons = {
           loading: true,
           data: null,
           error: null
-        }
-      };
-    case FETCH_LESSONS_SUCCESS:
-      return {
-        ...state,
-        lessons: {
+        };
+        break;
+      case FETCH_LESSONS_SUCCESS:
+        draft.lessons = {
           loading: false,
           data: action.payload,
           error: null
-        }
-      };
-    case FETCH_LESSONS_FAIL:
-      return {
-        ...state,
-        lessons: {
+        };
+        break;
+      case FETCH_LESSONS_FAIL:
+        draft.lessons = {
           loading: false,
           data: null,
           error: action.payload
-        }
-      };
-    case FETCH_MY_LESSONS:
-      return {
-        ...state,
-        mylessons: {
+        };
+        break;
+      case FETCH_MY_LESSONS:
+        draft.mylessons = {
           loading: true,
           data: null,
           error: null
-        }
-      };
-    case FETCH_MY_LESSONS_SUCCESS:
-      return {
-        ...state,
-        mylessons: {
+        };
+        break;
+      case FETCH_MY_LESSONS_SUCCESS:
+        draft.mylessons = {
           loading: false,
           data: action.payload,
           error: null
-        }
-      };
-    case FETCH_MY_LESSONS_FAIL:
-      return {
-        ...state,
-        mylessons: {
+        };
+        break;
+      case FETCH_MY_LESSONS_FAIL:
+        draft.mylessons = {
           loading: false,
           data: null,
           error: action.payload
-        }
-      };
-    default:
-      return state;
-  }
+        };
+        break;
+      case FETCH_ONE_LESSON:
+        draft.lessonDetailInfo = {
+          loading: true,
+          data: null,
+          error: null
+        };
+        break;
+      case FETCH_ONE_LESSON_SUCCESS:
+        draft.lessonDetailInfo = {
+          loading: false,
+          data: action.payload,
+          error: null
+        };
+        break;
+      case FETCH_ONE_LESSON_FAIL:
+        draft.lessonDetailInfo = {
+          loading: false,
+          data: null,
+          error: action.payload
+        };
+        break;
+      case JOIN_LESSON:
+        draft.mylessons = {
+          loading: true,
+          data: state.mylessons.data,
+          error: null
+        };
+        break;
+      case JOIN_LESSON_SUCCESS:
+        draft.mylessons = {
+          loading: false,
+          data:
+            state.mylessons.data?.concat(action.payload) ||
+            state.mylessons.data,
+          error: null
+        };
+        break;
+      case JOIN_LESSON_FAIL:
+        draft.mylessons = {
+          loading: false,
+          data: null,
+          error: action.payload
+        };
+        break;
+      default:
+        return state;
+    }
+  });
 }
 
 export default lessonReducer;
