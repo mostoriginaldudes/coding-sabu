@@ -1,12 +1,15 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { useHistory } from 'react-router-dom';
 import styled from '@emotion/styled';
 
-import { fetchLessonList } from 'apis';
+import { fetchMyTeachingLessonList } from 'apis';
 import LessonList from 'components/LessonList';
 import { Lesson } from 'types';
 import UnderlineTitle from 'styles/UnderlineTitle';
 import Button from 'components/Button';
+import { useSelector } from 'react-redux';
+import { RootState } from 'store';
+import useRouting from 'hooks/useRouting';
+import { Redirect } from 'react-router-dom';
 
 const Container = styled.div`
   position: relative;
@@ -19,17 +22,20 @@ const CreateLessonButton = styled(Button)`
 `;
 
 const MyTeachingLessons: React.FC = () => {
-  const history = useHistory();
+  const { forward } = useRouting();
   const [teachingLessons, setTeachingLessons] = useState<Lesson[]>([]);
+  const user = useSelector((state: RootState) => state.auth.user);
+
+  const isNotTeacher = useMemo(() => user.data?.userType !== 'teacher', [user]);
 
   const fetchMyTeachingLessons = useCallback(async () => {
-    const data = await fetchLessonList();
+    const data = await fetchMyTeachingLessonList();
     setTeachingLessons(data.lessons);
   }, [setTeachingLessons]);
 
   const goToLessonForm = useCallback(() => {
-    history.push('/lesson/form');
-  }, [history]);
+    forward('/lesson/form');
+  }, [forward]);
 
   useEffect(() => {
     fetchMyTeachingLessons();
@@ -37,6 +43,7 @@ const MyTeachingLessons: React.FC = () => {
 
   return (
     <Container>
+      {isNotTeacher && <Redirect to="/" />}
       <CreateLessonButton
         color="black"
         height={2}
@@ -45,7 +52,7 @@ const MyTeachingLessons: React.FC = () => {
       >
         수련 개설
       </CreateLessonButton>
-      <UnderlineTitle title="내 가르침" />
+      <UnderlineTitle title="내 가르침 목록" />
       <LessonList lessons={teachingLessons} />
     </Container>
   );
