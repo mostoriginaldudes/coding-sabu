@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import validationSchema from 'utils/FormValidation/auth/ValidationSchema';
 import { yupResolver } from '@hookform/resolvers/yup';
+import validationSchema from 'utils/formValidation/auth/ValidationSchema';
 
 import Modal from 'components/Modal';
 import Input from 'components/Input';
