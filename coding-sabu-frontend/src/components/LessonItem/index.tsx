@@ -58,18 +58,26 @@ const LessonInfo = styled.div`
 `;
 
 const LessonHeader = styled.header`
-  ${flexCenter}
-  justify-content: space-between;
+  display: flex;
+  flex-direction: column;
   width: 100%;
   font-weight: bold;
 `;
 
-const LessonTitle = styled.h5`
-  margin: 0;
+const LessonTitle = styled.h4`
+  margin: 0 0 10px;
+  text-overflow: ellipsis;
+  overflow: hidden;
 `;
 
 const TeacherName = styled.h5`
+  width: 100%;
+  align-self: flex-end;
   margin: 0;
+  text-align: right;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  color: ${colors.gray[6]};
 `;
 
 const LessonFooter = styled.footer`
