@@ -8,6 +8,7 @@ import { getModalRoot } from 'utils';
 import { flexCenter, positionFixed } from 'styles/module';
 import success from 'assets/images/success.svg';
 import fail from 'assets/images/fail.svg';
+import COMMON from 'fixtures/common/success';
 
 const size = 160;
 const delay = 3000;
@@ -58,6 +59,11 @@ const HeadUpDisplay: React.FC = () => {
     visibleHud && dispatch(createActionInvisibleHud());
   }, [visibleHud, dispatch]);
 
+  const hudIcon = useMemo(
+    () => (hudStatusText.includes(COMMON.SUCCESS) ? success : fail),
+    [hudStatusText]
+  );
+
   useEffect(() => {
     const modalRoot = getModalRoot();
     const current = modalTarget.current;
@@ -75,14 +81,8 @@ const HeadUpDisplay: React.FC = () => {
     <>
       {visibleHud && (
         <HeadUpDpWrapper>
-          <img
-            src={hudStatusText === 'success' ? success : fail}
-            alt={hudStatusText}
-            width={size / 2}
-          />
-          <h4 data-testid="text">
-            {hudStatusText === 'success' ? '완료' : '실패'}했습니다.
-          </h4>
+          <img src={hudIcon} alt={hudStatusText} width={size / 2} />
+          <h4 data-testid="text">{hudStatusText}</h4>
         </HeadUpDpWrapper>
       )}
     </>,
