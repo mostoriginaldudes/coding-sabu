@@ -1,9 +1,11 @@
-import { FC, useState, useRef, useEffect } from 'react';
+import { FC, useState, useRef, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Lesson } from 'types';
 import { concatHostToImagePath } from 'utils';
 import UnderlineTitle from 'styles/UnderlineTitle';
 import * as Styled from './LessonDisplay.style';
+import Viewer from 'components/Viewer';
+
 interface Props {
   lessons: Lesson[];
 }
@@ -13,27 +15,37 @@ const LessonDisplay: FC<Props> = ({ lessons }) => {
   const [movedPixels, setMovedPixels] = useState<number>(0);
   const [lessonIndex, setLessonIndex] = useState<number>(0);
 
+  const moveCarouselToLeft = () => {
+    if (carouselRef.current && lessonIndex > 0) {
+      setMovedPixels(movedPixels + (Styled.displayWidth + Styled.displaySpace));
+      carouselRef.current.style.transform = `translateX(${movedPixels}px)`;
+      setLessonIndex(lessonIndex => lessonIndex - 1);
+    }
+  };
+
+  const moveCarouselToRight = () => {
+    if (carouselRef.current && lessonIndex < lessons.length - 1) {
+      setMovedPixels(movedPixels - (Styled.displayWidth + Styled.displaySpace));
+      carouselRef.current.style.transform = `translateX(${movedPixels}px)`;
+      setLessonIndex(lessonIndex => lessonIndex + 1);
+    }
+  };
+
+  const leftArrowCursorStyle = useMemo(
+    () => (lessonIndex === 0 ? 'not-allowed' : 'pointer'),
+    [lessonIndex]
+  );
+
+  const rightArrowCursorStyle = useMemo(
+    () => (lessonIndex === lessons.length! - 1 ? 'not-allowed' : 'pointer'),
+    [lessonIndex, lessons]
+  );
+
   useEffect(() => {
     if (carouselRef.current) {
       carouselRef.current.style.transform = `translateX(${movedPixels}px)`;
     }
   }, [movedPixels]);
-
-  const moveCarouselToLeft = () => {
-    if (carouselRef.current && lessonIndex - 1 > 0) {
-      setMovedPixels(movedPixels + (Styled.displayWidth + Styled.displaySpace));
-      carouselRef.current.style.transform = `translateX(${movedPixels}px)`;
-      setLessonIndex(lessonIndex - 1);
-    }
-  };
-
-  const moveCarouselToRight = () => {
-    if (carouselRef.current && lessonIndex + 1 < lessons.length - 1) {
-      setMovedPixels(movedPixels - (Styled.displayWidth + Styled.displaySpace));
-      carouselRef.current.style.transform = `translateX(${movedPixels}px)`;
-      setLessonIndex(lessonIndex + 1);
-    }
-  };
 
   return (
     <Styled.LessonDisplay>
@@ -41,9 +53,7 @@ const LessonDisplay: FC<Props> = ({ lessons }) => {
       <Styled.CarouselContainer>
         <Styled.ArrowLeft
           onClick={moveCarouselToLeft}
-          style={{
-            cursor: `${lessonIndex === 0 ? 'not-allowed' : 'pointer'}`
-          }}
+          cursor={leftArrowCursorStyle}
         />
         <Styled.Carousel ref={carouselRef}>
           {lessons.map(
@@ -58,7 +68,9 @@ const LessonDisplay: FC<Props> = ({ lessons }) => {
                     <h4>{teacherName}</h4>
                   </div>
                   <article>
-                    <p>{description}</p>
+                    <div>
+                      <Viewer description={description} />
+                    </div>
                     <button>
                       <Link to={`/lesson/${id}`}>자세히 보기</Link>
                     </button>
@@ -70,11 +82,7 @@ const LessonDisplay: FC<Props> = ({ lessons }) => {
         </Styled.Carousel>
         <Styled.ArrowRight
           onClick={moveCarouselToRight}
-          style={{
-            cursor: `${
-              lessonIndex === lessons.length - 1 ? 'not-allowed' : 'pointer'
-            }`
-          }}
+          cursor={rightArrowCursorStyle}
         />
       </Styled.CarouselContainer>
     </Styled.LessonDisplay>
