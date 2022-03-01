@@ -11,7 +11,7 @@ const Viewer: FC<Props> = ({ description }) => {
   useEffect(() => {
     const currentViewerRef = toastViewerRef.current;
     return () => void currentViewerRef?.getInstance().destroy();
-  }, [toastViewerRef, description]);
+  }, []);
 
   return <ToastViewer initialValue={description} />;
 };

@@ -9,7 +9,6 @@ import UserMenu from 'components/UserMenu';
 import { RootState } from 'store';
 import {
   createActionInvisibleAuthForm,
-  createActionStatusTextHud,
   createActionVisibleAuthForm,
   createActionVisibleHud
 } from 'store/ui';
@@ -28,6 +27,8 @@ import {
   white,
   UserProfileImage
 } from './GlobalNav.style';
+import AUTH_SUCCESS from 'fixtures/auth/success';
+import AUTH_FAIL from 'fixtures/auth/fail';
 
 const GlobalNav: React.FC = () => {
   const [authModalType, setAuthModalType] = useState<'login' | 'signup'>(
@@ -70,21 +71,19 @@ const GlobalNav: React.FC = () => {
     [user]
   );
 
-  const displayLoginSuccessResult = useCallback(() => {
-    dispatch(createActionStatusTextHud('success'));
-    dispatch(createActionVisibleHud());
+  const displayLoginSuccess = useCallback(() => {
+    dispatch(createActionVisibleHud(AUTH_SUCCESS.LOGIN));
     dispatch(createActionInvisibleAuthForm());
   }, [dispatch]);
 
-  const displayLoginFailResult = useCallback(() => {
-    dispatch(createActionStatusTextHud('fail'));
-    dispatch(createActionVisibleHud());
+  const displayLoginFail = useCallback(() => {
+    dispatch(createActionVisibleHud(AUTH_FAIL.LOGIN));
   }, [dispatch]);
 
   useEffect(() => {
-    user.data && !user.error && displayLoginSuccessResult();
-    !user.data && user.error && displayLoginFailResult();
-  }, [user, displayLoginSuccessResult, displayLoginFailResult]);
+    user.data && !user.error && displayLoginSuccess();
+    !user.data && user.error && displayLoginFail();
+  }, [user, displayLoginSuccess, displayLoginFail]);
 
   return (
     <HeaderContainer data-testid="header">

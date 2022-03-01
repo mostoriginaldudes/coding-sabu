@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useRef, FC, memo } from 'react';
+import React, { useEffect, useCallback, useMemo, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import styled from '@emotion/styled';
@@ -8,6 +8,7 @@ import { getModalRoot } from 'utils';
 import { flexCenter, positionFixed } from 'styles/module';
 import success from 'assets/images/success.svg';
 import fail from 'assets/images/fail.svg';
+import COMMON from 'fixtures/common/success';
 
 const size = 160;
 const delay = 3000;
@@ -46,7 +47,7 @@ const HeadUpDpWrapper = styled.div`
   }
 `;
 
-const HeadUpDisplay: FC = () => {
+const HeadUpDisplay: React.FC = () => {
   const modalTarget = useRef<HTMLDivElement>(document.createElement('div'));
   const { visibleHud, hudStatusText } = useSelector((state: RootState) => ({
     visibleHud: state.ui.visibleHud,
@@ -57,6 +58,11 @@ const HeadUpDisplay: FC = () => {
   const hideHeadUp = useCallback(() => {
     visibleHud && dispatch(createActionInvisibleHud());
   }, [visibleHud, dispatch]);
+
+  const hudIcon = useMemo(
+    () => (hudStatusText.includes(COMMON.SUCCESS) ? success : fail),
+    [hudStatusText]
+  );
 
   useEffect(() => {
     const modalRoot = getModalRoot();
@@ -75,14 +81,8 @@ const HeadUpDisplay: FC = () => {
     <>
       {visibleHud && (
         <HeadUpDpWrapper>
-          <img
-            src={hudStatusText === 'success' ? success : fail}
-            alt={hudStatusText}
-            width={size / 2}
-          />
-          <h4 data-testid="text">
-            {hudStatusText === 'success' ? '완료' : '실패'}했습니다.
-          </h4>
+          <img src={hudIcon} alt={hudStatusText} width={size / 2} />
+          <h4 data-testid="text">{hudStatusText}</h4>
         </HeadUpDpWrapper>
       )}
     </>,
@@ -90,4 +90,4 @@ const HeadUpDisplay: FC = () => {
   );
 };
 
-export default memo(HeadUpDisplay);
+export default React.memo(HeadUpDisplay);

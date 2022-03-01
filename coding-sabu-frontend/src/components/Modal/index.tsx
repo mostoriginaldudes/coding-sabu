@@ -53,6 +53,7 @@ const ModalHeader = styled.header`
   border-bottom: 1px solid ${colors.black};
   ${media.tablet`
     padding: 0 20px;
+    margin-top: 65px;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
   `}
@@ -100,7 +101,7 @@ const Modal: FC<Props> = ({
     const modalRoot = getModalRoot();
     modalRoot.appendChild(modalTarget.current);
     return () => {
-      document.body.removeChild(modalRoot);
+      modalRoot && document.body.removeChild(modalRoot);
     };
   }, []);
 

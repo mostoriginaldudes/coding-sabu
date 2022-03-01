@@ -43,7 +43,7 @@ const isSuccess = (status: number) => status === 200 || status === 201;
 
 instance.interceptors.request.use(req => {
   if (req && req.headers) {
-    req.headers.authorization = injectedStore.getState().auth.token || '';
+    req.headers['Authorization'] = injectedStore.getState().auth.token || '';
   }
   return req;
 });

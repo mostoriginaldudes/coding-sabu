@@ -4,11 +4,14 @@ import LessonList from 'components/LessonList';
 import UnderlineTitle from 'styles/UnderlineTitle';
 import { RootState } from 'store';
 import { Lesson } from 'types';
-import { State as Lessons, createActionFetchMyLessons } from 'store/lesson';
+import { createActionFetchMyLessons } from 'store/lesson';
+import Loader from 'styles/Loader';
+import { Redirect } from 'react-router-dom';
 
-// 리덕스 쓸 필요가 있는지 고민해보자
 const MyJoiningLessons: FC = () => {
-  const { lessons } = useSelector<RootState, Lessons>(state => state.lesson);
+  const { loading, data, error } = useSelector(
+    (state: RootState) => state.lesson.mylessons
+  );
   const dispatch = useDispatch();
 
   const dispatchMyLessons = useCallback(
@@ -16,9 +19,9 @@ const MyJoiningLessons: FC = () => {
     [dispatch]
   );
 
-  const mylessonsArray = useMemo(
-    () => (lessons.data === null ? ([] as Lesson[]) : lessons.data),
-    [lessons]
+  const mylessonsList = useMemo(
+    () => (data === null ? ([] as Lesson[]) : data),
+    [data]
   );
 
   useEffect(() => {
@@ -27,8 +30,10 @@ const MyJoiningLessons: FC = () => {
 
   return (
     <div>
-      <UnderlineTitle title="수련 관리" />
-      <LessonList lessons={mylessonsArray} />
+      <UnderlineTitle title="내 수련 목록" />
+      <Loader loading={loading} />
+      {error && <Redirect to="/" />}
+      <LessonList lessons={mylessonsList} />
     </div>
   );
 };

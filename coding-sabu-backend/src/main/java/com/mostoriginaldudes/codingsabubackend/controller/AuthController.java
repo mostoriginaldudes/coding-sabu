@@ -8,6 +8,7 @@ import com.mostoriginaldudes.codingsabubackend.dto.response.SignupResponseDto;
 import com.mostoriginaldudes.codingsabubackend.service.auth.AuthService;
 import com.mostoriginaldudes.codingsabubackend.service.user.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static com.mostoriginaldudes.codingsabubackend.util.constant.Constant.*;
+import static com.mostoriginaldudes.codingsabubackend.util.constant.Constant.ACCESS_TOKEN;
+import static com.mostoriginaldudes.codingsabubackend.util.constant.Constant.REFRESH_TOKEN;
 
 @RequiredArgsConstructor
 @RestController
@@ -43,7 +45,7 @@ public class AuthController {
 
       return ResponseEntity
         .status(HttpStatus.OK)
-        .header(AUTHORIZATION_HEADER, accessToken)
+        .header(HttpHeaders.AUTHORIZATION, accessToken)
         .body(responseDto);
     }
   }
@@ -53,7 +55,7 @@ public class AuthController {
     try {
       return ResponseEntity
         .status(HttpStatus.OK)
-        .header(AUTHORIZATION_HEADER, authService.reissueAccessToken(request))
+        .header(HttpHeaders.AUTHORIZATION, authService.reissueAccessToken(request))
         .body(null);
     } catch (RuntimeException e) {
       authService.deleteRefreshToken(response);

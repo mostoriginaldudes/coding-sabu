@@ -9,8 +9,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface LessonService {
-  LessonListResponseDto getAllLessons(int page);
-  LessonResponseDto createLesson(LessonRequestDto requestDto, int teacherId);
+  LessonListResponseDto getAllLessons();
+  LessonResponseDto createLesson(LessonRequestDto requestDto);
   LessonResponseDto getLesson(int id);
   String uploadLessonThumbnail(MultipartFile multipartFile);
   LessonResponseDto registerLesson(int lessonId, int studentId);

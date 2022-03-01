@@ -149,8 +149,6 @@ export default function authReducer(state = initialState, action: Action) {
       case SET_TOKEN:
         draft.token = action.payload;
         break;
-      case LOGOUT:
-        break;
       case LOGOUT_SUCCESS:
         draft.token = null;
         draft.user.loading = false;

@@ -1,178 +1,159 @@
-import {
-  FC,
-  Reducer,
-  useCallback,
-  useReducer,
-  useState,
-  ChangeEvent,
-  SyntheticEvent,
-  useMemo,
-  useEffect
-} from 'react';
-import styled from '@emotion/styled';
+/** @jsxImportSource @emotion/react */
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import Input from 'components/Input';
 import Editor from 'components/Editor';
 import Button from 'components/Button';
 import UnderlineTitle from 'styles/UnderlineTitle';
-import Row from 'styles/Row';
-import { FlexCol, flexCenter } from 'styles/module';
-import { colors, media } from 'styles/theme';
-import { LessonFormAction as Action } from 'types';
 import useRouting from 'hooks/useRouting';
+import { createLesson } from 'apis';
+import { RootState } from 'store';
+import * as Styled from './LessonForm.style';
+import { createActionVisibleHud } from 'store/ui';
+import { yupResolver } from '@hookform/resolvers/yup';
+import validationSchema from 'utils/formValidation/lesson/ValidationSchema';
+import LESSON_SUCCESS from 'fixtures/lesson/success';
+import LESSON_FAIL from 'fixtures/lesson/fail';
 
-const Form = styled.form`
-  ${flexCenter}
-  flex-direction: column;
-`;
-
-const InputContainer = styled(FlexCol)`
-  width: 45%;
-  height: 100%;
-  margin-right: 5%;
-  ${media.tablet`
-    margin-right: 0;
-  `}
-`;
-
-const ThumbnailContainer = styled.div<LessonThumbnail>`
-  width: 45%;
-  height: 270px;
-  background-color: ${colors.gray[1]};
-  background-image: url(${({ imgUrl }) => imgUrl});
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
-  border-radius: 10px;
-  & > label {
-    ${flexCenter}
-    width: 100%;
-    height: 100%;
-    cursor: pointer;
-  }
-`;
-
-const ThumbnailInput = styled.input`
-  border: none;
-  position: absolute;
-  opacity: 0;
-  z-index: -1;
-  &:focus {
-    border: none;
-  }
-`;
-
-interface LessonThumbnail {
-  imgUrl?: string;
-}
-
-interface State {
+interface LessonFormProps {
   title: string;
-  price: string;
-  description: string;
-  terminatedAt: Date;
+  price: number;
 }
 
-const reducer: Reducer<State, Action> = (state, action) => {
-  switch (action.name) {
-    case 'title':
-      return { ...state, title: action.value };
-    case 'price':
-      return { ...state, price: action.value };
-    case 'description':
-      return { ...state, description: action.value };
-    case 'terminatedAt':
-      return { ...state, terminatedAt: new Date(action.value) };
-    default:
-      return state;
-  }
-};
-
-const LessonForm: FC = () => {
+const LessonForm: React.FC = () => {
   const [imgUrl, setImgUrl] = useState<string>('');
-  const hasBeenUploaded = useMemo(() => imgUrl !== '', [imgUrl]);
-  const { back } = useRouting();
+  const [imgFile, setImgFile] = useState<File | null>(null);
+  const [description, setDescription] = useState<string>('');
 
-  const [state, dispatch] = useReducer(reducer, {
-    title: '',
-    price: '',
-    description: '',
-    terminatedAt: new Date()
+  const teacherId = useSelector((state: RootState) => state.auth.user.data?.id);
+  const dispatch = useDispatch();
+
+  const { replace, back } = useRouting();
+
+  const {
+    register,
+    handleSubmit,
+    clearErrors,
+    setFocus,
+    formState: { errors }
+  } = useForm<LessonFormProps>({
+    resolver: yupResolver(validationSchema.getLesson()),
+    defaultValues: {
+      price: 0
+    }
   });
 
-  const onSubmit = useCallback((e: SyntheticEvent) => {
-    e.preventDefault();
-  }, []);
-
-  const onChange = useCallback(
-    ({ target }: { target: Action }) => dispatch(target as Action),
-    [dispatch]
+  const createLessonSuccess = useCallback(
+    (id: number) => {
+      dispatch(createActionVisibleHud(LESSON_SUCCESS.OPEN));
+      replace(`/lesson/${id}`);
+    },
+    [dispatch, replace]
   );
 
-  const convertDateTimeToString = useMemo(
-    () => state.terminatedAt.toJSON().slice(0, -3),
-    [state]
+  const createLessonFail = useCallback(() => {
+    dispatch(createActionVisibleHud(LESSON_FAIL.OPEN));
+    setFocus('title');
+  }, [dispatch, setFocus]);
+
+  const getFormData = useCallback(
+    (lessonForm: LessonFormProps) => {
+      const formData = new FormData();
+      formData.append('teacherId', String(teacherId));
+      formData.append('title', lessonForm.title);
+      formData.append('description', description);
+      formData.append('price', String(lessonForm.price));
+      formData.append('imageThumbnail', imgFile!);
+      return formData;
+    },
+    [teacherId, description, imgFile]
   );
 
-  const uploadThumbnail = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files![0];
-    if (file) {
-      const lessonImgUrl = URL.createObjectURL(file);
-      setImgUrl(lessonImgUrl);
+  const onSubmit: SubmitHandler<LessonFormProps> = async lessonForm => {
+    try {
+      const newLesson = await createLesson(getFormData(lessonForm));
+      createLessonSuccess(newLesson.id);
+    } catch (error) {
+      createLessonFail();
     }
   };
 
+  const hasBeenUploaded = useMemo(() => imgUrl !== '', [imgUrl]);
+
+  const uploadThumbnail = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files![0];
+      if (file) {
+        const lessonImgUrl = URL.createObjectURL(file);
+        setImgUrl(lessonImgUrl);
+        setImgFile(file);
+      }
+    },
+    [setImgUrl]
+  );
+
   useEffect(() => {
+    setFocus('title');
+    return () => {
+      clearErrors();
+    };
+  }, [setFocus, clearErrors]);
+
+  useEffect(() => {
+    teacherId || back();
     return () => {
       imgUrl && URL.revokeObjectURL(imgUrl);
     };
-  });
+  }, [teacherId, back, imgUrl]);
 
   return (
     <div>
       <UnderlineTitle title="수련 창설" />
-      <Form onSubmit={onSubmit}>
-        <Row>
-          <InputContainer>
+      <form
+        css={Styled.form}
+        onSubmit={handleSubmit(onSubmit)}
+        noValidate
+        encType="multipart/form-data"
+      >
+        <Styled.Row>
+          <Styled.InputContainer>
             <Input
-              name="title"
               label="수련 이름"
               placeholder="수련 제목을 입력해주세요."
-              value={state.title}
-              onChange={onChange}
+              {...register('title')}
             />
+            {errors.title && (
+              <Styled.InputError>{errors.title.message}</Styled.InputError>
+            )}
             <Input
-              name="price"
+              type="number"
               label="수련 가치"
               placeholder="수련 가격을 입력해주세요."
-              value={state.price}
-              onChange={onChange}
+              {...register('price')}
             />
-            <Input
-              name="terminatedAt"
-              type="datetime-local"
-              label="종료일"
-              value={convertDateTimeToString}
-              onChange={onChange}
-            />
-          </InputContainer>
-          <ThumbnailContainer imgUrl={imgUrl}>
+            {errors.price && (
+              <Styled.InputError>{errors.price.message}</Styled.InputError>
+            )}
+          </Styled.InputContainer>
+          <Styled.ThumbnailContainer imgUrl={imgUrl}>
             {hasBeenUploaded || (
               <label htmlFor="lessonFile">수련 소개 이미지 업로드</label>
             )}
-            <ThumbnailInput
+            <Styled.ThumbnailInput
               type="file"
               id="lessonFile"
               placeholder="수련 소개 이미지"
               onChange={uploadThumbnail}
             />
-          </ThumbnailContainer>
-        </Row>
-        <Row>
-          <Editor setValue={dispatch} />
-        </Row>
-        <Row>
-          <Button color="yellow" radius={5} height={3}>
-            수련 창설
+          </Styled.ThumbnailContainer>
+        </Styled.Row>
+        <Styled.Row>
+          <Editor setValue={setDescription} />
+        </Styled.Row>
+        <Styled.Row>
+          <Button type="submit" color="yellow" radius={5} height={3}>
+            수련 개설
           </Button>
           <Button
             type="button"
@@ -183,10 +164,10 @@ const LessonForm: FC = () => {
           >
             취소
           </Button>
-        </Row>
-      </Form>
+        </Styled.Row>
+      </form>
     </div>
   );
 };
 
-export default LessonForm;
+export default React.memo(LessonForm);

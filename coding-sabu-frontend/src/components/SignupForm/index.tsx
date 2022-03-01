@@ -11,7 +11,7 @@ import { createActionInvisibleAuthForm } from 'store/ui';
 import { useForm, SubmitHandler } from 'react-hook-form';
 
 import { yupResolver } from '@hookform/resolvers/yup';
-import validationSchema from 'utils/FormValidation/ValidationSchema';
+import validationSchema from 'utils/formValidation/auth/ValidationSchema';
 
 import useScrollLock from 'hooks/useScrollLock';
 import * as Styled from './SignupForm.style';
@@ -66,7 +66,7 @@ const SignupForm: FC<Props> = ({ visibleAuthForm, setModalToRender }) => {
     return () => {
       clearErrors();
     };
-  }, [clearErrors, setFocus, visibleAuthForm]);
+  }, [setFocus, clearErrors, visibleAuthForm]);
 
   return (
     <Modal

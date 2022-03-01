@@ -1,12 +1,15 @@
-import { FC, useState, useEffect, useCallback } from 'react';
-import { useHistory } from 'react-router-dom';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import styled from '@emotion/styled';
 
-import { fetchLessonList } from 'apis';
+import { fetchMyTeachingLessonList } from 'apis';
 import LessonList from 'components/LessonList';
 import { Lesson } from 'types';
 import UnderlineTitle from 'styles/UnderlineTitle';
 import Button from 'components/Button';
+import { useSelector } from 'react-redux';
+import { RootState } from 'store';
+import useRouting from 'hooks/useRouting';
+import { Redirect } from 'react-router-dom';
 
 const Container = styled.div`
   position: relative;
@@ -18,18 +21,21 @@ const CreateLessonButton = styled(Button)`
   font-weight: bold;
 `;
 
-const MyTeachingLessons: FC = () => {
-  const history = useHistory();
+const MyTeachingLessons: React.FC = () => {
+  const { forward } = useRouting();
   const [teachingLessons, setTeachingLessons] = useState<Lesson[]>([]);
+  const user = useSelector((state: RootState) => state.auth.user);
+
+  const isNotTeacher = useMemo(() => user.data?.userType !== 'teacher', [user]);
 
   const fetchMyTeachingLessons = useCallback(async () => {
-    const data = await fetchLessonList();
+    const data = await fetchMyTeachingLessonList();
     setTeachingLessons(data.lessons);
   }, [setTeachingLessons]);
 
   const goToLessonForm = useCallback(() => {
-    history.push('/lesson/form');
-  }, [history]);
+    forward('/lesson/form');
+  }, [forward]);
 
   useEffect(() => {
     fetchMyTeachingLessons();
@@ -37,6 +43,7 @@ const MyTeachingLessons: FC = () => {
 
   return (
     <Container>
+      {isNotTeacher && <Redirect to="/" />}
       <CreateLessonButton
         color="black"
         height={2}
@@ -45,10 +52,10 @@ const MyTeachingLessons: FC = () => {
       >
         수련 개설
       </CreateLessonButton>
-      <UnderlineTitle title="내 가르침" />
+      <UnderlineTitle title="내 가르침 목록" />
       <LessonList lessons={teachingLessons} />
     </Container>
   );
 };
 
-export default MyTeachingLessons;
+export default React.memo(MyTeachingLessons);

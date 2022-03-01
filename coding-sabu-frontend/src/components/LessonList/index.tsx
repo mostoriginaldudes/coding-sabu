@@ -1,10 +1,10 @@
-import { FC } from 'react';
+import React from 'react';
 import styled from '@emotion/styled';
-import { media } from 'styles/theme';
 import LessonItem from 'components/LessonItem';
+import useRouting from 'hooks/useRouting';
 import { Lesson } from 'types';
+import { media } from 'styles/theme';
 import { flexCenter } from 'styles/module';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 export const EmphasisText = styled.h3`
   font-size: 1.3rem;
@@ -16,7 +16,6 @@ const LessonListContainer = styled.ol`
   grid-template-columns: repeat(4, 1fr);
   grid-gap: 20px;
   margin-bottom: 20px;
-
   ${media.tablet`
     grid-template-columns: repeat(1, 1fr);
   `}
@@ -28,14 +27,16 @@ const LessonListElement = styled.li`
   justify-content: space-between;
 `;
 
-interface Props extends RouteComponentProps {
+interface Props {
   lessons: Lesson[];
 }
 
-const LessonList: FC<Props> = ({ history, lessons }) => {
+const LessonList: React.FC<Props> = ({ lessons }) => {
+  const { forward } = useRouting();
+
   const pickOneLesson = (lessonId: Lesson['id']) => {
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
-    history.push(`/lesson/${lessonId}`);
+    forward(`/lesson/${lessonId}`);
   };
 
   return (
@@ -54,4 +55,4 @@ const LessonList: FC<Props> = ({ history, lessons }) => {
   );
 };
 
-export default withRouter(LessonList);
+export default React.memo(LessonList);

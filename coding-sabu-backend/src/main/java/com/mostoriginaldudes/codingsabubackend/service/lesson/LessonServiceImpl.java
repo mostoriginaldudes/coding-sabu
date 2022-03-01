@@ -29,26 +29,25 @@ public class LessonServiceImpl implements LessonService {
   private final FileUploadConfig fileUploadConfig;
 
   @Override
-  public LessonListResponseDto getAllLessons(int page) {
+  public LessonListResponseDto getAllLessons() {
      return new LessonListResponseDto(
        addStudentCountAndTeacherName(
-         lessonRepository.getAllLessons(page)
+         lessonRepository.getAllLessons()
        )
      );
   }
 
   @Override
   @Transactional
-  public LessonResponseDto createLesson(LessonRequestDto requestDto, int teacherId) {
+  public LessonResponseDto createLesson(LessonRequestDto requestDto) {
     String thumbnailUrl = uploadLessonThumbnail(requestDto.getImageThumbnail());
 
     LessonDto lesson = LessonDto.builder()
-        .teacherId(teacherId)
+        .teacherId(requestDto.getTeacherId())
         .title(requestDto.getTitle())
         .description(requestDto.getDescription())
         .price(requestDto.getPrice())
         .createdAt(LocalDateTime.now())
-        .terminatedAt(requestDto.getTerminatedAt())
         .thumbnailUrl(thumbnailUrl)
         .build();
 
@@ -65,6 +64,7 @@ public class LessonServiceImpl implements LessonService {
     }
 
     String teacherName = convertTeacherIdToNickname(lesson.getTeacherId());
+    int studentCount = getStudentCount(id);
 
     return LessonResponseDto.builder()
       .id(id)
@@ -73,7 +73,7 @@ public class LessonServiceImpl implements LessonService {
       .description(lesson.getDescription())
       .price(lesson.getPrice())
       .createdAt(lesson.getCreatedAt())
-      .terminatedAt(lesson.getTerminatedAt())
+      .studentCount(studentCount)
       .thumbnailUrl(lesson.getThumbnailUrl())
       .build();
   }
@@ -88,7 +88,6 @@ public class LessonServiceImpl implements LessonService {
     try {
       FileOutputStream fileOutputStream = new FileOutputStream(imageRealFilePath);
       InputStream inputStream = lessonThumbnail.getInputStream();
-
       int fileReadCount = 0;
       byte[] imageFileBuffer = new byte[1024];
 
@@ -122,7 +121,7 @@ public class LessonServiceImpl implements LessonService {
   public LessonListResponseDto getMyLessons(int userId) {
     return new LessonListResponseDto(
       addStudentCountAndTeacherName(
-        lessonRepository.getMyLessonsByUserId(userId)
+        lessonRepository.getMyLessons(userId)
       )
     );
   }
@@ -139,7 +138,6 @@ public class LessonServiceImpl implements LessonService {
           .description(lesson.getDescription())
           .price(lesson.getPrice())
           .createdAt(lesson.getCreatedAt())
-          .terminatedAt(lesson.getTerminatedAt())
           .thumbnailUrl(lesson.getThumbnailUrl())
           .studentCount(getStudentCount(lesson.getId()))
           .build()

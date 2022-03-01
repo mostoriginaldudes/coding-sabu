@@ -17,7 +17,6 @@ public class LessonResponseDto {
   private final String description;
   private final int price;
   private final LocalDateTime createdAt;
-  private final LocalDateTime terminatedAt;
   private final String thumbnailUrl;
   private final int studentCount;
 }

@@ -1,5 +1,4 @@
 import { FC, useEffect, useCallback, useRef } from 'react';
-import { LessonFormAction as Action } from 'types';
 import { Editor as ToastEditor } from '@toast-ui/react-editor';
 import colorSyntax from '@toast-ui/editor-plugin-color-syntax';
 import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight';
@@ -9,7 +8,7 @@ import 'prismjs/themes/prism.css';
 import '@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight.css';
 import '@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-syntax.css';
 interface Props {
-  setValue: (value: Action) => void;
+  setValue: (value: string) => void;
 }
 
 const Editor: FC<Props> = ({ setValue }) => {
@@ -17,8 +16,8 @@ const Editor: FC<Props> = ({ setValue }) => {
   const editType = window.innerWidth <= 768 ? 'wysiwyg' : 'markdown';
 
   const changeHandler = useCallback(() => {
-    const markdown = toastEditorRef.current?.getInstance().getMarkdown();
-    setValue({ name: 'description', value: markdown! });
+    const html = toastEditorRef.current?.getInstance().getHTML();
+    html && setValue(html);
   }, [setValue, toastEditorRef]);
 
   useEffect(() => {

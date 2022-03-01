@@ -18,7 +18,6 @@ public class LessonDto {
   private String description;
   private int price;
   private LocalDateTime createdAt;
-  private LocalDateTime terminatedAt;
   private String thumbnailUrl;
 
   @Builder
@@ -28,7 +27,6 @@ public class LessonDto {
     String description,
     int price,
     LocalDateTime createdAt,
-    LocalDateTime terminatedAt,
     String thumbnailUrl
   ) {
     this.teacherId = teacherId;
@@ -36,7 +34,6 @@ public class LessonDto {
     this.description = description;
     this.price = price;
     this.createdAt = createdAt;
-    this.terminatedAt = terminatedAt;
     this.thumbnailUrl = thumbnailUrl;
   }
 }

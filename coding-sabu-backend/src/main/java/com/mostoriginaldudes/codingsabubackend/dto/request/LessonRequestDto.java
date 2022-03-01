@@ -1,17 +1,15 @@
 package com.mostoriginaldudes.codingsabubackend.dto.request;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDateTime;
-
-@AllArgsConstructor
+@Setter
 @Getter
 public class LessonRequestDto {
+  private int teacherId;
   private String title;
   private String description;
   private int price;
-  private LocalDateTime terminatedAt;
   private MultipartFile imageThumbnail;
 }

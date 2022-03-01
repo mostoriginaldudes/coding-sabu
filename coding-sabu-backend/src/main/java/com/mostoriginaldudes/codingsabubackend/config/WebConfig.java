@@ -5,13 +5,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.resource.PathResourceResolver;
 
 import java.util.Arrays;
 import java.util.List;
-
-import static com.mostoriginaldudes.codingsabubackend.util.constant.Constant.AUTHORIZATION_HEADER;
 
 @RequiredArgsConstructor
 @EnableWebMvc
@@ -28,7 +27,8 @@ public class WebConfig implements WebMvcConfigurer {
 
   private final List<String> AddAuthInterceptorUrl = Arrays.asList(
     "/user",
-    "/auth/logout"
+    "/auth/logout",
+    "/lesson", "/lesson/**/student", "/lesson/teachings"
   );
 
   @Override
@@ -37,7 +37,7 @@ public class WebConfig implements WebMvcConfigurer {
       .allowedOrigins(allowCorsUrl)
       .allowCredentials(true)
       .allowedMethods("*")
-      .exposedHeaders(AUTHORIZATION_HEADER)
+      .exposedHeaders(HttpHeaders.AUTHORIZATION)
       .maxAge(3000);
   }
 

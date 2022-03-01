@@ -43,14 +43,21 @@ const carouselArrowStyle = css`
   cursor: pointer;
 `;
 
-const ArrowLeft = styled(HiChevronLeft)`
+interface ArrowStyle {
+  cursor: 'not-allowed' | 'pointer';
+}
+const ArrowLeft = styled(HiChevronLeft)<ArrowStyle>`
   ${carouselArrowStyle}
   left: -1rem;
+  z-index: 20;
+  cursor: ${({ cursor }) => cursor};
 `;
 
-const ArrowRight = styled(HiChevronRight)`
+const ArrowRight = styled(HiChevronRight)<ArrowStyle>`
   ${carouselArrowStyle}
   right: -1rem;
+  z-index: 20;
+  cursor: ${({ cursor }) => cursor};
 `;
 
 const Content = styled.li`
@@ -79,9 +86,9 @@ interface Prop {
 const Thumbnail = styled.div<Prop>`
   width: 50%;
   height: 100%;
-  background-color: ${colors.black};
+  border: 3px solid ${colors.black};
   background-image: url(${({ imgUrl }) => imgUrl});
-  background-size: auto;
+  background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
 `;
@@ -122,7 +129,7 @@ const Info = styled.div`
     width: 100%;
     height: 100%;
 
-    & > p {
+    & > div {
       display: -webkit-box;
       width: 100%;
       height: 220px;
@@ -133,7 +140,7 @@ const Info = styled.div`
       white-space: normal;
       -webkit-line-clamp: 10;
       -webkit-box-orient: vertical;
-      overflow: hidden;
+      overflow: scroll;
     }
 
     & > button {

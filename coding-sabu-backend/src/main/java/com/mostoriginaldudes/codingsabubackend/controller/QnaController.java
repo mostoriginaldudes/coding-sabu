@@ -6,13 +6,10 @@ import com.mostoriginaldudes.codingsabubackend.dto.request.QuestionRequestDto;
 import com.mostoriginaldudes.codingsabubackend.service.auth.AuthService;
 import com.mostoriginaldudes.codingsabubackend.service.qna.QnaService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
-
-import static com.mostoriginaldudes.codingsabubackend.util.constant.Constant.AUTHORIZATION_HEADER;
 
 @RequiredArgsConstructor
 @RestController
@@ -25,17 +22,10 @@ public class QnaController {
   @PostMapping("/{lessonId}/question")
   public ResponseEntity<QuestionDto> addQuestion(
     @PathVariable int lessonId,
-    @RequestHeader Map<String, Object> requestHeader,
+    @RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken,
     @RequestBody QuestionRequestDto requestDto
   ) {
-    if (!requestHeader.containsKey(AUTHORIZATION_HEADER)) {
-      return ResponseEntity
-        .status(HttpStatus.UNAUTHORIZED)
-        .body(null);
-    }
-
-    String token = (String) requestHeader.get(AUTHORIZATION_HEADER);
-    UserDto user = authService.getLoggedInUserInfo(token);
+    UserDto user = authService.getLoggedInUserInfo(accessToken);
 
     if ("student".equals(user.getUserType())) {
       return ResponseEntity
