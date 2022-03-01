@@ -5,12 +5,17 @@ export interface Lesson {
   description: string;
   price: number;
   createdAt: Date;
-  terminatedAt: Date | null;
   thumbnailUrl: string;
   studentCount: number;
 }
 
-export type HudStatus = 'success' | 'fail';
+export interface LessonRequest {
+  teacherId: number;
+  title: string;
+  description: string;
+  price: number;
+  imageThumbnail: File;
+}
 
 export type LessonFormAction =
   | HTMLInputElement
