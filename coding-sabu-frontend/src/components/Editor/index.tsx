@@ -16,8 +16,8 @@ const Editor: FC<Props> = ({ setValue }) => {
   const editType = window.innerWidth <= 768 ? 'wysiwyg' : 'markdown';
 
   const changeHandler = useCallback(() => {
-    const markdown = toastEditorRef.current?.getInstance().getMarkdown();
-    setValue({ name: 'description', value: markdown! });
+    const html = toastEditorRef.current?.getInstance().getHTML();
+    html && setValue(html);
   }, [setValue, toastEditorRef]);
 
   useEffect(() => {
