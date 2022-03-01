@@ -9,7 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface LessonService {
-  LessonListResponseDto getAllLessons(int page);
+  LessonListResponseDto getAllLessons();
   LessonResponseDto createLesson(LessonRequestDto requestDto, int teacherId);
   LessonResponseDto getLesson(int id);
   String uploadLessonThumbnail(MultipartFile multipartFile);
