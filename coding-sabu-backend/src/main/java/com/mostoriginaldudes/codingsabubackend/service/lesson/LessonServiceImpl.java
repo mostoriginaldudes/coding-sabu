@@ -121,7 +121,7 @@ public class LessonServiceImpl implements LessonService {
   public LessonListResponseDto getMyLessons(int userId) {
     return new LessonListResponseDto(
       addStudentCountAndTeacherName(
-        lessonRepository.getMyLessonsByUserId(userId)
+        lessonRepository.getMyLessons(userId)
       )
     );
   }

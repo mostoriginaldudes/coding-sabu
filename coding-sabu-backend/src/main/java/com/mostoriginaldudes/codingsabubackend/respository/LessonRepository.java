@@ -14,7 +14,7 @@ public interface LessonRepository {
   LessonDto getLessonById(int id);
   int createLesson(LessonDto lesson);
   int registerStudentToLesson(int lessonId, int studentId);
-  List<LessonDto> getMyLessonsByUserId(int userId);
+  List<LessonDto> getMyLessons(int userId);
   List<UserDto> getStudentsInMyLessonByTeacherId(int lessonId, int teacherId);
   int getStudentCount(int lessonId);
   List<LessonDto> getTeachingLessons(int teacherId);

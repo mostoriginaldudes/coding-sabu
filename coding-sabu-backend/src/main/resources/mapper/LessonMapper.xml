@@ -55,7 +55,7 @@
     )
   </insert>
 
-  <select id="getMyLessonsByUserId" resultType="LessonDto">
+  <select id="getMyLessons" resultType="LessonDto">
     SELECT
     lesson.id AS id
     ,lesson.title AS title
