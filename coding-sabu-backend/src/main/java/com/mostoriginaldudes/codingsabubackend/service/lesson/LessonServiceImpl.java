@@ -29,10 +29,10 @@ public class LessonServiceImpl implements LessonService {
   private final FileUploadConfig fileUploadConfig;
 
   @Override
-  public LessonListResponseDto getAllLessons(int page) {
+  public LessonListResponseDto getAllLessons() {
      return new LessonListResponseDto(
        addStudentCountAndTeacherName(
-         lessonRepository.getAllLessons(page)
+         lessonRepository.getAllLessons()
        )
      );
   }

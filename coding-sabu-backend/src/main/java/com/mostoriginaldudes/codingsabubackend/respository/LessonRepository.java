@@ -10,7 +10,7 @@ import java.util.List;
 @Mapper
 @Repository
 public interface LessonRepository {
-  List<LessonDto> getAllLessons(int page);
+  List<LessonDto> getAllLessons();
   LessonDto getLessonById(int id);
   int createLesson(LessonDto lesson);
   int registerStudentToLesson(int lessonId, int studentId);

@@ -7,9 +7,7 @@
   <select id="getAllLessons" resultType="LessonDto">
     SELECT *
     FROM lesson
-    ORDER BY id
-    LIMIT 12
-    OFFSET #{page}
+    ORDER BY created_at DESC
   </select>
 
   <select id="getLessonById" resultType="LessonDto">
