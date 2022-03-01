@@ -88,9 +88,11 @@ const LessonDetail: React.FC<Props> = ({ match }) => {
 
   const enrollLessonFail = useCallback(
     (error: Error) => {
-      dispatch(createActionVisibleHud(LESSON_FAIL.REGISTER));
       if (error instanceof AuthenticationError) {
+        dispatch(createActionVisibleHud(AUTH_FAIL.REQUIRED_LOGIN));
         dispatch(createActionVisibleAuthForm());
+      } else {
+        dispatch(createActionVisibleHud(LESSON_FAIL.REGISTER));
       }
     },
     [dispatch]
