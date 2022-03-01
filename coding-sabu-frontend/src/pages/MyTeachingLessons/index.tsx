@@ -1,4 +1,4 @@
-import { FC, useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from '@emotion/styled';
 
@@ -18,7 +18,7 @@ const CreateLessonButton = styled(Button)`
   font-weight: bold;
 `;
 
-const MyTeachingLessons: FC = () => {
+const MyTeachingLessons: React.FC = () => {
   const history = useHistory();
   const [teachingLessons, setTeachingLessons] = useState<Lesson[]>([]);
 
@@ -51,4 +51,4 @@ const MyTeachingLessons: FC = () => {
   );
 };
 
-export default MyTeachingLessons;
+export default React.memo(MyTeachingLessons);
