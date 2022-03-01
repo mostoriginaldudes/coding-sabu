@@ -1,6 +1,5 @@
 package com.mostoriginaldudes.codingsabubackend.service.auth;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mostoriginaldudes.codingsabubackend.auth.JsonWebToken;
 import com.mostoriginaldudes.codingsabubackend.auth.Security;
 import com.mostoriginaldudes.codingsabubackend.dto.LoginDto;
@@ -132,7 +131,7 @@ public class AuthServiceImpl implements AuthService {
   public UserDto getLoggedInUserInfo(String token) {
     try {
       Claims claims = jwt.verifyJsonWebToken(token);
-      return new ObjectMapper().convertValue(claims.get("userInfo"), UserDto.class);
+      return userService.getUserInfo((Integer) claims.get("id"));
     } catch (Exception e) {
       e.printStackTrace();
       return null;
