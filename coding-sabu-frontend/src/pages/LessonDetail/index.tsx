@@ -1,5 +1,6 @@
 import React, { useEffect, useCallback, useMemo } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 import styled from '@emotion/styled';
 import NotFound from 'pages/NotFound';
 import Button from 'components/Button';
@@ -9,16 +10,30 @@ import Loader from 'styles/Loader';
 import Row from 'styles/Row';
 import UnderlineTitle from 'styles/UnderlineTitle';
 import { flexCenter } from 'styles/module';
-import useFetchLessonList from 'hooks/useFetchLessonList';
 import useRouting from 'hooks/useRouting';
-import { Lesson } from 'types';
 import { concatHostToImagePath } from 'utils';
+
+import { RootState } from 'store';
+import {
+  createActionFetchOneLesson,
+  createActionJoinLesson
+} from 'store/lesson';
+import { colors } from 'styles/theme';
+import { createActionVisibleAuthForm, createActionVisibleHud } from 'store/ui';
+import AuthenticationError from 'errors/AuthenticationError';
+import LESSON_SUCCESS from 'fixtures/lesson/success';
+import LESSON_FAIL from 'fixtures/lesson/fail';
+import AUTH_FAIL from 'fixtures/auth/fail';
+
+interface LessonThumbnail {
+  imgUrl?: string;
+}
 
 const ThumbnailContainer = styled.div<LessonThumbnail>`
   width: 45%;
   height: 270px;
   background-image: url(${({ imgUrl }) => imgUrl});
-  background-size: auto;
+  background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
   border-radius: 10px;
@@ -36,67 +51,127 @@ const Column = styled.div`
   width: 45%;
 `;
 
+const InfoContainer = styled(Column)`
+  margin-left: 15px;
+`;
+
 const ViewerContainer = styled(Column)`
   min-height: 200px;
+  border: 1px dashed ${colors.gray[6]};
+  border-radius: 5px;
+  padding: 5px 10px;
 `;
 
 interface Props extends RouteComponentProps<{ id: string }> {}
 
 const LessonDetail: React.FC<Props> = ({ match }) => {
-  imgUrl?: string;
-}
-
-  const enrollLesson = async () => {
   const { id } = match.params;
-  const { loading, data, error } = useFetchLessonList();
-  const [lesson, setLesson] = useState<Lesson>();
-  const thumbnailUrl = concatHostToImagePath(lesson?.thumbnailUrl);
+  const { user, lesson, mylessons } = useSelector((state: RootState) => ({
+    user: state.auth.user,
+    lesson: state.lesson.lessonDetailInfo,
+    mylessons: state.lesson.mylessons
+  }));
+  const dispatch = useDispatch();
+  const thumbnailUrl = concatHostToImagePath(lesson.data?.thumbnailUrl);
   const { back } = useRouting();
 
-  useEffect(() => {
-    const [lessonToShow] = data?.filter(
-      (lesson: Lesson) => lesson.id === parseInt(id)
-    );
-    setLesson(lessonToShow);
-  }, [id, data, setLesson]);
+  const fetchLesson = useCallback(
+    (id: string) => {
+      dispatch(createActionFetchOneLesson(parseInt(id)));
+    },
+    [dispatch]
+  );
 
-  const joinToLesson = useCallback(() => {
-    // TODO 사용자 인증 기능을 구현한 다음, 수강 신청 API 호출하도록 구현하기.
-    back();
-  }, [back]);
+  const enrollLessonSuccess = useCallback(() => {
+    dispatch(createActionVisibleHud(LESSON_SUCCESS.REGISTER));
+  }, [dispatch]);
+
+  const enrollLessonFail = useCallback(
+    (error: Error) => {
+      dispatch(createActionVisibleHud(LESSON_FAIL.REGISTER));
+      if (error instanceof AuthenticationError) {
+        dispatch(createActionVisibleAuthForm());
+      }
+    },
+    [dispatch]
+  );
+
+  const enrollLesson = async () => {
+    try {
+      if (user.data) {
+        await dispatch(createActionJoinLesson(parseInt(id), user.data.id));
+        enrollLessonSuccess();
+      } else {
+        throw new AuthenticationError(AUTH_FAIL.REQUIRED_LOGIN);
+      }
+    } catch (error) {
+      enrollLessonFail(error as Error);
+    }
+  };
+
+  const localizedPrice = useMemo(() => {
+    if (lesson.data?.price === 0) {
+      return 'FREE';
+    } else {
+      return `${lesson.data?.price.toLocaleString()}원`;
+    }
+  }, [lesson.data]);
+
+  const hasJoinedLesson = useMemo(() => {
+    if (mylessons.data) {
+      return Boolean(
+        mylessons.data.find(mylesson => mylesson.id === parseInt(id))
+      );
+    } else {
+      return false;
+    }
+  }, [mylessons, id]);
+
+  useEffect(() => {
+    fetchLesson(id);
+  }, [id, fetchLesson, mylessons]);
 
   return (
     <div>
-      <Loader loading={loading} />
-      {lesson && (
+      <Loader loading={lesson.loading} />
+      {lesson.data && (
         <>
-          <UnderlineTitle title={lesson.title} />
+          <UnderlineTitle title={lesson.data.title} />
           <Row>
             <ThumbnailContainer imgUrl={thumbnailUrl} />
-            <Column>
-              {/* 사부명 클릭시 사부 상세 페이지로 */}
-              <TextBox legend="사부명">유대상</TextBox>
-              <TextBox legend="수련비용">1,000원</TextBox>
-              <TextBox legend="수련생 수">1명</TextBox>
-            </Column>
+            <InfoContainer>
+              <TextBox legend="사부명">{lesson.data.teacherName}</TextBox>
+              <TextBox legend="수련비용">{localizedPrice}</TextBox>
+              <TextBox legend="수련생 수">{lesson.data.studentCount}</TextBox>
+            </InfoContainer>
           </Row>
           <Row>
             <ViewerContainer>
-              <h3>수련 설명</h3>
-              <Viewer description={lesson.description} />
+              <Viewer description={lesson.data.description} />
             </ViewerContainer>
           </Row>
           <Row>
-            <Button color="yellow" radius={5} height={3} onClick={joinToLesson}>
-              참가 신쳥
-            </Button>
+            {hasJoinedLesson ? (
+              <Button color="yellow" radius={5} height={3} onClick={() => {}}>
+                수련장 이동
+              </Button>
+            ) : (
+              <Button
+                color="yellow"
+                radius={5}
+                height={3}
+                onClick={enrollLesson}
+              >
+                수련 등록
+              </Button>
+            )}
             <Button color="black" radius={5} height={3} onClick={back}>
               뒤로
             </Button>
           </Row>
         </>
       )}
-      {error && <NotFound />}
+      {lesson.error && <NotFound />}
     </div>
   );
 };
