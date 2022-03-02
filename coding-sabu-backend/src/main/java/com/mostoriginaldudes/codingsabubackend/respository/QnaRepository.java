@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 @Mapper
 @Repository
 public interface QnaRepository {
-  int createQuestion(QuestionDto questionDto);
+  void createQuestion(QuestionDto questionDto);
 }

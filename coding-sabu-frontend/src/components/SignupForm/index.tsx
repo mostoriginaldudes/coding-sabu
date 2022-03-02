@@ -11,7 +11,7 @@ import { createActionInvisibleAuthForm } from 'store/ui';
 import { useForm, SubmitHandler } from 'react-hook-form';
 
 import { yupResolver } from '@hookform/resolvers/yup';
-import validationSchema from 'utils/formValidation/auth/ValidationSchema';
+import validationSchema from 'utils/FormValidation/auth/ValidationSchema';
 
 import useScrollLock from 'hooks/useScrollLock';
 import * as Styled from './SignupForm.style';

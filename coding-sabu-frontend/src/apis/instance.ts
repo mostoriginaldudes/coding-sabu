@@ -5,8 +5,9 @@ import Axios, {
   AxiosResponse
 } from 'axios';
 
-import { createActionSetToken } from 'store/auth';
 import store from 'store';
+import { createActionSetToken } from 'store/auth';
+
 type Response<T = any> = {
   response: T;
   token?: string;
@@ -33,28 +34,40 @@ const instance: HttpRequestInstance = Axios.create({
 });
 
 type Store = typeof store;
-
 let injectedStore: Store;
 export const injectStore = (_store: Store) => {
   injectedStore = _store;
 };
 
-const isSuccess = (status: number) => status === 200 || status === 201;
-
 instance.interceptors.request.use(req => {
+  return loadAccessTokenToHttpHeader(req);
+});
+
+const loadAccessTokenToHttpHeader = (req: AxiosRequestConfig) => {
   if (req && req.headers) {
     req.headers['Authorization'] = injectedStore.getState().auth.token || '';
   }
   return req;
+};
+
+instance.interceptors.response.use(async res => {
+  if (isSuccess(res.status)) {
+    saveAccessTokenToStore(res);
+  }
+  return res.data;
 });
 
-instance.interceptors.response.use(res => {
-  if (res.headers && res.headers.authorization && isSuccess(res.status)) {
+const isSuccess = (status: number) => status === 200 || status === 201;
+
+const existAccessToken = (res: AxiosResponse) =>
+  res.headers && res.headers.authorization;
+
+const saveAccessTokenToStore = (res: AxiosResponse) => {
+  if (existAccessToken(res)) {
     if (!injectedStore.getState().auth.token) {
       injectedStore.dispatch(createActionSetToken(res.headers.authorization));
     }
   }
-  return res.data;
-});
+};
 
 export default instance;

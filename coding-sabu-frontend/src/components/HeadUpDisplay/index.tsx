@@ -45,6 +45,11 @@ const HeadUpDpWrapper = styled.div`
       opacity: 0;
     }
   }
+
+  & > h4 {
+    text-align: center;
+    font-size: 0.8rem;
+  }
 `;
 
 const HeadUpDisplay: React.FC = () => {

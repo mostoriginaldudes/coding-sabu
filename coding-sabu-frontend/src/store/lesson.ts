@@ -5,7 +5,8 @@ import { Lesson } from 'types';
 import {
   createLesson,
   fetchLessonList,
-  fetchMyLessonList,
+  fetchMyJoiningLessonList,
+  fetchMyTeachingLessonList,
   fetchOneLesson,
   joinLesson
 } from 'apis';
@@ -14,9 +15,16 @@ import {
 const FETCH_LESSONS = 'lesson/FETCH_LESSONS' as const;
 const FETCH_LESSONS_SUCCESS = 'lesson/FETCH_LESSONS_SUCCESS' as const;
 const FETCH_LESSONS_FAIL = 'lesson/FETCH_LESSONS_FAIL' as const;
-const FETCH_MY_LESSONS = 'lesson/FETCH_MY_LESSONS' as const;
-const FETCH_MY_LESSONS_SUCCESS = 'lesson/FETCH_MY_LESSONS_SUCCESS' as const;
-const FETCH_MY_LESSONS_FAIL = 'lesson/FETCH_MY_LESSONS_FAIL' as const;
+const FETCH_MY_JOINING_LESSONS = 'lesson/FETCH_MY_JOINING_LESSONS' as const;
+const FETCH_MY_JOINING_LESSONS_SUCCESS =
+  'lesson/FETCH_MY_JOINING_LESSONS_SUCCESS' as const;
+const FETCH_MY_JOINING_LESSONS_FAIL =
+  'lesson/FETCH_MY_JOINING_LESSONS_FAIL' as const;
+const FETCH_MY_TEACHING_LESSONS = 'lesson/FETCH_MY_TEACHING_LESSONS' as const;
+const FETCH_MY_TEACHING_LESSONS_SUCCESS =
+  'lesson/FETCH_MY_TEACHING_LESSONS_SUCCESS' as const;
+const FETCH_MY_TEACHING_LESSONS_FAIL =
+  'lesson/FETCH_MY_TEACHING_LESSONS_FAIL' as const;
 const CREATE_LESSON = 'lesson/CREATE_LESSON' as const;
 const CREATE_LESSON_SUCCESS = 'lesson/CREATE_LESSON_SUCCESS' as const;
 const CREATE_LESSON_FAIL = 'lesson/CREATE_LESSON_FAIL' as const;
@@ -30,7 +38,8 @@ const JOIN_LESSON_FAIL = 'lesson/JOIN_LESSON_FAIL' as const;
 // types
 export interface State {
   readonly lessons: ThunkAsyncState<Lesson[]>;
-  readonly mylessons: ThunkAsyncState<Lesson[]>;
+  readonly myJoiningLessons: ThunkAsyncState<Lesson[]>;
+  readonly myTeachingLessons: ThunkAsyncState<Lesson[]>;
   readonly lessonDetailInfo: ThunkAsyncState<Lesson>;
 }
 
@@ -38,9 +47,12 @@ type Action =
   | { type: typeof FETCH_LESSONS }
   | { type: typeof FETCH_LESSONS_SUCCESS; payload: Lesson[] }
   | { type: typeof FETCH_LESSONS_FAIL; payload: Error }
-  | { type: typeof FETCH_MY_LESSONS }
-  | { type: typeof FETCH_MY_LESSONS_SUCCESS; payload: Lesson[] }
-  | { type: typeof FETCH_MY_LESSONS_FAIL; payload: Error }
+  | { type: typeof FETCH_MY_JOINING_LESSONS }
+  | { type: typeof FETCH_MY_JOINING_LESSONS_SUCCESS; payload: Lesson[] }
+  | { type: typeof FETCH_MY_JOINING_LESSONS_FAIL; payload: Error }
+  | { type: typeof FETCH_MY_TEACHING_LESSONS }
+  | { type: typeof FETCH_MY_TEACHING_LESSONS_SUCCESS; payload: Lesson[] }
+  | { type: typeof FETCH_MY_TEACHING_LESSONS_FAIL; payload: Error }
   | { type: typeof CREATE_LESSON }
   | { type: typeof CREATE_LESSON_SUCCESS }
   | { type: typeof CREATE_LESSON_FAIL }
@@ -65,14 +77,37 @@ export const createActionFetchLessons =
     }
   };
 
-export const createActionFetchMyLessons =
+export const createActionFetchMyJoiningLessons =
   (): LessonThunkAction => async dispatch => {
-    dispatch({ type: FETCH_MY_LESSONS });
+    dispatch({ type: FETCH_MY_JOINING_LESSONS });
     try {
-      const data = await fetchMyLessonList();
-      dispatch({ type: FETCH_MY_LESSONS_SUCCESS, payload: data.lessons });
+      const data = await fetchMyJoiningLessonList();
+      dispatch({
+        type: FETCH_MY_JOINING_LESSONS_SUCCESS,
+        payload: data.lessons
+      });
     } catch (error) {
-      dispatch({ type: FETCH_MY_LESSONS_FAIL, payload: error as Error });
+      dispatch({
+        type: FETCH_MY_JOINING_LESSONS_FAIL,
+        payload: error as Error
+      });
+    }
+  };
+
+export const createActionFetchMyTeachingLessons =
+  (): LessonThunkAction => async dispatch => {
+    dispatch({ type: FETCH_MY_TEACHING_LESSONS });
+    try {
+      const data = await fetchMyTeachingLessonList();
+      dispatch({
+        type: FETCH_MY_TEACHING_LESSONS_SUCCESS,
+        payload: data.lessons
+      });
+    } catch (error) {
+      dispatch({
+        type: FETCH_MY_TEACHING_LESSONS_FAIL,
+        payload: error as Error
+      });
     }
   };
 
@@ -119,7 +154,12 @@ const initialState: State = {
     data: null,
     error: null
   },
-  mylessons: {
+  myJoiningLessons: {
+    loading: false,
+    data: null,
+    error: null
+  },
+  myTeachingLessons: {
     loading: false,
     data: null,
     error: null
@@ -156,22 +196,43 @@ function lessonReducer(state = initialState, action: Action) {
           error: action.payload
         };
         break;
-      case FETCH_MY_LESSONS:
-        draft.mylessons = {
+      case FETCH_MY_JOINING_LESSONS:
+        draft.myJoiningLessons = {
           loading: true,
           data: null,
           error: null
         };
         break;
-      case FETCH_MY_LESSONS_SUCCESS:
-        draft.mylessons = {
+      case FETCH_MY_JOINING_LESSONS_SUCCESS:
+        draft.myJoiningLessons = {
           loading: false,
           data: action.payload,
           error: null
         };
         break;
-      case FETCH_MY_LESSONS_FAIL:
-        draft.mylessons = {
+      case FETCH_MY_JOINING_LESSONS_FAIL:
+        draft.myJoiningLessons = {
+          loading: false,
+          data: null,
+          error: action.payload
+        };
+        break;
+      case FETCH_MY_TEACHING_LESSONS:
+        draft.myTeachingLessons = {
+          loading: true,
+          data: null,
+          error: null
+        };
+        break;
+      case FETCH_MY_TEACHING_LESSONS_SUCCESS:
+        draft.myTeachingLessons = {
+          loading: false,
+          data: action.payload,
+          error: null
+        };
+        break;
+      case FETCH_MY_TEACHING_LESSONS_FAIL:
+        draft.myTeachingLessons = {
           loading: false,
           data: null,
           error: action.payload
@@ -199,23 +260,23 @@ function lessonReducer(state = initialState, action: Action) {
         };
         break;
       case JOIN_LESSON:
-        draft.mylessons = {
+        draft.myJoiningLessons = {
           loading: true,
-          data: state.mylessons.data,
+          data: state.myJoiningLessons.data,
           error: null
         };
         break;
       case JOIN_LESSON_SUCCESS:
-        draft.mylessons = {
+        draft.myJoiningLessons = {
           loading: false,
           data:
-            state.mylessons.data?.concat(action.payload) ||
-            state.mylessons.data,
+            state.myJoiningLessons.data?.concat(action.payload) ||
+            state.myJoiningLessons.data,
           error: null
         };
         break;
       case JOIN_LESSON_FAIL:
-        draft.mylessons = {
+        draft.myJoiningLessons = {
           loading: false,
           data: null,
           error: action.payload

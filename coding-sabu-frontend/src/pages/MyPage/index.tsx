@@ -14,7 +14,7 @@ import { colors, media } from 'styles/theme';
 import { flexCenter } from 'styles/module';
 
 import { yupResolver } from '@hookform/resolvers/yup';
-import validationSchema from 'utils/formValidation/auth/ValidationSchema';
+import validationSchema from 'utils/FormValidation/auth/ValidationSchema';
 
 const InputContainer = styled.div`
   display: flex;

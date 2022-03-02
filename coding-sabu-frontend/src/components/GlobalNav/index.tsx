@@ -17,10 +17,8 @@ import { FlexRow } from 'styles/module';
 import {
   EmphasisText,
   GlobalNavStyle,
-  gray,
   HeaderContainer,
   Image,
-  Search,
   unitRegular,
   ButtonToMyClass,
   UserDefaultProfileImage,
@@ -99,60 +97,47 @@ const GlobalNav: React.FC = () => {
             <EmphasisText>코딩사부</EmphasisText>
           </FlexRow>
         </Link>
-        <FlexRow>
-          <Link to="/search">
-            <Search
-              color={gray[8]}
-              fontSize={unitRegular / 2}
-              cursor="pointer"
-              role="search"
-            />
-          </Link>
-          {isLoggedIn && (
+        {isLoggedIn ? (
+          <FlexRow role="toggleMenu" onClick={toggleUserMenu}>
             <ButtonToMyClass radius={unitRegular} color="white">
               <Link to="/mylesson">수련 관리</Link>
             </ButtonToMyClass>
-          )}
-          {isLoggedIn ? (
-            <FlexRow role="toggleMenu" onClick={toggleUserMenu}>
-              {profileImage ? (
-                <UserProfileImage profileImageUrl={profileImage} />
-              ) : (
-                <UserDefaultProfileImage
-                  color={white}
-                  fontSize={unitRegular / 3}
-                  cursor="pointer"
-                />
-              )}
-
-              <DownArrow cursor="pointer" />
-              <UserMenu
-                userInfo={user.data}
-                visibleUserMenu={visibleUserMenu}
-                setVisibleUserMenu={setVisibleUserMenu}
+            {profileImage ? (
+              <UserProfileImage profileImageUrl={profileImage} />
+            ) : (
+              <UserDefaultProfileImage
+                color={white}
+                fontSize={unitRegular / 3}
+                cursor="pointer"
               />
-            </FlexRow>
-          ) : (
-            <>
-              <Button color="black" radius={15} onClick={showAuthForm}>
-                로그인
-              </Button>
-              {authModalType === 'login' ? (
-                <LoginForm
-                  setModalToRender={setModalToRender}
-                  visibleAuthForm={visibleAuthForm}
-                  user={user}
-                />
-              ) : (
-                <SignupForm
-                  setModalToRender={setModalToRender}
-                  visibleAuthForm={visibleAuthForm}
-                  user={user}
-                />
-              )}
-            </>
-          )}
-        </FlexRow>
+            )}
+            <DownArrow cursor="pointer" />
+            <UserMenu
+              userInfo={user.data}
+              visibleUserMenu={visibleUserMenu}
+              setVisibleUserMenu={setVisibleUserMenu}
+            />
+          </FlexRow>
+        ) : (
+          <>
+            <Button color="black" radius={15} onClick={showAuthForm}>
+              로그인
+            </Button>
+            {authModalType === 'login' ? (
+              <LoginForm
+                setModalToRender={setModalToRender}
+                visibleAuthForm={visibleAuthForm}
+                user={user}
+              />
+            ) : (
+              <SignupForm
+                setModalToRender={setModalToRender}
+                visibleAuthForm={visibleAuthForm}
+                user={user}
+              />
+            )}
+          </>
+        )}
       </GlobalNavStyle>
     </HeaderContainer>
   );

@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static com.mostoriginaldudes.codingsabubackend.exception.ExceptionMessage.FAIL_FILE_UPLOAD;
+
 @RequiredArgsConstructor
 @Service
 public class LessonServiceImpl implements LessonService {
@@ -101,7 +103,7 @@ public class LessonServiceImpl implements LessonService {
       return imageUrl;
 
     } catch(Exception e) {
-      throw new RuntimeException("파일 업로드 에러 발생");
+      throw new RuntimeException(FAIL_FILE_UPLOAD.getExceptionMessage());
     }
   }
 
@@ -133,6 +135,7 @@ public class LessonServiceImpl implements LessonService {
       lessonList.add(
         LessonResponseDto.builder()
           .id(lesson.getId())
+          .teacherId(lesson.getTeacherId())
           .teacherName(convertTeacherIdToNickname(lesson.getTeacherId()))
           .title(lesson.getTitle())
           .description(lesson.getDescription())

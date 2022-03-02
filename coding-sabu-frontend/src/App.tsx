@@ -16,6 +16,8 @@ import store from 'store';
 import GlobalStyle from 'styles/GlobalStyle';
 import { sizes } from 'styles/theme';
 import { injectStore } from 'apis/instance';
+import Lecture from 'pages/Lecture';
+import LectureForm from 'pages/LectureForm';
 
 const Main = styled.main`
   width: calc(100% - 2rem);
@@ -39,7 +41,16 @@ const App: FC = () => {
             <Route path="/mylesson" component={MyJoiningLessons} />
             <Route path="/myteaching" component={MyTeachingLessons} />
             <Route path="/lesson/form" component={LessonForm} />
-            <Route path="/lesson/:id" component={LessonDetail} />
+            <Route path="/lesson/:id" component={LessonDetail} exact />
+            <Route
+              path="/lesson/:lessonId/lecture/form"
+              component={LectureForm}
+            />
+            <Route
+              path="/lesson/:lessonId/lecture/:unitId"
+              component={Lecture}
+              exact
+            />
             <Route path="/logout" component={Logout} />
             <Route path="*" component={NotFound} />
           </Switch>
