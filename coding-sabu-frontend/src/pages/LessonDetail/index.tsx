@@ -15,6 +15,7 @@ import { concatHostToImagePath } from 'utils';
 
 import { RootState } from 'store';
 import {
+  createActionFetchMyJoiningLessons,
   createActionFetchOneLesson,
   createActionJoinLesson
 } from 'store/lesson';
@@ -24,10 +25,20 @@ import AuthenticationError from 'errors/AuthenticationError';
 import LESSON_SUCCESS from 'fixtures/lesson/success';
 import LESSON_FAIL from 'fixtures/lesson/fail';
 import AUTH_FAIL from 'fixtures/auth/fail';
+import { createActionFetchLectureUnits } from 'store/lecture';
 
 interface LessonThumbnail {
   imgUrl?: string;
 }
+
+const LessonDetailContainer = styled.div`
+  position: relative;
+`;
+
+const NavButton = styled(Button)`
+  position: absolute;
+  right: 0;
+`;
 
 const ThumbnailContainer = styled.div<LessonThumbnail>`
   width: 45%;
@@ -66,19 +77,27 @@ interface Props extends RouteComponentProps<{ id: string }> {}
 
 const LessonDetail: React.FC<Props> = ({ match }) => {
   const { id } = match.params;
-  const { user, lesson, mylessons } = useSelector((state: RootState) => ({
-    user: state.auth.user,
-    lesson: state.lesson.lessonDetailInfo,
-    mylessons: state.lesson.mylessons
-  }));
+  const { user, lesson, lecture, myJoiningLessons, myTeachingLessons } =
+    useSelector((state: RootState) => ({
+      user: state.auth.user,
+      lesson: state.lesson.lessonDetailInfo,
+      myJoiningLessons: state.lesson.myJoiningLessons,
+      myTeachingLessons: state.lesson.myTeachingLessons,
+      lecture: state.lecture.lectureUnits
+    }));
   const dispatch = useDispatch();
   const thumbnailUrl = concatHostToImagePath(lesson.data?.thumbnailUrl);
-  const { back } = useRouting();
+  const { forward, back } = useRouting();
 
   const fetchLesson = useCallback(
     (id: string) => {
       dispatch(createActionFetchOneLesson(parseInt(id)));
     },
+    [dispatch]
+  );
+
+  const fetchLecture = useCallback(
+    (lessonId: number) => dispatch(createActionFetchLectureUnits(lessonId)),
     [dispatch]
   );
 
@@ -103,6 +122,7 @@ const LessonDetail: React.FC<Props> = ({ match }) => {
       if (user.data) {
         await dispatch(createActionJoinLesson(parseInt(id), user.data.id));
         enrollLessonSuccess();
+        await dispatch(createActionFetchMyJoiningLessons());
       } else {
         throw new AuthenticationError(AUTH_FAIL.REQUIRED_LOGIN);
       }
@@ -120,24 +140,48 @@ const LessonDetail: React.FC<Props> = ({ match }) => {
   }, [lesson.data]);
 
   const hasJoinedLesson = useMemo(() => {
-    if (mylessons.data) {
+    if (user.data && myJoiningLessons.data) {
       return Boolean(
-        mylessons.data.find(mylesson => mylesson.id === parseInt(id))
+        myJoiningLessons.data.find(
+          myJoiningLesson => myJoiningLesson.id === parseInt(id)
+        )
       );
-    } else {
-      return false;
     }
-  }, [mylessons, id]);
+    return false;
+  }, [myJoiningLessons, id, user]);
+
+  const isToughtByMe = useMemo(() => {
+    if (user.data && myTeachingLessons.data) {
+      return Boolean(
+        myTeachingLessons.data.find(
+          myTeachingLesson => myTeachingLesson.id === parseInt(id)
+        )
+      );
+    }
+    return false;
+  }, [myTeachingLessons, id, user]);
 
   useEffect(() => {
     fetchLesson(id);
-  }, [id, fetchLesson, mylessons]);
+    fetchLecture(parseInt(id));
+  }, [id, fetchLesson, fetchLecture, myJoiningLessons]);
 
   return (
-    <div>
+    <LessonDetailContainer>
       <Loader loading={lesson.loading} />
       {lesson.data && (
         <>
+          {(hasJoinedLesson || isToughtByMe) && (
+            <NavButton
+              color="yellow"
+              radius={5}
+              onClick={() =>
+                forward(`/lesson/${id}/lecture/${lecture.data![0].id}`)
+              }
+            >
+              수련장 이동
+            </NavButton>
+          )}
           <UnderlineTitle title={lesson.data.title} />
           <Row>
             <ThumbnailContainer imgUrl={thumbnailUrl} />
@@ -153,11 +197,17 @@ const LessonDetail: React.FC<Props> = ({ match }) => {
             </ViewerContainer>
           </Row>
           <Row>
-            {hasJoinedLesson ? (
-              <Button color="yellow" radius={5} height={3} onClick={() => {}}>
-                수련장 이동
+            {isToughtByMe && (
+              <Button
+                color="white"
+                radius={5}
+                height={3}
+                onClick={() => forward(`/lesson/${id}/lecture/form`)}
+              >
+                수련 챕터 작성
               </Button>
-            ) : (
+            )}
+            {hasJoinedLesson || isToughtByMe || (
               <Button
                 color="yellow"
                 radius={5}
@@ -174,7 +224,7 @@ const LessonDetail: React.FC<Props> = ({ match }) => {
         </>
       )}
       {lesson.error && <NotFound />}
-    </div>
+    </LessonDetailContainer>
   );
 };
 

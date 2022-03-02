@@ -73,3 +73,19 @@ export interface EditUserInfo {
   description: string;
   profileImage: File;
 }
+
+export interface LectureRequestInfo {
+  unit: string;
+  content: string;
+}
+
+export interface Lecture {
+  readonly id: number;
+  readonly lessonId: number;
+  readonly unit: string;
+  readonly content: string;
+}
+
+export interface LectureList {
+  readonly lectureUnits: Lecture[];
+}
