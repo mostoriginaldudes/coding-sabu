@@ -3,7 +3,6 @@ import { FC } from 'react';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 import { AiOutlineUser } from 'react-icons/ai';
-import { FaSearch } from 'react-icons/fa';
 import Button from 'components/Button';
 import { flexCenter, positionFixed } from 'styles/module';
 import { colors, media, sizes } from 'styles/theme';
@@ -74,10 +73,6 @@ interface Props {
 export const UserProfileImage: FC<Props> = ({ profileImageUrl }) => {
   return <img src={profileImageUrl} alt="프로필 사진" css={userProfileStyle} />;
 };
-
-export const Search = styled(FaSearch)`
-  margin-right: 10px;
-`;
 
 export const ButtonToMyClass = styled(Button)`
   ${media.tablet`

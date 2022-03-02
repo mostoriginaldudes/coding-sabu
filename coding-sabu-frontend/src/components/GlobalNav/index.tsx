@@ -20,7 +20,6 @@ import {
   gray,
   HeaderContainer,
   Image,
-  Search,
   unitRegular,
   ButtonToMyClass,
   UserDefaultProfileImage,
@@ -100,15 +99,7 @@ const GlobalNav: React.FC = () => {
           </FlexRow>
         </Link>
         <FlexRow>
-          <Link to="/search">
-            <Search
-              color={gray[8]}
-              fontSize={unitRegular / 2}
-              cursor="pointer"
-              role="search"
-            />
-          </Link>
-          {isLoggedIn && (
+          <FlexRow role="toggleMenu" onClick={toggleUserMenu}>
             <ButtonToMyClass radius={unitRegular} color="white">
               <Link to="/mylesson">수련 관리</Link>
             </ButtonToMyClass>
