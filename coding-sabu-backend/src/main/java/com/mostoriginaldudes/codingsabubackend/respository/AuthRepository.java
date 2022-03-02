@@ -11,5 +11,5 @@ import org.springframework.stereotype.Repository;
 public interface AuthRepository {
   UserDto matchUser(LoginDto login);
   String checkIfExistEmail(String email);
-  int createUser(SignupDto signup);
+  void createUser(SignupDto signup);
 }

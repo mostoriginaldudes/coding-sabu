@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface LessonNoticeRepository {
   List<LessonNoticeDto> getLessonNoticeByLessonId(int lessonId);
-  int createLessonNotice(LessonNoticeDto lessonNoticeDto);
+  void createLessonNotice(LessonNoticeDto lessonNoticeDto);
 }
