@@ -3,6 +3,7 @@ package com.mostoriginaldudes.codingsabubackend.interceptor;
 import com.mostoriginaldudes.codingsabubackend.auth.JsonWebToken;
 import com.mostoriginaldudes.codingsabubackend.exception.ExceptionCode;
 import com.mostoriginaldudes.codingsabubackend.exception.UnauthorizationException;
+import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -29,26 +30,21 @@ public class AuthInterceptor implements HandlerInterceptor {
     try {
       String accessToken = request.getHeader(HttpHeaders.AUTHORIZATION);
       return verifyAccessToken(accessToken);
-    } catch(Exception e) {
+    } catch(JwtException e) {
       e.printStackTrace();
       response.sendError(HttpStatus.UNAUTHORIZED.value());
       return false;
     }
   }
 
-  private boolean verifyAccessToken(String givenAccessToken) {
+  private boolean verifyAccessToken(String givenAccessToken) throws JwtException {
     Optional<String> optAccessToken = Optional.ofNullable(givenAccessToken);
 
-    try {
-      String accessToken = optAccessToken.orElseThrow(
-        () -> new UnauthorizationException(ExceptionCode.NO_EXIST_ACCESS_TOKEN)
-      );
+    String accessToken = optAccessToken.orElseThrow(
+      () -> new UnauthorizationException(ExceptionCode.NO_EXIST_ACCESS_TOKEN)
+    );
 
-      jwt.verifyJsonWebToken(accessToken);
-      return true;
-    } catch(Exception e) {
-      e.printStackTrace();
-      return false;
-    }
+    jwt.verifyJsonWebToken(accessToken);
+    return true;
   }
 }
