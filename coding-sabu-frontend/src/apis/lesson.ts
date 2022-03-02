@@ -4,7 +4,7 @@ import { Lesson, LessonListResponse, LessonResponse } from 'types';
 export const fetchLessonList = () =>
   httpRequest.get<LessonListResponse>('/lesson/all', { withCredentials: true });
 
-export const fetchMyLessonList = () =>
+export const fetchMyJoiningLessonList = () =>
   httpRequest.get<LessonListResponse>('lesson/me');
 
 export const fetchOneLesson = (id: number) =>
