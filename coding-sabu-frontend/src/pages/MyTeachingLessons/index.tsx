@@ -1,15 +1,13 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import styled from '@emotion/styled';
-
-import { fetchMyTeachingLessonList } from 'apis';
-import LessonList from 'components/LessonList';
-import { Lesson } from 'types';
-import UnderlineTitle from 'styles/UnderlineTitle';
-import Button from 'components/Button';
-import { useSelector } from 'react-redux';
-import { RootState } from 'store';
-import useRouting from 'hooks/useRouting';
+import React, { useEffect, useCallback, useMemo } from 'react';
 import { Redirect } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import styled from '@emotion/styled';
+import LessonList from 'components/LessonList';
+import Button from 'components/Button';
+import useRouting from 'hooks/useRouting';
+import { RootState } from 'store';
+import { createActionFetchMyTeachingLessons } from 'store/lesson';
+import UnderlineTitle from 'styles/UnderlineTitle';
 
 const Container = styled.div`
   position: relative;
@@ -23,15 +21,17 @@ const CreateLessonButton = styled(Button)`
 
 const MyTeachingLessons: React.FC = () => {
   const { forward } = useRouting();
-  const [teachingLessons, setTeachingLessons] = useState<Lesson[]>([]);
-  const user = useSelector((state: RootState) => state.auth.user);
+  const { user, myTeachingLessons } = useSelector((state: RootState) => ({
+    user: state.auth.user,
+    myTeachingLessons: state.lesson.myTeachingLessons
+  }));
+  const dispatch = useDispatch();
 
   const isNotTeacher = useMemo(() => user.data?.userType !== 'teacher', [user]);
 
-  const fetchMyTeachingLessons = useCallback(async () => {
-    const data = await fetchMyTeachingLessonList();
-    setTeachingLessons(data.lessons);
-  }, [setTeachingLessons]);
+  const fetchMyTeachingLessons = useCallback(() => {
+    dispatch(createActionFetchMyTeachingLessons());
+  }, [dispatch]);
 
   const goToLessonForm = useCallback(() => {
     forward('/lesson/form');
@@ -53,7 +53,9 @@ const MyTeachingLessons: React.FC = () => {
         수련 개설
       </CreateLessonButton>
       <UnderlineTitle title="내 가르침 목록" />
-      <LessonList lessons={teachingLessons} />
+      {myTeachingLessons && myTeachingLessons.data && (
+        <LessonList lessons={myTeachingLessons.data} />
+      )}
     </Container>
   );
 };
