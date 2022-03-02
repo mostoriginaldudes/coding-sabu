@@ -47,6 +47,10 @@ const style = css`
       -moz-appearance: textfield;
     }
   }
+
+  :root {
+    --element-gap: 10px;
+  }
 `;
 
 const GlobalStyle = () => {
