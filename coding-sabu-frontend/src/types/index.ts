@@ -1,5 +1,6 @@
 export interface Lesson {
   id: number;
+  teacherId: number;
   teacherName: string;
   title: string;
   description: string;
