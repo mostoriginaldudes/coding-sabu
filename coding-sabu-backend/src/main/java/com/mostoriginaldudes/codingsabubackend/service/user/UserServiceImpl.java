@@ -17,6 +17,8 @@ import java.io.InputStream;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.mostoriginaldudes.codingsabubackend.exception.ExceptionMessage.FAIL_FILE_UPLOAD;
+
 @RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
@@ -104,7 +106,7 @@ public class UserServiceImpl implements UserService {
       return imageUrl;
 
     } catch(Exception e) {
-      throw new RuntimeException("파일 업로드 에러 발생");
+      throw new RuntimeException(FAIL_FILE_UPLOAD.getExceptionMessage());
     }
   }
 
