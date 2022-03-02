@@ -135,6 +135,7 @@ public class LessonServiceImpl implements LessonService {
       lessonList.add(
         LessonResponseDto.builder()
           .id(lesson.getId())
+          .teacherId(lesson.getTeacherId())
           .teacherName(convertTeacherIdToNickname(lesson.getTeacherId()))
           .title(lesson.getTitle())
           .description(lesson.getDescription())
