@@ -1,32 +1,8 @@
 import React from 'react';
-import styled from '@emotion/styled';
 import LessonItem from 'components/LessonItem';
 import useRouting from 'hooks/useRouting';
 import { Lesson } from 'types';
-import { media } from 'styles/theme';
-import { flexCenter } from 'styles/module';
-
-export const EmphasisText = styled.h3`
-  font-size: 1.3rem;
-  font-weight: bold;
-`;
-
-const LessonListContainer = styled.ol`
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-gap: 20px;
-  margin-bottom: 20px;
-  ${media.tablet`
-    grid-template-columns: repeat(1, 1fr);
-  `}
-`;
-
-const LessonListElement = styled.li`
-  ${flexCenter}
-  flex-direction: column;
-  justify-content: space-between;
-  cursor: pointer;
-`;
+import * as Styled from './LessonList.style';
 
 interface Props {
   lessons: Lesson[];
@@ -41,18 +17,16 @@ const LessonList: React.FC<Props> = ({ lessons }) => {
   };
 
   return (
-    <>
-      <LessonListContainer>
-        {lessons.map((lesson, index) => (
-          <LessonListElement
-            key={index}
-            onClick={() => pickOneLesson(lesson.id)}
-          >
-            <LessonItem {...lesson} />
-          </LessonListElement>
-        ))}
-      </LessonListContainer>
-    </>
+    <Styled.LessonListContainer>
+      {lessons.map((lesson, index) => (
+        <Styled.LessonListElement
+          key={index}
+          onClick={() => pickOneLesson(lesson.id)}
+        >
+          <LessonItem {...lesson} />
+        </Styled.LessonListElement>
+      ))}
+    </Styled.LessonListContainer>
   );
 };
 
