@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo, FC, memo, MouseEventHandler } from 'react';
+import { useState, useCallback, useMemo, FC, memo, MouseEventHandler } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { AiFillCaretDown as DownArrow } from 'react-icons/ai';
@@ -7,7 +7,7 @@ import SignupForm from 'components/SignupForm';
 import Button from 'components/Button';
 import UserMenu from 'components/UserMenu';
 import { RootState } from 'store';
-import { showAuthForm, hideAuthForm, showHud } from 'store/ui';
+import { showAuthForm } from 'store/ui';
 import logo from 'assets/images/logo.svg';
 import { FlexRow } from 'styles/module';
 import {
@@ -21,8 +21,6 @@ import {
   white,
   UserProfileImage
 } from './GlobalNav.style';
-import AUTH_SUCCESS from 'fixtures/auth/success';
-import AUTH_FAIL from 'fixtures/auth/fail';
 
 const GlobalNav: FC = () => {
   const [authModalType, setAuthModalType] = useState<'login' | 'signup'>('login');
@@ -55,20 +53,6 @@ const GlobalNav: FC = () => {
     () => (user.data?.profileImage === 'img/default.png' ? false : user.data?.profileImage),
     [user]
   );
-
-  const displayLoginSuccess = useCallback(() => {
-    dispatch(showHud(AUTH_SUCCESS.LOGIN));
-    dispatch(hideAuthForm());
-  }, [dispatch]);
-
-  const displayLoginFail = useCallback(() => {
-    dispatch(showHud(AUTH_FAIL.LOGIN));
-  }, [dispatch]);
-
-  useEffect(() => {
-    user.data && !user.error && displayLoginSuccess();
-    !user.data && user.error && displayLoginFail();
-  }, [user, displayLoginSuccess, displayLoginFail]);
 
   return (
     <HeaderContainer data-testid="header">

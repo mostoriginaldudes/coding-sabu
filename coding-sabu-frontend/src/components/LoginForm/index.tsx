@@ -10,13 +10,15 @@ import Button from 'components/Button';
 
 import { ThunkAsyncState } from 'store';
 import { login } from 'store/auth';
-import { hideAuthForm } from 'store/ui';
+import { hideAuthForm, showHud } from 'store/ui';
 
 import { LoginInfo, User } from 'types';
 
 import { ButtonContainer, InputError } from './LoginForm.style';
 
 import useScrollLock from 'hooks/useScrollLock';
+import AUTH_SUCCESS from 'fixtures/auth/success';
+import AUTH_FAIL from 'fixtures/auth/fail';
 
 interface Props {
   visibleAuthForm: boolean;
@@ -24,7 +26,7 @@ interface Props {
   user: ThunkAsyncState<User>;
 }
 
-const LoginForm: FC<Props> = ({ visibleAuthForm, setModalToRender }) => {
+const LoginForm: FC<Props> = ({ visibleAuthForm, setModalToRender, user }) => {
   const {
     register,
     handleSubmit,
@@ -40,11 +42,25 @@ const LoginForm: FC<Props> = ({ visibleAuthForm, setModalToRender }) => {
 
   const closeLoginForm = useCallback(() => dispatch(hideAuthForm()), [dispatch]);
 
+  const displayLoginSuccess = useCallback(() => {
+    dispatch(showHud(AUTH_SUCCESS.LOGIN));
+    dispatch(hideAuthForm());
+  }, [dispatch]);
+
+  const displayLoginFail = useCallback(() => {
+    dispatch(showHud(AUTH_FAIL.LOGIN));
+  }, [dispatch]);
+
   const onSubmit: SubmitHandler<LoginInfo> = loginInfo => {
     dispatch(login(loginInfo));
   };
 
   useScrollLock(visibleAuthForm, [visibleAuthForm]);
+
+  useEffect(() => {
+    user.data && !user.error && displayLoginSuccess();
+    !user.data && user.error && displayLoginFail();
+  }, [user, displayLoginSuccess, displayLoginFail]);
 
   useEffect(() => {
     visibleAuthForm && setFocus('email');
