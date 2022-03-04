@@ -4,25 +4,19 @@ import LessonList from 'components/LessonList';
 import UnderlineTitle from 'styles/UnderlineTitle';
 import { RootState } from 'store';
 import { Lesson } from 'types';
-import { createActionFetchMyJoiningLessons } from 'store/lesson';
+import { fetchMyJoiningLessons } from 'store/lesson';
 import Loader from 'styles/Loader';
-import { Redirect } from 'react-router-dom';
+import useRedirect from 'hooks/useRedirect';
 
 const MyJoiningLessons: FC = () => {
-  const { loading, data, error } = useSelector(
-    (state: RootState) => state.lesson.myJoiningLessons
-  );
+  const { loading, data, error } = useSelector((state: RootState) => state.lesson.myJoiningLessons);
   const dispatch = useDispatch();
 
-  const dispatchMyJoiningLessons = useCallback(
-    () => dispatch(createActionFetchMyJoiningLessons()),
-    [dispatch]
-  );
+  const dispatchMyJoiningLessons = useCallback(() => dispatch(fetchMyJoiningLessons()), [dispatch]);
 
-  const myJoiningLessonList = useMemo(
-    () => (data === null ? ([] as Lesson[]) : data),
-    [data]
-  );
+  const myJoiningLessonList = useMemo(() => (data === null ? ([] as Lesson[]) : data), [data]);
+
+  useRedirect('/', [error]);
 
   useEffect(() => {
     dispatchMyJoiningLessons();
@@ -32,7 +26,6 @@ const MyJoiningLessons: FC = () => {
     <div>
       <UnderlineTitle title="내 수련 목록" />
       <Loader loading={loading} />
-      {error && <Redirect to="/" />}
       <LessonList lessons={myJoiningLessonList} />
     </div>
   );

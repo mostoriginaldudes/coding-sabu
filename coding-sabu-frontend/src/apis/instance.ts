@@ -6,7 +6,7 @@ import Axios, {
 } from 'axios';
 
 import store from 'store';
-import { createActionSetToken } from 'store/auth';
+import { setToken } from 'store/auth';
 
 type Response<T = any> = {
   response: T;
@@ -50,7 +50,7 @@ const loadAccessTokenToHttpHeader = (req: AxiosRequestConfig) => {
   return req;
 };
 
-instance.interceptors.response.use(async res => {
+instance.interceptors.response.use(res => {
   if (isSuccess(res.status)) {
     saveAccessTokenToStore(res);
   }
@@ -59,13 +59,13 @@ instance.interceptors.response.use(async res => {
 
 const isSuccess = (status: number) => status === 200 || status === 201;
 
-const existAccessToken = (res: AxiosResponse) =>
-  res.headers && res.headers.authorization;
+const existAccessToken = (res: AxiosResponse) => res.headers && res.headers.authorization;
 
 const saveAccessTokenToStore = (res: AxiosResponse) => {
   if (existAccessToken(res)) {
-    if (!injectedStore.getState().auth.token) {
-      injectedStore.dispatch(createActionSetToken(res.headers.authorization));
+    const newAccessToken = res.headers.authorization;
+    if (injectedStore.getState().auth.token !== newAccessToken) {
+      injectedStore.dispatch(setToken(newAccessToken));
     }
   }
 };

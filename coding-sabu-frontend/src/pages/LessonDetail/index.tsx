@@ -1,117 +1,65 @@
 import React, { useEffect, useCallback, useMemo } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import styled from '@emotion/styled';
 import NotFound from 'pages/NotFound';
 import Button from 'components/Button';
 import TextBox from 'components/TextBox';
 import Viewer from 'components/Viewer';
-import Loader from 'styles/Loader';
-import Row from 'styles/Row';
-import UnderlineTitle from 'styles/UnderlineTitle';
-import { flexCenter } from 'styles/module';
 import useRouting from 'hooks/useRouting';
-import { concatHostToImagePath } from 'utils';
-
 import { RootState } from 'store';
-import {
-  createActionFetchMyJoiningLessons,
-  createActionFetchOneLesson,
-  createActionJoinLesson
-} from 'store/lesson';
-import { colors } from 'styles/theme';
-import { createActionVisibleAuthForm, createActionVisibleHud } from 'store/ui';
+import { fetchMyJoiningLessons, fetchOneLesson, joinLesson } from 'store/lesson';
+import { fetchLecture } from 'store/lecture';
+import { showAuthForm, showHud } from 'store/ui';
 import AuthenticationError from 'errors/AuthenticationError';
+import { concatHostToImagePath } from 'utils';
 import LESSON_SUCCESS from 'fixtures/lesson/success';
 import LESSON_FAIL from 'fixtures/lesson/fail';
 import AUTH_FAIL from 'fixtures/auth/fail';
-import { createActionFetchLectureUnits } from 'store/lecture';
-
-interface LessonThumbnail {
-  imgUrl?: string;
-}
-
-const LessonDetailContainer = styled.div`
-  position: relative;
-`;
-
-const NavButton = styled(Button)`
-  position: absolute;
-  right: 0;
-`;
-
-const ThumbnailContainer = styled.div<LessonThumbnail>`
-  width: 45%;
-  height: 270px;
-  background-image: url(${({ imgUrl }) => imgUrl});
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
-  border-radius: 10px;
-  & > label {
-    ${flexCenter}
-    width: 100%;
-    height: 100%;
-    cursor: pointer;
-  }
-`;
-
-const Column = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 45%;
-`;
-
-const InfoContainer = styled(Column)`
-  margin-left: 15px;
-`;
-
-const ViewerContainer = styled(Column)`
-  min-height: 200px;
-  border: 1px dashed ${colors.gray[6]};
-  border-radius: 5px;
-  padding: 5px 10px;
-`;
+import Loader from 'styles/Loader';
+import { Row } from 'styles/module';
+import UnderlineTitle from 'styles/UnderlineTitle';
+import * as Styled from './LessonDetail.style';
 
 interface Props extends RouteComponentProps<{ id: string }> {}
 
 const LessonDetail: React.FC<Props> = ({ match }) => {
   const { id } = match.params;
-  const { user, lesson, lecture, myJoiningLessons, myTeachingLessons } =
-    useSelector((state: RootState) => ({
+  const { user, lesson, lecture, myJoiningLessons, myTeachingLessons } = useSelector(
+    (state: RootState) => ({
       user: state.auth.user,
       lesson: state.lesson.lessonDetailInfo,
       myJoiningLessons: state.lesson.myJoiningLessons,
       myTeachingLessons: state.lesson.myTeachingLessons,
       lecture: state.lecture.lectureUnits
-    }));
+    })
+  );
   const dispatch = useDispatch();
   const thumbnailUrl = concatHostToImagePath(lesson.data?.thumbnailUrl);
   const { forward, back } = useRouting();
 
-  const fetchLesson = useCallback(
+  const dispatchFetchOneLesson = useCallback(
     (id: string) => {
-      dispatch(createActionFetchOneLesson(parseInt(id)));
+      dispatch(fetchOneLesson(parseInt(id)));
     },
     [dispatch]
   );
 
-  const fetchLecture = useCallback(
-    (lessonId: number) => dispatch(createActionFetchLectureUnits(lessonId)),
+  const dispatchFetchLecture = useCallback(
+    (lessonId: number) => dispatch(fetchLecture(lessonId)),
     [dispatch]
   );
 
   const enrollLessonSuccess = useCallback(() => {
-    dispatch(createActionVisibleHud(LESSON_SUCCESS.REGISTER));
+    dispatch(showHud(LESSON_SUCCESS.REGISTER));
   }, [dispatch]);
 
   const enrollLessonFail = useCallback(
     (error: Error) => {
       if (error instanceof AuthenticationError) {
-        dispatch(createActionVisibleHud(AUTH_FAIL.REQUIRED_LOGIN));
-        dispatch(createActionVisibleAuthForm());
+        dispatch(showHud(AUTH_FAIL.REQUIRED_LOGIN));
+        dispatch(showAuthForm());
       } else {
-        dispatch(createActionVisibleHud(LESSON_FAIL.REGISTER));
+        dispatch(showHud(LESSON_FAIL.REGISTER));
       }
     },
     [dispatch]
@@ -120,9 +68,9 @@ const LessonDetail: React.FC<Props> = ({ match }) => {
   const enrollLesson = async () => {
     try {
       if (user.data) {
-        await dispatch(createActionJoinLesson(parseInt(id), user.data.id));
+        await dispatch(joinLesson({ lessonId: parseInt(id), userId: user.data.id }));
         enrollLessonSuccess();
-        await dispatch(createActionFetchMyJoiningLessons());
+        await dispatch(fetchMyJoiningLessons());
       } else {
         throw new AuthenticationError(AUTH_FAIL.REQUIRED_LOGIN);
       }
@@ -142,9 +90,7 @@ const LessonDetail: React.FC<Props> = ({ match }) => {
   const hasJoinedLesson = useMemo(() => {
     if (user.data && myJoiningLessons.data) {
       return Boolean(
-        myJoiningLessons.data.find(
-          myJoiningLesson => myJoiningLesson.id === parseInt(id)
-        )
+        myJoiningLessons.data.find(myJoiningLesson => myJoiningLesson.id === parseInt(id))
       );
     }
     return false;
@@ -153,48 +99,44 @@ const LessonDetail: React.FC<Props> = ({ match }) => {
   const isToughtByMe = useMemo(() => {
     if (user.data && myTeachingLessons.data) {
       return Boolean(
-        myTeachingLessons.data.find(
-          myTeachingLesson => myTeachingLesson.id === parseInt(id)
-        )
+        myTeachingLessons.data.find(myTeachingLesson => myTeachingLesson.id === parseInt(id))
       );
     }
     return false;
   }, [myTeachingLessons, id, user]);
 
   useEffect(() => {
-    fetchLesson(id);
-    fetchLecture(parseInt(id));
-  }, [id, fetchLesson, fetchLecture, myJoiningLessons]);
+    dispatchFetchOneLesson(id);
+    dispatchFetchLecture(parseInt(id));
+  }, [id, dispatchFetchOneLesson, dispatchFetchLecture, myJoiningLessons]);
 
   return (
-    <LessonDetailContainer>
+    <Styled.LessonDetailContainer>
       <Loader loading={lesson.loading} />
       {lesson.data && (
         <>
           {(hasJoinedLesson || isToughtByMe) && (
-            <NavButton
+            <Styled.NavButton
               color="yellow"
               radius={5}
-              onClick={() =>
-                forward(`/lesson/${id}/lecture/${lecture.data![0].id}`)
-              }
+              onClick={() => forward(`/lesson/${id}/lecture/${lecture.data![0].id}`)}
             >
               수련장 이동
-            </NavButton>
+            </Styled.NavButton>
           )}
           <UnderlineTitle title={lesson.data.title} />
           <Row>
-            <ThumbnailContainer imgUrl={thumbnailUrl} />
-            <InfoContainer>
+            <Styled.ThumbnailContainer imgUrl={thumbnailUrl} />
+            <Styled.InfoContainer>
               <TextBox legend="사부명">{lesson.data.teacherName}</TextBox>
               <TextBox legend="수련비용">{localizedPrice}</TextBox>
               <TextBox legend="수련생 수">{lesson.data.studentCount}</TextBox>
-            </InfoContainer>
+            </Styled.InfoContainer>
           </Row>
           <Row>
-            <ViewerContainer>
+            <Styled.ViewerContainer>
               <Viewer description={lesson.data.description} />
-            </ViewerContainer>
+            </Styled.ViewerContainer>
           </Row>
           <Row>
             {isToughtByMe && (
@@ -208,12 +150,7 @@ const LessonDetail: React.FC<Props> = ({ match }) => {
               </Button>
             )}
             {hasJoinedLesson || isToughtByMe || (
-              <Button
-                color="yellow"
-                radius={5}
-                height={3}
-                onClick={enrollLesson}
-              >
+              <Button color="yellow" radius={5} height={3} onClick={enrollLesson}>
                 수련 등록
               </Button>
             )}
@@ -224,7 +161,7 @@ const LessonDetail: React.FC<Props> = ({ match }) => {
         </>
       )}
       {lesson.error && <NotFound />}
-    </LessonDetailContainer>
+    </Styled.LessonDetailContainer>
   );
 };
 

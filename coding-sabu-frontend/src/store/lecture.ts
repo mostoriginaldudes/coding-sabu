@@ -1,44 +1,14 @@
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { ThunkAsyncState } from '.';
-import { ThunkAction } from 'redux-thunk';
-import { produce } from 'immer';
 import { Lecture } from 'types';
-import { fetchLectureUnits } from 'apis';
+import { fetchLectureRequest } from 'apis';
 
-// constants
-const FETCH_LECTURE_UNITS = 'lecture/FETCH_LECTURE_UNITS' as const;
-const FETCH_LECTURE_UNITS_SUCCESS =
-  'lecture/FETCH_LECTURE_UNITS_SUCCESS' as const;
-const FETCH_LECTURE_UNITS_FAIL = 'lecture/FETCH_LECTURE_UNITS_FAIL' as const;
+const FETCH_LECTURE = 'lecture/FETCH_LECTURE' as const;
 
-// types
 export interface State {
   readonly lectureUnits: ThunkAsyncState<Lecture[]>;
 }
 
-type Action =
-  | { type: typeof FETCH_LECTURE_UNITS }
-  | { type: typeof FETCH_LECTURE_UNITS_SUCCESS; payload: Lecture[] }
-  | { type: typeof FETCH_LECTURE_UNITS_FAIL; payload: Error };
-
-type LectureThunkAction = ThunkAction<void, State, null, Action>;
-
-// action creators
-export const createActionFetchLectureUnits =
-  (lessonId: number): LectureThunkAction =>
-  async dispatch => {
-    dispatch({ type: FETCH_LECTURE_UNITS });
-    try {
-      const data = await fetchLectureUnits(lessonId);
-      dispatch({
-        type: FETCH_LECTURE_UNITS_SUCCESS,
-        payload: data.lectureUnits
-      });
-    } catch (error) {
-      dispatch({ type: FETCH_LECTURE_UNITS_FAIL, payload: error as Error });
-    }
-  };
-
-// initialState
 const initialState: State = {
   lectureUnits: {
     loading: false,
@@ -47,35 +17,48 @@ const initialState: State = {
   }
 };
 
-// reducer
-function lectureReducer(state = initialState, action: Action) {
-  return produce(state, draft => {
-    switch (action.type) {
-      case FETCH_LECTURE_UNITS:
-        draft.lectureUnits = {
+const lectureSlice = createSlice({
+  name: 'lecture',
+  reducers: {},
+  initialState,
+  extraReducers: builder => {
+    builder
+      .addCase(fetchLecture.pending, state => {
+        state.lectureUnits = {
           loading: true,
           data: null,
           error: null
         };
-        break;
-      case FETCH_LECTURE_UNITS_SUCCESS:
-        draft.lectureUnits = {
+      })
+      .addCase(fetchLecture.fulfilled, (state, action) => {
+        state.lectureUnits = {
           loading: false,
           data: action.payload,
           error: null
         };
-        break;
-      case FETCH_LECTURE_UNITS_FAIL:
-        draft.lectureUnits = {
+      })
+      .addCase(fetchLecture.rejected, (state, action) => {
+        state.lectureUnits = {
           loading: false,
           data: null,
-          error: action.payload
+          error: action.error as Error
         };
-        break;
-      default:
-        return state;
-    }
-  });
-}
+      })
+      .addDefaultCase(state => state);
+  }
+});
 
-export default lectureReducer;
+const fetchLecture = createAsyncThunk(
+  FETCH_LECTURE,
+  async (lessonId: number, { rejectWithValue }) => {
+    try {
+      const data = await fetchLectureRequest(lessonId);
+      return data.lectureUnits;
+    } catch (error) {
+      return rejectWithValue((error as Error).message);
+    }
+  }
+);
+
+export { fetchLecture };
+export default lectureSlice.reducer;

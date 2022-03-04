@@ -1,25 +1,14 @@
-import React, { useEffect, useCallback, useMemo } from 'react';
+import { useEffect, useCallback, useMemo, FC, memo } from 'react';
 import { Redirect } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import styled from '@emotion/styled';
 import LessonList from 'components/LessonList';
-import Button from 'components/Button';
 import useRouting from 'hooks/useRouting';
 import { RootState } from 'store';
-import { createActionFetchMyTeachingLessons } from 'store/lesson';
+import { fetchMyTeachingLessons } from 'store/lesson';
 import UnderlineTitle from 'styles/UnderlineTitle';
+import * as Styled from './MyTeachingLessons.style';
 
-const Container = styled.div`
-  position: relative;
-`;
-
-const CreateLessonButton = styled(Button)`
-  position: absolute;
-  right: 0;
-  font-weight: bold;
-`;
-
-const MyTeachingLessons: React.FC = () => {
+const MyTeachingLessons: FC = () => {
   const { forward } = useRouting();
   const { user, myTeachingLessons } = useSelector((state: RootState) => ({
     user: state.auth.user,
@@ -29,8 +18,8 @@ const MyTeachingLessons: React.FC = () => {
 
   const isNotTeacher = useMemo(() => user.data?.userType !== 'teacher', [user]);
 
-  const fetchMyTeachingLessons = useCallback(() => {
-    dispatch(createActionFetchMyTeachingLessons());
+  const dispatchFetchMyTeachingLessons = useCallback(() => {
+    dispatch(fetchMyTeachingLessons());
   }, [dispatch]);
 
   const goToLessonForm = useCallback(() => {
@@ -38,26 +27,21 @@ const MyTeachingLessons: React.FC = () => {
   }, [forward]);
 
   useEffect(() => {
-    fetchMyTeachingLessons();
-  }, [fetchMyTeachingLessons]);
+    dispatchFetchMyTeachingLessons();
+  }, [dispatchFetchMyTeachingLessons]);
 
   return (
-    <Container>
+    <Styled.Container>
       {isNotTeacher && <Redirect to="/" />}
-      <CreateLessonButton
-        color="black"
-        height={2}
-        radius={10}
-        onClick={goToLessonForm}
-      >
+      <Styled.CreateLessonButton color="black" height={2} radius={10} onClick={goToLessonForm}>
         수련 개설
-      </CreateLessonButton>
+      </Styled.CreateLessonButton>
       <UnderlineTitle title="내 가르침 목록" />
       {myTeachingLessons && myTeachingLessons.data && (
         <LessonList lessons={myTeachingLessons.data} />
       )}
-    </Container>
+    </Styled.Container>
   );
 };
 
-export default React.memo(MyTeachingLessons);
+export default memo(MyTeachingLessons);

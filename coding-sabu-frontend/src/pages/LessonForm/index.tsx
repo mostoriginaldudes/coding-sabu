@@ -7,10 +7,10 @@ import Editor from 'components/Editor';
 import Button from 'components/Button';
 import UnderlineTitle from 'styles/UnderlineTitle';
 import useRouting from 'hooks/useRouting';
-import { createLesson } from 'apis';
+import { createLessonRequest } from 'apis';
 import { RootState } from 'store';
 import * as Styled from './LessonForm.style';
-import { createActionVisibleHud } from 'store/ui';
+import { showHud } from 'store/ui';
 import { yupResolver } from '@hookform/resolvers/yup';
 import validationSchema from 'utils/FormValidation/lesson/ValidationSchema';
 import LESSON_SUCCESS from 'fixtures/lesson/success';
@@ -46,14 +46,14 @@ const LessonForm: React.FC = () => {
 
   const createLessonSuccess = useCallback(
     (id: number) => {
-      dispatch(createActionVisibleHud(LESSON_SUCCESS.OPEN));
+      dispatch(showHud(LESSON_SUCCESS.OPEN));
       replace(`/lesson/${id}`);
     },
     [dispatch, replace]
   );
 
   const createLessonFail = useCallback(() => {
-    dispatch(createActionVisibleHud(LESSON_FAIL.OPEN));
+    dispatch(showHud(LESSON_FAIL.OPEN));
     setFocus('title');
   }, [dispatch, setFocus]);
 
@@ -72,7 +72,7 @@ const LessonForm: React.FC = () => {
 
   const onSubmit: SubmitHandler<LessonFormProps> = async lessonForm => {
     try {
-      const newLesson = await createLesson(getFormData(lessonForm));
+      const newLesson = await createLessonRequest(getFormData(lessonForm));
       createLessonSuccess(newLesson.id);
     } catch (error) {
       createLessonFail();
@@ -123,23 +123,17 @@ const LessonForm: React.FC = () => {
               placeholder="수련 제목을 입력해주세요."
               {...register('title')}
             />
-            {errors.title && (
-              <Styled.InputError>{errors.title.message}</Styled.InputError>
-            )}
+            {errors.title && <Styled.InputError>{errors.title.message}</Styled.InputError>}
             <Input
               type="number"
               label="수련 가치"
               placeholder="수련 가격을 입력해주세요."
               {...register('price')}
             />
-            {errors.price && (
-              <Styled.InputError>{errors.price.message}</Styled.InputError>
-            )}
+            {errors.price && <Styled.InputError>{errors.price.message}</Styled.InputError>}
           </Styled.InputContainer>
           <Styled.ThumbnailContainer imgUrl={imgUrl}>
-            {hasBeenUploaded || (
-              <label htmlFor="lessonFile">수련 소개 이미지 업로드</label>
-            )}
+            {hasBeenUploaded || <label htmlFor="lessonFile">수련 소개 이미지 업로드</label>}
             <Styled.ThumbnailInput
               type="file"
               id="lessonFile"
@@ -155,13 +149,7 @@ const LessonForm: React.FC = () => {
           <Button type="submit" color="yellow" radius={5} height={3}>
             수련 개설
           </Button>
-          <Button
-            type="button"
-            color="white"
-            radius={5}
-            height={3}
-            onClick={back}
-          >
+          <Button type="button" color="white" radius={5} height={3} onClick={back}>
             취소
           </Button>
         </Styled.Row>

@@ -1,6 +1,6 @@
-import React, { useEffect, useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useMemo, FC, memo } from 'react';
 import { Route, useRouteMatch } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 import { RootState } from 'store';
 import UnderlineTitle from 'styles/UnderlineTitle';
@@ -8,7 +8,7 @@ import { Lesson } from 'types';
 import NotFound from 'pages/NotFound';
 import LectureUnitList from 'components/LectureUnitList';
 import LectureContent from 'components/LectureContent';
-import { createActionFetchLectureUnits } from 'store/lecture';
+import { fetchLecture } from 'store/lecture';
 import Loader from 'styles/Loader';
 
 const LectureWrapper = styled.div`
@@ -20,7 +20,7 @@ type RouteParam = {
   unitId: string;
 };
 
-const Lecture: React.FC = () => {
+const Lecture: FC = () => {
   const { lessons, lecture } = useSelector((state: RootState) => ({
     lessons: state.lesson.myTeachingLessons,
     lecture: state.lecture.lectureUnits
@@ -42,7 +42,7 @@ const Lecture: React.FC = () => {
   );
 
   useEffect(() => {
-    dispatch(createActionFetchLectureUnits(lessonId));
+    dispatch(fetchLecture(lessonId));
   }, [dispatch, lessonId]);
 
   return (
@@ -56,11 +56,7 @@ const Lecture: React.FC = () => {
             <Route
               path={match.url}
               render={routeProps => (
-                <LectureContent
-                  key={unitId}
-                  content={content}
-                  {...routeProps}
-                />
+                <LectureContent key={unitId} content={content} {...routeProps} />
               )}
             />
           </LectureWrapper>
@@ -72,4 +68,4 @@ const Lecture: React.FC = () => {
   );
 };
 
-export default React.memo(Lecture);
+export default memo(Lecture);

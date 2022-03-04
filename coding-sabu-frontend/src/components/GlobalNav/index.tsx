@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, FC, memo, MouseEventHandler } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { AiFillCaretDown as DownArrow } from 'react-icons/ai';
@@ -7,11 +7,7 @@ import SignupForm from 'components/SignupForm';
 import Button from 'components/Button';
 import UserMenu from 'components/UserMenu';
 import { RootState } from 'store';
-import {
-  createActionInvisibleAuthForm,
-  createActionVisibleAuthForm,
-  createActionVisibleHud
-} from 'store/ui';
+import { showAuthForm, hideAuthForm, showHud } from 'store/ui';
 import logo from 'assets/images/logo.svg';
 import { FlexRow } from 'styles/module';
 import {
@@ -28,10 +24,8 @@ import {
 import AUTH_SUCCESS from 'fixtures/auth/success';
 import AUTH_FAIL from 'fixtures/auth/fail';
 
-const GlobalNav: React.FC = () => {
-  const [authModalType, setAuthModalType] = useState<'login' | 'signup'>(
-    'login'
-  );
+const GlobalNav: FC = () => {
+  const [authModalType, setAuthModalType] = useState<'login' | 'signup'>('login');
   const [visibleUserMenu, setVisibleUserMenu] = useState<boolean>(false);
   const { token, user, visibleAuthForm } = useSelector((state: RootState) => ({
     token: state.auth.token,
@@ -45,7 +39,7 @@ const GlobalNav: React.FC = () => {
     [setAuthModalType]
   );
 
-  const toggleUserMenu = useCallback<React.MouseEventHandler<HTMLDivElement>>(
+  const toggleUserMenu = useCallback<MouseEventHandler<HTMLDivElement>>(
     e => {
       e.stopPropagation();
       setVisibleUserMenu(!visibleUserMenu);
@@ -53,29 +47,22 @@ const GlobalNav: React.FC = () => {
     [visibleUserMenu, setVisibleUserMenu]
   );
 
-  const showAuthForm = useCallback(
-    () => dispatch(createActionVisibleAuthForm()),
-    [dispatch]
-  );
+  const dispatchShowAuthForm = useCallback(() => dispatch(showAuthForm()), [dispatch]);
 
-  // TODO 로그인 유지 기능
   const isLoggedIn = useMemo(() => Boolean(token && user.data), [token, user]);
 
   const profileImage = useMemo(
-    () =>
-      user.data?.profileImage === 'img/default.png'
-        ? false
-        : user.data?.profileImage,
+    () => (user.data?.profileImage === 'img/default.png' ? false : user.data?.profileImage),
     [user]
   );
 
   const displayLoginSuccess = useCallback(() => {
-    dispatch(createActionVisibleHud(AUTH_SUCCESS.LOGIN));
-    dispatch(createActionInvisibleAuthForm());
+    dispatch(showHud(AUTH_SUCCESS.LOGIN));
+    dispatch(hideAuthForm());
   }, [dispatch]);
 
   const displayLoginFail = useCallback(() => {
-    dispatch(createActionVisibleHud(AUTH_FAIL.LOGIN));
+    dispatch(showHud(AUTH_FAIL.LOGIN));
   }, [dispatch]);
 
   useEffect(() => {
@@ -88,12 +75,7 @@ const GlobalNav: React.FC = () => {
       <GlobalNavStyle>
         <Link to="/">
           <FlexRow>
-            <Image
-              src={logo}
-              alt="logo"
-              width={unitRegular}
-              height={unitRegular}
-            />
+            <Image src={logo} alt="logo" width={unitRegular} height={unitRegular} />
             <EmphasisText>코딩사부</EmphasisText>
           </FlexRow>
         </Link>
@@ -105,11 +87,7 @@ const GlobalNav: React.FC = () => {
             {profileImage ? (
               <UserProfileImage profileImageUrl={profileImage} />
             ) : (
-              <UserDefaultProfileImage
-                color={white}
-                fontSize={unitRegular / 3}
-                cursor="pointer"
-              />
+              <UserDefaultProfileImage color={white} fontSize={unitRegular / 3} cursor="pointer" />
             )}
             <DownArrow cursor="pointer" />
             <UserMenu
@@ -120,7 +98,7 @@ const GlobalNav: React.FC = () => {
           </FlexRow>
         ) : (
           <>
-            <Button color="black" radius={15} onClick={showAuthForm}>
+            <Button color="black" radius={15} onClick={dispatchShowAuthForm}>
               로그인
             </Button>
             {authModalType === 'login' ? (
@@ -143,4 +121,4 @@ const GlobalNav: React.FC = () => {
   );
 };
 
-export default React.memo(GlobalNav);
+export default memo(GlobalNav);

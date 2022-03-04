@@ -1,9 +1,6 @@
 import { useEffect, DependencyList } from 'react';
 
-export default function useScrollLock(
-  condition: boolean,
-  deps: DependencyList
-) {
+export default function useScrollLock(condition: boolean, deps: DependencyList) {
   useEffect(() => {
     if (condition) {
       document.body.style.overflow = 'hidden';

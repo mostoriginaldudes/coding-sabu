@@ -56,5 +56,5 @@ const InputError = styled.p`
   margin-top: 0;
 `;
 
-export { default as Row } from 'styles/Row';
+export { Row } from 'styles/module';
 export { form, InputContainer, ThumbnailContainer, ThumbnailInput, InputError };

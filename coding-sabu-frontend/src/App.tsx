@@ -1,6 +1,5 @@
 import { FC, memo } from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import { Provider } from 'react-redux';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import styled from '@emotion/styled';
 import GlobalNav from 'components/GlobalNav';
 import Home from 'pages/Home';
@@ -12,10 +11,8 @@ import LessonDetail from 'pages/LessonDetail';
 import Logout from 'pages/Logout';
 import NotFound from 'pages/NotFound';
 import HeadUpDisplay from 'components/HeadUpDisplay';
-import store from 'store';
 import GlobalStyle from 'styles/GlobalStyle';
 import { sizes } from 'styles/theme';
-import { injectStore } from 'apis/instance';
 import Lecture from 'pages/Lecture';
 import LectureForm from 'pages/LectureForm';
 
@@ -25,38 +22,27 @@ const Main = styled.main`
   margin: ${sizes.unitBig / 8}em auto 2rem;
 `;
 
-injectStore(store);
-
 const App: FC = () => {
   return (
-    <Provider store={store}>
-      <Router>
-        <GlobalStyle />
-        <GlobalNav />
-        <Main>
-          <HeadUpDisplay />
-          <Switch>
-            <Route path="/" component={Home} exact />
-            <Route path="/mypage" component={MyPage} exact />
-            <Route path="/mylesson" component={MyJoiningLessons} />
-            <Route path="/myteaching" component={MyTeachingLessons} />
-            <Route path="/lesson/form" component={LessonForm} />
-            <Route path="/lesson/:id" component={LessonDetail} exact />
-            <Route
-              path="/lesson/:lessonId/lecture/form"
-              component={LectureForm}
-            />
-            <Route
-              path="/lesson/:lessonId/lecture/:unitId"
-              component={Lecture}
-              exact
-            />
-            <Route path="/logout" component={Logout} />
-            <Route path="*" component={NotFound} />
-          </Switch>
-        </Main>
-      </Router>
-    </Provider>
+    <BrowserRouter>
+      <GlobalStyle />
+      <GlobalNav />
+      <Main>
+        <HeadUpDisplay />
+        <Switch>
+          <Route path="/" component={Home} exact />
+          <Route path="/mypage" component={MyPage} exact />
+          <Route path="/mylesson" component={MyJoiningLessons} />
+          <Route path="/myteaching" component={MyTeachingLessons} />
+          <Route path="/lesson/form" component={LessonForm} />
+          <Route path="/lesson/:id" component={LessonDetail} exact />
+          <Route path="/lesson/:lessonId/lecture/form" component={LectureForm} />
+          <Route path="/lesson/:lessonId/lecture/:unitId" component={Lecture} exact />
+          <Route path="/logout" component={Logout} />
+          <Route path="*" component={NotFound} />
+        </Switch>
+      </Main>
+    </BrowserRouter>
   );
 };
 

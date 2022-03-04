@@ -1,34 +1,8 @@
 import { FC, useCallback, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import styled from '@emotion/styled';
-import { colors, sizes } from 'styles/theme';
-import { flexCenter } from 'styles/module';
 import useClickOutside from 'hooks/useClickOutside';
 import { User } from 'types';
-
-const UserMenuContainer = styled.ul`
-  width: 163px;
-  box-shadow: rgb(0 0 0 / 25%) 0px 0px 15px;
-  position: absolute;
-  top: ${sizes.unitBig + 4}px;
-  right: 0;
-  background-color: ${colors.white};
-`;
-
-const UserMenuList = styled.li`
-  ${flexCenter}
-  width: 100%;
-  height: 36px;
-  cursor: pointer;
-  &:hover {
-    background-color: ${colors.yellow[4]};
-  }
-  & > a {
-    width: 100%;
-    height: 100%;
-    ${flexCenter}
-  }
-`;
+import * as Styled from './UserMenu.style';
 
 interface Props {
   userInfo: User | null;
@@ -36,11 +10,7 @@ interface Props {
   setVisibleUserMenu: (visibleUserMenu: boolean) => void;
 }
 
-const UserMenu: FC<Props> = ({
-  userInfo,
-  visibleUserMenu,
-  setVisibleUserMenu
-}) => {
+const UserMenu: FC<Props> = ({ userInfo, visibleUserMenu, setVisibleUserMenu }) => {
   const offUserMenu = useCallback(() => {
     setVisibleUserMenu(false);
   }, [setVisibleUserMenu]);
@@ -51,22 +21,22 @@ const UserMenu: FC<Props> = ({
   return (
     <div ref={userMenu}>
       {visibleUserMenu && (
-        <UserMenuContainer role="userMenu">
-          <UserMenuList>
+        <Styled.Container role="userMenu">
+          <Styled.List>
             <Link to="/mypage">내 정보</Link>
-          </UserMenuList>
-          <UserMenuList>
+          </Styled.List>
+          <Styled.List>
             <Link to="/mylesson">내 수련</Link>
-          </UserMenuList>
+          </Styled.List>
           {userInfo?.userType === 'teacher' && (
-            <UserMenuList>
+            <Styled.List>
               <Link to="/myteaching">내 가르침</Link>
-            </UserMenuList>
+            </Styled.List>
           )}
-          <UserMenuList>
+          <Styled.List>
             <Link to="/logout">로그아웃</Link>
-          </UserMenuList>
-        </UserMenuContainer>
+          </Styled.List>
+        </Styled.Container>
       )}
     </div>
   );

@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { ButtonHTMLAttributes, ReactNode } from 'react';
-import { colors } from '../../styles/theme';
+import { colors } from 'styles/theme';
 const { yellow, black, white } = colors;
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -13,10 +13,8 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 const Button = styled.button<ButtonProps>`
   height: ${({ height }) => height}rem;
   border-radius: ${({ radius }) => radius}px;
-  border: ${({ color }) =>
-    `1px solid ${color === 'yellow' ? yellow[4] : black}`};
-  background-color: ${({ color }) =>
-    color === 'yellow' ? yellow[4] : colors[color]};
+  border: ${({ color }) => `1px solid ${color === 'yellow' ? yellow[4] : black}`};
+  background-color: ${({ color }) => (color === 'yellow' ? yellow[4] : colors[color])};
   color: ${({ color }) => (color === 'black' ? white : black)};
   padding: 5px 7px;
   font-size: 0.8em;
