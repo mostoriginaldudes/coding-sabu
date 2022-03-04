@@ -120,10 +120,10 @@ const MyPage: React.FC<RouteComponentProps> = ({ history }) => {
             <Styled.InputError>{errors.email.message}</Styled.InputError>
           )}
           <Input
-              label="새 비밀번호"
-              type="password"
-              placeholder="영문 대소문자, 숫자, 특수문자 포함(! @ # $)"
-              {...register('password')}
+            label="새 비밀번호 (변경하고 싶지 않다면 기존 비밀번호)"
+            type="password"
+            placeholder="영문 대소문자, 숫자, 특수문자 포함(! @ # $)"
+            {...register('password', { deps: ['passwordCheck'] })}
           />
           {errors.password && (
             <Styled.InputError>{errors.password.message}</Styled.InputError>
@@ -132,9 +132,9 @@ const MyPage: React.FC<RouteComponentProps> = ({ history }) => {
             type="password"
             label="비밀번호 확인"
             placeholder="비밀번호를 한번 더 입력해주세요."
-              {...register('passwordCheck')}
-            />
-            {errors.passwordCheck && (
+            {...register('passwordCheck', { deps: ['password'] })}
+          />
+          {errors.passwordCheck && (
             <Styled.InputError>
               {errors.passwordCheck.message}
             </Styled.InputError>
