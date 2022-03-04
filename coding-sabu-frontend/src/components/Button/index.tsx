@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { ButtonHTMLAttributes, ReactNode } from 'react';
-import { colors } from '../../styles/theme';
+import { colors } from 'styles/theme';
 const { yellow, black, white } = colors;
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {

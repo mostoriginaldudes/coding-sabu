@@ -1,4 +1,4 @@
-import { render, screen } from '../../utils/testUtil';
+import { render, screen } from 'utils/testUtil';
 import UserMenu from '.';
 
 describe('appearance of User Menu', () => {

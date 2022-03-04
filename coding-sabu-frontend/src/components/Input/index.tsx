@@ -1,6 +1,6 @@
 import { forwardRef, InputHTMLAttributes } from 'react';
 import styled from '@emotion/styled';
-import { colors } from '../../styles/theme';
+import { colors } from 'styles/theme';
 import { flexCenter } from 'styles/module';
 
 const InputContainer = styled.div`

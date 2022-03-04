@@ -1,4 +1,4 @@
-import { render, screen } from '../../utils/testUtil';
+import { render, screen } from 'utils/testUtil';
 import userEvent from '@testing-library/user-event';
 import GlobalNav from '.';
 

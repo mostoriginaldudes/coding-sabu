@@ -1,8 +1,8 @@
 import React from 'react';
-import styled from '@emotion/styled';
-import { colors, media } from 'styles/theme';
-import Viewer from 'components/Viewer';
 import { RouteComponentProps } from 'react-router-dom';
+import styled from '@emotion/styled';
+import Viewer from 'components/Viewer';
+import { colors, media } from 'styles/theme';
 
 const ContentWrapper = styled.div`
   width: 100%;

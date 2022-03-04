@@ -1,6 +1,6 @@
-import { render, screen } from '../../utils/testUtil';
+import { render, screen } from 'utils/testUtil';
 import Button from '.';
-import { colors } from '../../styles/theme';
+import { colors } from 'styles/theme';
 
 describe('appearance Button', () => {
   describe('renders yellow button', () => {
