@@ -6,6 +6,8 @@ import { css } from '@emotion/react';
 import { logout } from 'store/auth';
 import Loader from 'styles/Loader';
 import { colors } from 'styles/theme';
+import { showHud } from 'store/ui';
+import AUTH_SUCCESS from 'fixtures/auth/success';
 
 const style = css`
   & > h2 {
@@ -20,7 +22,8 @@ const Logout: FC = () => {
 
   const dispatchLogout = useCallback(async () => {
     await dispatch(logout());
-    setReadyToRedirect(true);
+    await dispatch(showHud(AUTH_SUCCESS.LOGOUT));
+    setTimeout(() => setReadyToRedirect(true), 750);
   }, [dispatch]);
 
   useEffect(() => {
