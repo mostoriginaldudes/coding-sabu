@@ -171,41 +171,64 @@ export const fetchLessons = createAsyncThunk(FETCH_LESSONS, async () => {
 
 export const fetchMyJoiningLessons = createAsyncThunk(
   FETCH_MY_JOINING_LESSONS,
-  async () => {
-    const myJoiningLessonList = await fetchMyJoiningLessonListRequest();
-    return myJoiningLessonList.lessons;
+  async (_: void, { rejectWithValue }) => {
+    try {
+      const myJoiningLessonList = await fetchMyJoiningLessonListRequest();
+      return myJoiningLessonList.lessons;
+    } catch (error) {
+      return rejectWithValue((error as Error).message);
+    }
   }
 );
 
 export const fetchMyTeachingLessons = createAsyncThunk(
   FETCH_MY_TEACHING_LESSONS,
-  async () => {
-    const myTeachingLessonList = await fetchMyTeachingLessonListRequest();
-    return myTeachingLessonList.lessons;
+  async (_: void, { rejectWithValue }) => {
+    try {
+      const myTeachingLessonList = await fetchMyTeachingLessonListRequest();
+      return myTeachingLessonList.lessons;
+    } catch (error) {
+      return rejectWithValue((error as Error).message);
+    }
   }
 );
 
 export const createLesson = createAsyncThunk(
   CREATE_LESSON,
-  async (lesson: FormData) => {
-    const newLesson = await createLessonRequest(lesson);
-    return newLesson;
+  async (lesson: FormData, { rejectWithValue }) => {
+    try {
+      const newLesson = await createLessonRequest(lesson);
+      return newLesson;
+    } catch (error) {
+      return rejectWithValue((error as Error).message);
+    }
   }
 );
 
 export const fetchOneLesson = createAsyncThunk(
   FETCH_ONE_LESSON,
-  async (id: number) => {
-    const lesson = await fetchOneLessonRequest(id);
-    return lesson;
+  async (id: number, { rejectWithValue }) => {
+    try {
+      const lesson = await fetchOneLessonRequest(id);
+      return lesson;
+    } catch (error) {
+      return rejectWithValue((error as Error).message);
+    }
   }
 );
 
 export const joinLesson = createAsyncThunk(
   JOIN_LESSON,
-  async ({ lessonId, userId }: { lessonId: number; userId: number }) => {
-    const myNewLesson = await joinLessonRequest(lessonId, userId);
-    return myNewLesson.lesson;
+  async (
+    { lessonId, userId }: { lessonId: number; userId: number },
+    { rejectWithValue }
+  ) => {
+    try {
+      const myNewLesson = await joinLessonRequest(lessonId, userId);
+      return myNewLesson.lesson;
+    } catch (error) {
+      return rejectWithValue((error as Error).message);
+    }
   }
 );
 

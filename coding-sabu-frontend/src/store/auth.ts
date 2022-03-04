@@ -125,26 +125,51 @@ const authSlice = createSlice({
   }
 });
 
-const login = createAsyncThunk(LOGIN, async (loginInfo: LoginInfo) => {
-  const user: User = await loginRequest(loginInfo);
-  return user;
-});
+const login = createAsyncThunk(
+  LOGIN,
+  async (loginInfo: LoginInfo, { rejectWithValue }) => {
+    try {
+      const user: User = await loginRequest(loginInfo);
+      return user;
+    } catch (error) {
+      return rejectWithValue((error as Error).message);
+    }
+  }
+);
 
-const signup = createAsyncThunk(SIGNUP, async (signupInfo: SignupInfo) => {
-  const user: User = await signupRequest(signupInfo);
-  return user;
-});
+const signup = createAsyncThunk(
+  SIGNUP,
+  async (signupInfo: SignupInfo, { rejectWithValue }) => {
+    try {
+      const user: User = await signupRequest(signupInfo);
+      return user;
+    } catch (error) {
+      return rejectWithValue((error as Error).message);
+    }
+  }
+);
 
-const logout = createAsyncThunk(LOGOUT, async () => {
-  await logoutRequest();
-  return;
-});
+const logout = createAsyncThunk(
+  LOGOUT,
+  async (_: void, { rejectWithValue }) => {
+    try {
+      await logoutRequest();
+      return;
+    } catch (error) {
+      return rejectWithValue((error as Error).message);
+    }
+  }
+);
 
 const editUser = createAsyncThunk(
   EDIT_USER,
-  async (userInfoFormData: FormData) => {
-    const user: User = await editUserRequest(userInfoFormData);
-    return user;
+  async (userInfoFormData: FormData, { rejectWithValue }) => {
+    try {
+      const user: User = await editUserRequest(userInfoFormData);
+      return user;
+    } catch (error) {
+      return rejectWithValue((error as Error).message);
+    }
   }
 );
 

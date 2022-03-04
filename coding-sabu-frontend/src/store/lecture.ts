@@ -50,9 +50,13 @@ const lectureSlice = createSlice({
 
 const fetchLecture = createAsyncThunk(
   FETCH_LECTURE,
-  async (lessonId: number) => {
-    const data = await fetchLectureRequest(lessonId);
-    return data.lectureUnits;
+  async (lessonId: number, { rejectWithValue }) => {
+    try {
+      const data = await fetchLectureRequest(lessonId);
+      return data.lectureUnits;
+    } catch (error) {
+      return rejectWithValue((error as Error).message);
+    }
   }
 );
 
