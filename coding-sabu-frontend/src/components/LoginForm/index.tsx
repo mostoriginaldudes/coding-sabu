@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import { useEffect, useCallback, FC, memo } from 'react';
 import { useDispatch } from 'react-redux';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -9,8 +9,8 @@ import Input from 'components/Input';
 import Button from 'components/Button';
 
 import { ThunkAsyncState } from 'store';
-import { createActionLogin } from 'store/auth';
-import { createActionInvisibleAuthForm } from 'store/ui';
+import { login } from 'store/auth';
+import { hideAuthForm } from 'store/ui';
 
 import { LoginInfo, User } from 'types';
 
@@ -24,7 +24,7 @@ interface Props {
   user: ThunkAsyncState<User>;
 }
 
-const LoginForm: React.FC<Props> = ({ visibleAuthForm, setModalToRender }) => {
+const LoginForm: FC<Props> = ({ visibleAuthForm, setModalToRender }) => {
   const {
     register,
     handleSubmit,
@@ -39,12 +39,12 @@ const LoginForm: React.FC<Props> = ({ visibleAuthForm, setModalToRender }) => {
   const dispatch = useDispatch();
 
   const closeLoginForm = useCallback(
-    () => dispatch(createActionInvisibleAuthForm()),
+    () => dispatch(hideAuthForm()),
     [dispatch]
   );
 
   const onSubmit: SubmitHandler<LoginInfo> = loginInfo => {
-    dispatch(createActionLogin(loginInfo));
+    dispatch(login(loginInfo));
   };
 
   useScrollLock(visibleAuthForm, [visibleAuthForm]);
@@ -99,4 +99,4 @@ const LoginForm: React.FC<Props> = ({ visibleAuthForm, setModalToRender }) => {
   );
 };
 
-export default React.memo(LoginForm);
+export default memo(LoginForm);

@@ -10,7 +10,7 @@ import useRouting from 'hooks/useRouting';
 import { createLessonRequest } from 'apis';
 import { RootState } from 'store';
 import * as Styled from './LessonForm.style';
-import { createActionVisibleHud } from 'store/ui';
+import { showHud } from 'store/ui';
 import { yupResolver } from '@hookform/resolvers/yup';
 import validationSchema from 'utils/FormValidation/lesson/ValidationSchema';
 import LESSON_SUCCESS from 'fixtures/lesson/success';
@@ -46,14 +46,14 @@ const LessonForm: React.FC = () => {
 
   const createLessonSuccess = useCallback(
     (id: number) => {
-      dispatch(createActionVisibleHud(LESSON_SUCCESS.OPEN));
+      dispatch(showHud(LESSON_SUCCESS.OPEN));
       replace(`/lesson/${id}`);
     },
     [dispatch, replace]
   );
 
   const createLessonFail = useCallback(() => {
-    dispatch(createActionVisibleHud(LESSON_FAIL.OPEN));
+    dispatch(showHud(LESSON_FAIL.OPEN));
     setFocus('title');
   }, [dispatch, setFocus]);
 

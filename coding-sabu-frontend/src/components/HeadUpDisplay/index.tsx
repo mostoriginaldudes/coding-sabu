@@ -1,9 +1,9 @@
-import React, { useEffect, useCallback, useMemo, useRef } from 'react';
+import { useEffect, useCallback, useMemo, useRef, FC, memo } from 'react';
 import { createPortal } from 'react-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import styled from '@emotion/styled';
 import { RootState } from 'store';
-import { createActionInvisibleHud } from 'store/ui';
+import { hideHud } from 'store/ui';
 import { getModalRoot } from 'utils';
 import { flexCenter, positionFixed } from 'styles/module';
 import success from 'assets/images/success.svg';
@@ -52,7 +52,7 @@ const HeadUpDpWrapper = styled.div`
   }
 `;
 
-const HeadUpDisplay: React.FC = () => {
+const HeadUpDisplay: FC = () => {
   const modalTarget = useRef<HTMLDivElement>(document.createElement('div'));
   const { visibleHud, hudStatusText } = useSelector((state: RootState) => ({
     visibleHud: state.ui.visibleHud,
@@ -61,7 +61,7 @@ const HeadUpDisplay: React.FC = () => {
   const dispatch = useDispatch();
 
   const hideHeadUp = useCallback(() => {
-    visibleHud && dispatch(createActionInvisibleHud());
+    visibleHud && dispatch(hideHud());
   }, [visibleHud, dispatch]);
 
   const hudIcon = useMemo(
@@ -74,7 +74,7 @@ const HeadUpDisplay: React.FC = () => {
     const current = modalTarget.current;
     modalRoot.appendChild(current);
 
-    const timerId = setTimeout(hideHeadUp, delay);
+    const timerId = setTimeout(hideHeadUp, 3000);
 
     return () => {
       modalRoot.removeChild(current);
@@ -95,4 +95,4 @@ const HeadUpDisplay: React.FC = () => {
   );
 };
 
-export default React.memo(HeadUpDisplay);
+export default memo(HeadUpDisplay);

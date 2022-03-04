@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useMemo } from 'react';
+import { useEffect, useCallback, useMemo, FC, memo } from 'react';
 import { Redirect } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import styled from '@emotion/styled';
@@ -6,7 +6,7 @@ import LessonList from 'components/LessonList';
 import Button from 'components/Button';
 import useRouting from 'hooks/useRouting';
 import { RootState } from 'store';
-import { createActionFetchMyTeachingLessons } from 'store/lesson';
+import { fetchMyTeachingLessons } from 'store/lesson';
 import UnderlineTitle from 'styles/UnderlineTitle';
 
 const Container = styled.div`
@@ -19,7 +19,7 @@ const CreateLessonButton = styled(Button)`
   font-weight: bold;
 `;
 
-const MyTeachingLessons: React.FC = () => {
+const MyTeachingLessons: FC = () => {
   const { forward } = useRouting();
   const { user, myTeachingLessons } = useSelector((state: RootState) => ({
     user: state.auth.user,
@@ -29,8 +29,8 @@ const MyTeachingLessons: React.FC = () => {
 
   const isNotTeacher = useMemo(() => user.data?.userType !== 'teacher', [user]);
 
-  const fetchMyTeachingLessons = useCallback(() => {
-    dispatch(createActionFetchMyTeachingLessons());
+  const dispatchFetchMyTeachingLessons = useCallback(() => {
+    dispatch(fetchMyTeachingLessons());
   }, [dispatch]);
 
   const goToLessonForm = useCallback(() => {
@@ -38,8 +38,8 @@ const MyTeachingLessons: React.FC = () => {
   }, [forward]);
 
   useEffect(() => {
-    fetchMyTeachingLessons();
-  }, [fetchMyTeachingLessons]);
+    dispatchFetchMyTeachingLessons();
+  }, [dispatchFetchMyTeachingLessons]);
 
   return (
     <Container>
@@ -60,4 +60,4 @@ const MyTeachingLessons: React.FC = () => {
   );
 };
 
-export default React.memo(MyTeachingLessons);
+export default memo(MyTeachingLessons);

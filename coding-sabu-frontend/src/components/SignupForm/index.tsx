@@ -1,18 +1,15 @@
-import { FC, useEffect, useCallback, memo } from 'react';
+import { useEffect, useCallback, FC, memo } from 'react';
+import { useDispatch } from 'react-redux';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 import Modal from 'components/Modal';
 import Input from 'components/Input';
 import Button from 'components/Button';
 import { LoginInfo, SignupFormInfo, SignupInfo, User } from 'types';
-
-import { useDispatch } from 'react-redux';
 import { ThunkAsyncState } from 'store';
-import { createActionLogin, createActionSignup } from 'store/auth';
-import { createActionInvisibleAuthForm } from 'store/ui';
-import { useForm, SubmitHandler } from 'react-hook-form';
-
-import { yupResolver } from '@hookform/resolvers/yup';
+import { login, signup } from 'store/auth';
+import { hideAuthForm } from 'store/ui';
 import validationSchema from 'utils/FormValidation/auth/ValidationSchema';
-
 import useScrollLock from 'hooks/useScrollLock';
 import * as Styled from './SignupForm.style';
 
@@ -40,9 +37,9 @@ const SignupForm: FC<Props> = ({ visibleAuthForm, setModalToRender }) => {
     ...signupProps
   }) => {
     try {
-      await dispatch(createActionSignup(signupProps as SignupInfo));
+      await dispatch(signup(signupProps as SignupInfo));
       await dispatch(
-        createActionLogin({
+        login({
           email: signupProps.email,
           password: signupProps.password
         } as LoginInfo)
@@ -52,7 +49,7 @@ const SignupForm: FC<Props> = ({ visibleAuthForm, setModalToRender }) => {
 
   const closeSignupForm = useCallback(() => {
     setModalToRender('login');
-    dispatch(createActionInvisibleAuthForm());
+    dispatch(hideAuthForm());
   }, [dispatch, setModalToRender]);
 
   const openLoginForm = useCallback(() => {

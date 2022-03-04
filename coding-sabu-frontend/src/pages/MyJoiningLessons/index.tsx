@@ -4,7 +4,7 @@ import LessonList from 'components/LessonList';
 import UnderlineTitle from 'styles/UnderlineTitle';
 import { RootState } from 'store';
 import { Lesson } from 'types';
-import { createActionFetchMyJoiningLessons } from 'store/lesson';
+import { fetchMyJoiningLessons } from 'store/lesson';
 import Loader from 'styles/Loader';
 import { Redirect } from 'react-router-dom';
 
@@ -15,7 +15,7 @@ const MyJoiningLessons: FC = () => {
   const dispatch = useDispatch();
 
   const dispatchMyJoiningLessons = useCallback(
-    () => dispatch(createActionFetchMyJoiningLessons()),
+    () => dispatch(fetchMyJoiningLessons()),
     [dispatch]
   );
 

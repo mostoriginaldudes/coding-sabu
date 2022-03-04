@@ -1,41 +1,22 @@
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { ThunkAsyncState } from '.';
-import { ThunkAction } from 'redux-thunk';
-import { produce } from 'immer';
 import { Lesson } from 'types';
 import {
-  createLesson,
-  fetchLessonList,
-  fetchMyJoiningLessonList,
-  fetchMyTeachingLessonList,
-  fetchOneLesson,
-  joinLesson
+  createLessonRequest,
+  fetchLessonListRequest,
+  fetchMyJoiningLessonListRequest,
+  fetchMyTeachingLessonListRequest,
+  fetchOneLessonRequest,
+  joinLessonRequest
 } from 'apis';
 
-// constants
 const FETCH_LESSONS = 'lesson/FETCH_LESSONS' as const;
-const FETCH_LESSONS_SUCCESS = 'lesson/FETCH_LESSONS_SUCCESS' as const;
-const FETCH_LESSONS_FAIL = 'lesson/FETCH_LESSONS_FAIL' as const;
 const FETCH_MY_JOINING_LESSONS = 'lesson/FETCH_MY_JOINING_LESSONS' as const;
-const FETCH_MY_JOINING_LESSONS_SUCCESS =
-  'lesson/FETCH_MY_JOINING_LESSONS_SUCCESS' as const;
-const FETCH_MY_JOINING_LESSONS_FAIL =
-  'lesson/FETCH_MY_JOINING_LESSONS_FAIL' as const;
 const FETCH_MY_TEACHING_LESSONS = 'lesson/FETCH_MY_TEACHING_LESSONS' as const;
-const FETCH_MY_TEACHING_LESSONS_SUCCESS =
-  'lesson/FETCH_MY_TEACHING_LESSONS_SUCCESS' as const;
-const FETCH_MY_TEACHING_LESSONS_FAIL =
-  'lesson/FETCH_MY_TEACHING_LESSONS_FAIL' as const;
 const CREATE_LESSON = 'lesson/CREATE_LESSON' as const;
-const CREATE_LESSON_SUCCESS = 'lesson/CREATE_LESSON_SUCCESS' as const;
-const CREATE_LESSON_FAIL = 'lesson/CREATE_LESSON_FAIL' as const;
 const FETCH_ONE_LESSON = 'lesson/FETCH_ONE_LESSON' as const;
-const FETCH_ONE_LESSON_SUCCESS = 'lesson/FETCH_ONE_LESSON_SUCCESS' as const;
-const FETCH_ONE_LESSON_FAIL = 'lesson/FETCH_ONE_LESSON_FAIL' as const;
 const JOIN_LESSON = 'lesson/JOIN_LESSON' as const;
-const JOIN_LESSON_SUCCESS = 'lesson/JOIN_LESSON_SUCCESS' as const;
-const JOIN_LESSON_FAIL = 'lesson/JOIN_LESSON_FAIL' as const;
 
-// types
 export interface State {
   readonly lessons: ThunkAsyncState<Lesson[]>;
   readonly myJoiningLessons: ThunkAsyncState<Lesson[]>;
@@ -43,111 +24,6 @@ export interface State {
   readonly lessonDetailInfo: ThunkAsyncState<Lesson>;
 }
 
-type Action =
-  | { type: typeof FETCH_LESSONS }
-  | { type: typeof FETCH_LESSONS_SUCCESS; payload: Lesson[] }
-  | { type: typeof FETCH_LESSONS_FAIL; payload: Error }
-  | { type: typeof FETCH_MY_JOINING_LESSONS }
-  | { type: typeof FETCH_MY_JOINING_LESSONS_SUCCESS; payload: Lesson[] }
-  | { type: typeof FETCH_MY_JOINING_LESSONS_FAIL; payload: Error }
-  | { type: typeof FETCH_MY_TEACHING_LESSONS }
-  | { type: typeof FETCH_MY_TEACHING_LESSONS_SUCCESS; payload: Lesson[] }
-  | { type: typeof FETCH_MY_TEACHING_LESSONS_FAIL; payload: Error }
-  | { type: typeof CREATE_LESSON }
-  | { type: typeof CREATE_LESSON_SUCCESS }
-  | { type: typeof CREATE_LESSON_FAIL }
-  | { type: typeof FETCH_ONE_LESSON }
-  | { type: typeof FETCH_ONE_LESSON_SUCCESS; payload: Lesson }
-  | { type: typeof FETCH_ONE_LESSON_FAIL; payload: Error }
-  | { type: typeof JOIN_LESSON }
-  | { type: typeof JOIN_LESSON_SUCCESS; payload: Lesson }
-  | { type: typeof JOIN_LESSON_FAIL; payload: Error };
-
-type LessonThunkAction = ThunkAction<void, State, null, Action>;
-
-// action creators
-export const createActionFetchLessons =
-  (): LessonThunkAction => async dispatch => {
-    dispatch({ type: FETCH_LESSONS });
-    try {
-      const data = await fetchLessonList();
-      dispatch({ type: FETCH_LESSONS_SUCCESS, payload: data.lessons });
-    } catch (error) {
-      dispatch({ type: FETCH_LESSONS_FAIL, payload: error as Error });
-    }
-  };
-
-export const createActionFetchMyJoiningLessons =
-  (): LessonThunkAction => async dispatch => {
-    dispatch({ type: FETCH_MY_JOINING_LESSONS });
-    try {
-      const data = await fetchMyJoiningLessonList();
-      dispatch({
-        type: FETCH_MY_JOINING_LESSONS_SUCCESS,
-        payload: data.lessons
-      });
-    } catch (error) {
-      dispatch({
-        type: FETCH_MY_JOINING_LESSONS_FAIL,
-        payload: error as Error
-      });
-    }
-  };
-
-export const createActionFetchMyTeachingLessons =
-  (): LessonThunkAction => async dispatch => {
-    dispatch({ type: FETCH_MY_TEACHING_LESSONS });
-    try {
-      const data = await fetchMyTeachingLessonList();
-      dispatch({
-        type: FETCH_MY_TEACHING_LESSONS_SUCCESS,
-        payload: data.lessons
-      });
-    } catch (error) {
-      dispatch({
-        type: FETCH_MY_TEACHING_LESSONS_FAIL,
-        payload: error as Error
-      });
-    }
-  };
-
-export const createActionCreateLesson =
-  (lesson: FormData): LessonThunkAction =>
-  async dispatch => {
-    dispatch({ type: CREATE_LESSON });
-    try {
-      await createLesson(lesson);
-      dispatch({ type: CREATE_LESSON_SUCCESS });
-    } catch (error) {
-      dispatch({ type: CREATE_LESSON_FAIL });
-    }
-  };
-
-export const createActionFetchOneLesson =
-  (id: number): LessonThunkAction =>
-  async dispatch => {
-    dispatch({ type: FETCH_ONE_LESSON });
-    try {
-      const lesson = await fetchOneLesson(id);
-      dispatch({ type: FETCH_ONE_LESSON_SUCCESS, payload: lesson });
-    } catch (error) {
-      dispatch({ type: FETCH_ONE_LESSON_FAIL, payload: error as Error });
-    }
-  };
-
-export const createActionJoinLesson =
-  (lessonId: number, userId: number): LessonThunkAction =>
-  async dispatch => {
-    dispatch({ type: JOIN_LESSON });
-    try {
-      const myNewLesson = await joinLesson(lessonId, userId);
-      dispatch({ type: JOIN_LESSON_SUCCESS, payload: myNewLesson.lesson });
-    } catch (error) {
-      dispatch({ type: JOIN_LESSON_FAIL, payload: error as Error });
-    }
-  };
-
-// initialState
 const initialState: State = {
   lessons: {
     loading: false,
@@ -171,121 +47,166 @@ const initialState: State = {
   }
 };
 
-// reducer
-function lessonReducer(state = initialState, action: Action) {
-  return produce(state, draft => {
-    switch (action.type) {
-      case FETCH_LESSONS:
-        draft.lessons = {
+const lessonSlice = createSlice({
+  name: 'lesson',
+  reducers: {},
+  initialState,
+  extraReducers: builder => {
+    builder
+      .addCase(fetchLessons.pending, state => {
+        state.lessons = {
           loading: true,
           data: null,
           error: null
         };
-        break;
-      case FETCH_LESSONS_SUCCESS:
-        draft.lessons = {
+      })
+      .addCase(fetchLessons.fulfilled, (state, action) => {
+        state.lessons = {
           loading: false,
           data: action.payload,
           error: null
         };
-        break;
-      case FETCH_LESSONS_FAIL:
-        draft.lessons = {
+      })
+      .addCase(fetchLessons.rejected, (state, action) => {
+        state.myJoiningLessons = {
           loading: false,
           data: null,
-          error: action.payload
+          error: action.error as Error
         };
-        break;
-      case FETCH_MY_JOINING_LESSONS:
-        draft.myJoiningLessons = {
+      })
+      .addCase(fetchMyJoiningLessons.pending, state => {
+        state.myJoiningLessons = {
           loading: true,
           data: null,
           error: null
         };
-        break;
-      case FETCH_MY_JOINING_LESSONS_SUCCESS:
-        draft.myJoiningLessons = {
+      })
+      .addCase(fetchMyJoiningLessons.fulfilled, (state, action) => {
+        state.myJoiningLessons = {
           loading: false,
           data: action.payload,
           error: null
         };
-        break;
-      case FETCH_MY_JOINING_LESSONS_FAIL:
-        draft.myJoiningLessons = {
+      })
+      .addCase(fetchMyJoiningLessons.rejected, (state, action) => {
+        state.lessons = {
           loading: false,
           data: null,
-          error: action.payload
+          error: action.error as Error
         };
-        break;
-      case FETCH_MY_TEACHING_LESSONS:
-        draft.myTeachingLessons = {
+      })
+      .addCase(fetchMyTeachingLessons.pending, state => {
+        state.myTeachingLessons = {
           loading: true,
           data: null,
           error: null
         };
-        break;
-      case FETCH_MY_TEACHING_LESSONS_SUCCESS:
-        draft.myTeachingLessons = {
+      })
+      .addCase(fetchMyTeachingLessons.fulfilled, (state, action) => {
+        state.myTeachingLessons = {
           loading: false,
           data: action.payload,
           error: null
         };
-        break;
-      case FETCH_MY_TEACHING_LESSONS_FAIL:
-        draft.myTeachingLessons = {
+      })
+      .addCase(fetchMyTeachingLessons.rejected, (state, action) => {
+        state.myTeachingLessons = {
           loading: false,
           data: null,
-          error: action.payload
+          error: action.error as Error
         };
-        break;
-      case FETCH_ONE_LESSON:
-        draft.lessonDetailInfo = {
+      })
+      .addCase(fetchOneLesson.pending, state => {
+        state.lessonDetailInfo = {
           loading: true,
           data: null,
           error: null
         };
-        break;
-      case FETCH_ONE_LESSON_SUCCESS:
-        draft.lessonDetailInfo = {
+      })
+      .addCase(fetchOneLesson.fulfilled, (state, action) => {
+        state.lessonDetailInfo = {
           loading: false,
           data: action.payload,
           error: null
         };
-        break;
-      case FETCH_ONE_LESSON_FAIL:
-        draft.lessonDetailInfo = {
+      })
+      .addCase(fetchOneLesson.rejected, (state, action) => {
+        state.lessonDetailInfo = {
           loading: false,
           data: null,
-          error: action.payload
+          error: action.error as Error
         };
-        break;
-      case JOIN_LESSON:
-        draft.myJoiningLessons = {
+      })
+      .addCase(joinLesson.pending, (state, action) => {
+        state.myJoiningLessons = {
           loading: true,
-          data: state.myJoiningLessons.data,
+          data: null,
           error: null
         };
-        break;
-      case JOIN_LESSON_SUCCESS:
-        draft.myJoiningLessons = {
+      })
+      .addCase(joinLesson.fulfilled, (state, action) => {
+        state.myJoiningLessons = {
           loading: false,
           data:
             state.myJoiningLessons.data?.concat(action.payload) ||
             state.myJoiningLessons.data,
           error: null
         };
-        break;
-      case JOIN_LESSON_FAIL:
-        draft.myJoiningLessons = {
+      })
+      .addCase(joinLesson.rejected, (state, action) => {
+        state.myJoiningLessons = {
           loading: false,
           data: null,
-          error: action.payload
+          error: action.error as Error
         };
-        break;
-      default:
-        return state;
-    }
-  });
-}
+      })
+      .addDefaultCase(state => state);
+  }
+});
 
-export default lessonReducer;
+export const fetchLessons = createAsyncThunk(FETCH_LESSONS, async () => {
+  const allLessonList = await fetchLessonListRequest();
+  return allLessonList.lessons;
+});
+
+export const fetchMyJoiningLessons = createAsyncThunk(
+  FETCH_MY_JOINING_LESSONS,
+  async () => {
+    const myJoiningLessonList = await fetchMyJoiningLessonListRequest();
+    return myJoiningLessonList.lessons;
+  }
+);
+
+export const fetchMyTeachingLessons = createAsyncThunk(
+  FETCH_MY_TEACHING_LESSONS,
+  async () => {
+    const myTeachingLessonList = await fetchMyTeachingLessonListRequest();
+    return myTeachingLessonList.lessons;
+  }
+);
+
+export const createLesson = createAsyncThunk(
+  CREATE_LESSON,
+  async (lesson: FormData) => {
+    const newLesson = await createLessonRequest(lesson);
+    return newLesson;
+  }
+);
+
+export const fetchOneLesson = createAsyncThunk(
+  FETCH_ONE_LESSON,
+  async (id: number) => {
+    const lesson = await fetchOneLessonRequest(id);
+    return lesson;
+  }
+);
+
+export const joinLesson = createAsyncThunk(
+  JOIN_LESSON,
+  async ({ lessonId, userId }: { lessonId: number; userId: number }) => {
+    const myNewLesson = await joinLessonRequest(lessonId, userId);
+    return myNewLesson.lesson;
+  }
+);
+
+export default lessonSlice.reducer;

@@ -6,7 +6,7 @@ import Input from 'components/Input';
 import Button from 'components/Button';
 import { EditUserInfo } from 'types';
 import { RootState } from 'store';
-import { createActionEditUser } from 'store/auth';
+import { editUser } from 'store/auth';
 
 import FlexRow from 'styles/Row';
 import styled from '@emotion/styled';
@@ -125,19 +125,19 @@ const MyPage: React.FC<RouteComponentProps> = ({ history }) => {
     }
   });
 
-  const onSubmit: SubmitHandler<EditUserInfo> = async (editUser, event) => {
+  const onSubmit: SubmitHandler<EditUserInfo> = async (newInfo, event) => {
     event?.preventDefault();
 
     if (user.data) {
       const formData = new FormData();
       formData.append('id', String(user.data.id));
       formData.append('email', user.data.email);
-      formData.append('password', editUser.password);
-      formData.append('nickname', editUser.nickname);
-      formData.append('phoneNum', editUser.phoneNum);
-      formData.append('description', editUser.description);
+      formData.append('password', newInfo.password);
+      formData.append('nickname', newInfo.nickname);
+      formData.append('phoneNum', newInfo.phoneNum);
+      formData.append('description', newInfo.description);
       formData.append('profileImage', profileImage as unknown as string);
-      await dispatch(createActionEditUser(formData));
+      await dispatch(editUser(formData));
 
       if (user.error === null) {
         movePreviousPage();

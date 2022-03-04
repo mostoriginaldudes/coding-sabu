@@ -15,17 +15,17 @@ import { concatHostToImagePath } from 'utils';
 
 import { RootState } from 'store';
 import {
-  createActionFetchMyJoiningLessons,
-  createActionFetchOneLesson,
-  createActionJoinLesson
+  fetchMyJoiningLessons,
+  fetchOneLesson,
+  joinLesson
 } from 'store/lesson';
+import { fetchLecture } from 'store/lecture';
+import { showAuthForm, showHud } from 'store/ui';
 import { colors } from 'styles/theme';
-import { createActionVisibleAuthForm, createActionVisibleHud } from 'store/ui';
 import AuthenticationError from 'errors/AuthenticationError';
 import LESSON_SUCCESS from 'fixtures/lesson/success';
 import LESSON_FAIL from 'fixtures/lesson/fail';
 import AUTH_FAIL from 'fixtures/auth/fail';
-import { createActionFetchLectureUnits } from 'store/lecture';
 
 interface LessonThumbnail {
   imgUrl?: string;
@@ -89,29 +89,29 @@ const LessonDetail: React.FC<Props> = ({ match }) => {
   const thumbnailUrl = concatHostToImagePath(lesson.data?.thumbnailUrl);
   const { forward, back } = useRouting();
 
-  const fetchLesson = useCallback(
+  const dispatchFetchOneLesson = useCallback(
     (id: string) => {
-      dispatch(createActionFetchOneLesson(parseInt(id)));
+      dispatch(fetchOneLesson(parseInt(id)));
     },
     [dispatch]
   );
 
-  const fetchLecture = useCallback(
-    (lessonId: number) => dispatch(createActionFetchLectureUnits(lessonId)),
+  const dispatchFetchLecture = useCallback(
+    (lessonId: number) => dispatch(fetchLecture(lessonId)),
     [dispatch]
   );
 
   const enrollLessonSuccess = useCallback(() => {
-    dispatch(createActionVisibleHud(LESSON_SUCCESS.REGISTER));
+    dispatch(showHud(LESSON_SUCCESS.REGISTER));
   }, [dispatch]);
 
   const enrollLessonFail = useCallback(
     (error: Error) => {
       if (error instanceof AuthenticationError) {
-        dispatch(createActionVisibleHud(AUTH_FAIL.REQUIRED_LOGIN));
-        dispatch(createActionVisibleAuthForm());
+        dispatch(showHud(AUTH_FAIL.REQUIRED_LOGIN));
+        dispatch(showAuthForm());
       } else {
-        dispatch(createActionVisibleHud(LESSON_FAIL.REGISTER));
+        dispatch(showHud(LESSON_FAIL.REGISTER));
       }
     },
     [dispatch]
@@ -120,9 +120,11 @@ const LessonDetail: React.FC<Props> = ({ match }) => {
   const enrollLesson = async () => {
     try {
       if (user.data) {
-        await dispatch(createActionJoinLesson(parseInt(id), user.data.id));
+        await dispatch(
+          joinLesson({ lessonId: parseInt(id), userId: user.data.id })
+        );
         enrollLessonSuccess();
-        await dispatch(createActionFetchMyJoiningLessons());
+        await dispatch(fetchMyJoiningLessons());
       } else {
         throw new AuthenticationError(AUTH_FAIL.REQUIRED_LOGIN);
       }
@@ -162,9 +164,9 @@ const LessonDetail: React.FC<Props> = ({ match }) => {
   }, [myTeachingLessons, id, user]);
 
   useEffect(() => {
-    fetchLesson(id);
-    fetchLecture(parseInt(id));
-  }, [id, fetchLesson, fetchLecture, myJoiningLessons]);
+    dispatchFetchOneLesson(id);
+    dispatchFetchLecture(parseInt(id));
+  }, [id, dispatchFetchOneLesson, dispatchFetchLecture, myJoiningLessons]);
 
   return (
     <LessonDetailContainer>

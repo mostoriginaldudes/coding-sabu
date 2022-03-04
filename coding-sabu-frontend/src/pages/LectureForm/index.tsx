@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { RouteComponentProps, useRouteMatch } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import UnderlineTitle from 'styles/UnderlineTitle';
@@ -8,7 +8,7 @@ import Button from 'components/Button';
 import Row from 'styles/Row';
 import { createLectureRequest } from 'apis';
 import { Lecture, LectureRequestInfo } from 'types';
-import { createActionVisibleHud } from 'store/ui';
+import { showHud } from 'store/ui';
 import LECTURE_FAIL from 'fixtures/lecture/fail';
 import LECTURE_SUCCESS from 'fixtures/lecture/success';
 import { ValidationError } from 'yup';
@@ -57,7 +57,7 @@ const LectureForm: React.FC<RouteComponentProps> = ({ history }) => {
 
   const successCreateLecture = useCallback(
     (lecture: Lecture) => {
-      dispatch(createActionVisibleHud(LECTURE_SUCCESS.CREATE_LECTURE));
+      dispatch(showHud(LECTURE_SUCCESS.CREATE_LECTURE));
       history.replace(`/lesson/${lessonId}/lecture/${lecture.id}`);
     },
     [dispatch, history, lessonId]
@@ -66,9 +66,9 @@ const LectureForm: React.FC<RouteComponentProps> = ({ history }) => {
   const failCreateLecture = useCallback(
     (error: Error) => {
       if (error instanceof ValidationError) {
-        dispatch(createActionVisibleHud(error.message));
+        dispatch(showHud(error.message));
       } else {
-        dispatch(createActionVisibleHud(LECTURE_FAIL.CREATE_LECTURE));
+        dispatch(showHud(LECTURE_FAIL.CREATE_LECTURE));
       }
     },
     [dispatch]

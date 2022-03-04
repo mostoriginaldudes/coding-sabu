@@ -1,9 +1,9 @@
 /** @jsxImportSource @emotion/react */
-import { FC, useState, useCallback, useEffect } from 'react';
+import { useState, useEffect, useCallback, FC } from 'react';
 import { Redirect } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { css } from '@emotion/react';
-import { createActionLogout } from 'store/auth';
+import { logout } from 'store/auth';
 import Loader from 'styles/Loader';
 import { colors } from 'styles/theme';
 
@@ -18,14 +18,14 @@ const Logout: FC = () => {
   const [readyToRedirect, setReadyToRedirect] = useState<boolean>(false);
   const dispatch = useDispatch();
 
-  const logout = useCallback(async () => {
-    await dispatch(createActionLogout());
+  const dispatchLogout = useCallback(async () => {
+    await dispatch(logout());
     setReadyToRedirect(true);
   }, [dispatch]);
 
   useEffect(() => {
-    logout();
-  }, [logout]);
+    dispatchLogout();
+  }, [dispatchLogout]);
 
   return (
     <div css={style}>
