@@ -16,7 +16,7 @@ export type ThunkAsyncState<T> = {
 };
 
 const persistConfig: PersistConfig<any> = {
-  key: 'root',
+  key: 'auth',
   version: 1,
   storage,
   throttle: 500,
