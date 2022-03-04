@@ -6,7 +6,7 @@ import { RootState } from 'store';
 import { Lesson } from 'types';
 import { fetchMyJoiningLessons } from 'store/lesson';
 import Loader from 'styles/Loader';
-import { Redirect } from 'react-router-dom';
+import useRedirect from 'hooks/useRedirect';
 
 const MyJoiningLessons: FC = () => {
   const { loading, data, error } = useSelector(
@@ -24,6 +24,8 @@ const MyJoiningLessons: FC = () => {
     [data]
   );
 
+  useRedirect('/', [error]);
+
   useEffect(() => {
     dispatchMyJoiningLessons();
   }, [dispatchMyJoiningLessons]);
@@ -32,7 +34,6 @@ const MyJoiningLessons: FC = () => {
     <div>
       <UnderlineTitle title="내 수련 목록" />
       <Loader loading={loading} />
-      {error && <Redirect to="/" />}
       <LessonList lessons={myJoiningLessonList} />
     </div>
   );
