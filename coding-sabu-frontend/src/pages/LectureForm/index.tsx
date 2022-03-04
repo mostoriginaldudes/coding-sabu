@@ -6,7 +6,7 @@ import Editor from 'components/Editor';
 import Input from 'components/Input';
 import Button from 'components/Button';
 import Row from 'styles/Row';
-import { createLecture } from 'apis';
+import { createLectureRequest } from 'apis';
 import { Lecture, LectureRequestInfo } from 'types';
 import { createActionVisibleHud } from 'store/ui';
 import LECTURE_FAIL from 'fixtures/lecture/fail';
@@ -79,7 +79,7 @@ const LectureForm: React.FC<RouteComponentProps> = ({ history }) => {
     try {
       checkIfInputEmpty();
 
-      const response = await createLecture(lessonId, {
+      const response = await createLectureRequest(lessonId, {
         unit,
         content
       } as LectureRequestInfo);

@@ -7,7 +7,7 @@ import Editor from 'components/Editor';
 import Button from 'components/Button';
 import UnderlineTitle from 'styles/UnderlineTitle';
 import useRouting from 'hooks/useRouting';
-import { createLesson } from 'apis';
+import { createLessonRequest } from 'apis';
 import { RootState } from 'store';
 import * as Styled from './LessonForm.style';
 import { createActionVisibleHud } from 'store/ui';
@@ -72,7 +72,7 @@ const LessonForm: React.FC = () => {
 
   const onSubmit: SubmitHandler<LessonFormProps> = async lessonForm => {
     try {
-      const newLesson = await createLesson(getFormData(lessonForm));
+      const newLesson = await createLessonRequest(getFormData(lessonForm));
       createLessonSuccess(newLesson.id);
     } catch (error) {
       createLessonFail();

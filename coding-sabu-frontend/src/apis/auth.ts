@@ -1,16 +1,16 @@
 import httpRequest from 'apis/instance';
 import { LoginInfo, SignupInfo, User } from 'types';
 
-export const login = (loginInfo: LoginInfo) =>
+export const loginRequest = (loginInfo: LoginInfo) =>
   httpRequest.post<User>('/auth/login', loginInfo);
 
-export const signup = (signupInfo: SignupInfo) =>
+export const signupRequest = (signupInfo: SignupInfo) =>
   httpRequest.post<User>('/auth/users', signupInfo);
 
-export const checkEmail = (email: string) =>
+export const checkEmailRequest = (email: string) =>
   httpRequest.get<string>(`/auth/user/email/${email}`);
 
-export const editUser = (userInfo: FormData) =>
+export const editUserRequest = (userInfo: FormData) =>
   httpRequest.put<User>('/user', userInfo);
 
-export const logout = () => httpRequest.get<void>('/auth/logout');
+export const logoutRequest = () => httpRequest.get<void>('/auth/logout');
