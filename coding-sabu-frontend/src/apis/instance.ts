@@ -8,11 +8,6 @@ import Axios, {
 import store from 'store';
 import { setToken } from 'store/auth';
 
-import { reissueAccessTokenRequest } from './auth';
-import { UNAUTHORIZED } from 'fixtures/auth/constants';
-import AUTH_FAIL from 'fixtures/auth/fail';
-import AuthorizationError from 'errors/AuthorizationError';
-
 type Response<T = any> = {
   response: T;
   token?: string;
@@ -55,11 +50,9 @@ const loadAccessTokenToHttpHeader = (req: AxiosRequestConfig) => {
   return req;
 };
 
-instance.interceptors.response.use(async res => {
+instance.interceptors.response.use(res => {
   if (isSuccess(res.status)) {
     saveAccessTokenToStore(res);
-  } else if (res.status === UNAUTHORIZED) {
-    reissueAccessToken();
   }
   return res.data;
 });
@@ -71,17 +64,10 @@ const existAccessToken = (res: AxiosResponse) =>
 
 const saveAccessTokenToStore = (res: AxiosResponse) => {
   if (existAccessToken(res)) {
-    if (!injectedStore.getState().auth.token) {
-      injectedStore.dispatch(setToken(res.headers.authorization));
+    const newAccessToken = res.headers.authorization;
+    if (injectedStore.getState().auth.token !== newAccessToken) {
+      injectedStore.dispatch(setToken(newAccessToken));
     }
-  }
-};
-
-const reissueAccessToken = async () => {
-  try {
-    await reissueAccessTokenRequest();
-  } catch (error) {
-    throw new AuthorizationError(AUTH_FAIL.UNAUTHORIZED);
   }
 };
 
