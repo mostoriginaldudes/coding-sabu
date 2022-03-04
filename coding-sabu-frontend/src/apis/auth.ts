@@ -14,3 +14,6 @@ export const editUserRequest = (userInfo: FormData) =>
   httpRequest.put<User>('/user', userInfo);
 
 export const logoutRequest = () => httpRequest.get<void>('/auth/logout');
+
+export const reissueAccessTokenRequest = () =>
+  httpRequest.get<void>('/auth/access');
