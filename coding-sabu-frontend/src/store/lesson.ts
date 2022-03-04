@@ -147,9 +147,7 @@ const lessonSlice = createSlice({
       .addCase(joinLesson.fulfilled, (state, action) => {
         state.myJoiningLessons = {
           loading: false,
-          data:
-            state.myJoiningLessons.data?.concat(action.payload) ||
-            state.myJoiningLessons.data,
+          data: state.myJoiningLessons.data?.concat(action.payload) || state.myJoiningLessons.data,
           error: null
         };
       })
@@ -219,10 +217,7 @@ export const fetchOneLesson = createAsyncThunk(
 
 export const joinLesson = createAsyncThunk(
   JOIN_LESSON,
-  async (
-    { lessonId, userId }: { lessonId: number; userId: number },
-    { rejectWithValue }
-  ) => {
+  async ({ lessonId, userId }: { lessonId: number; userId: number }, { rejectWithValue }) => {
     try {
       const myNewLesson = await joinLessonRequest(lessonId, userId);
       return myNewLesson.lesson;

@@ -19,10 +19,7 @@ const LessonList: React.FC<Props> = ({ lessons }) => {
   return (
     <Styled.LessonListContainer>
       {lessons.map((lesson, index) => (
-        <Styled.LessonListElement
-          key={index}
-          onClick={() => pickOneLesson(lesson.id)}
-        >
+        <Styled.LessonListElement key={index} onClick={() => pickOneLesson(lesson.id)}>
           <LessonItem {...lesson} />
         </Styled.LessonListElement>
       ))}

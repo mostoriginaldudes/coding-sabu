@@ -1,12 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { ThunkAsyncState } from '.';
 import { LoginInfo, SignupInfo, User } from 'types';
-import {
-  editUserRequest,
-  loginRequest,
-  logoutRequest,
-  signupRequest
-} from 'apis';
+import { editUserRequest, loginRequest, logoutRequest, signupRequest } from 'apis';
 
 const LOGIN = 'auth/LOGIN' as const;
 const SIGNUP = 'auth/SIGNUP' as const;
@@ -125,41 +120,32 @@ const authSlice = createSlice({
   }
 });
 
-const login = createAsyncThunk(
-  LOGIN,
-  async (loginInfo: LoginInfo, { rejectWithValue }) => {
-    try {
-      const user: User = await loginRequest(loginInfo);
-      return user;
-    } catch (error) {
-      return rejectWithValue((error as Error).message);
-    }
+const login = createAsyncThunk(LOGIN, async (loginInfo: LoginInfo, { rejectWithValue }) => {
+  try {
+    const user: User = await loginRequest(loginInfo);
+    return user;
+  } catch (error) {
+    return rejectWithValue((error as Error).message);
   }
-);
+});
 
-const signup = createAsyncThunk(
-  SIGNUP,
-  async (signupInfo: SignupInfo, { rejectWithValue }) => {
-    try {
-      const user: User = await signupRequest(signupInfo);
-      return user;
-    } catch (error) {
-      return rejectWithValue((error as Error).message);
-    }
+const signup = createAsyncThunk(SIGNUP, async (signupInfo: SignupInfo, { rejectWithValue }) => {
+  try {
+    const user: User = await signupRequest(signupInfo);
+    return user;
+  } catch (error) {
+    return rejectWithValue((error as Error).message);
   }
-);
+});
 
-const logout = createAsyncThunk(
-  LOGOUT,
-  async (_: void, { rejectWithValue }) => {
-    try {
-      await logoutRequest();
-      return;
-    } catch (error) {
-      return rejectWithValue((error as Error).message);
-    }
+const logout = createAsyncThunk(LOGOUT, async (_: void, { rejectWithValue }) => {
+  try {
+    await logoutRequest();
+    return;
+  } catch (error) {
+    return rejectWithValue((error as Error).message);
   }
-);
+});
 
 const editUser = createAsyncThunk(
   EDIT_USER,

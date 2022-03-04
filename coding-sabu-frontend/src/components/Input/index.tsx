@@ -13,13 +13,7 @@ const Input = forwardRef<HTMLInputElement, Props>(
     return (
       <Styled.InputContainer>
         <Styled.InputLabel htmlFor={name}>{label}</Styled.InputLabel>
-        <Styled.InputBox
-          id={name}
-          name={name}
-          onChange={onChange}
-          {...attrs}
-          ref={ref}
-        />
+        <Styled.InputBox id={name} name={name} onChange={onChange} {...attrs} ref={ref} />
       </Styled.InputContainer>
     );
   }

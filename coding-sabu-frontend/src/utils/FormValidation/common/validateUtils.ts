@@ -3,11 +3,7 @@ import debounce from 'lodash.debounce';
 import * as yup from 'yup';
 
 const validateEmail = debounce(
-  (
-    email: string | undefined,
-    _: yup.TestContext,
-    resolve: (val: boolean) => void
-  ) => {
+  (email: string | undefined, _: yup.TestContext, resolve: (val: boolean) => void) => {
     if (email) {
       setTimeout(() => {
         checkEmailRequest(email as string)

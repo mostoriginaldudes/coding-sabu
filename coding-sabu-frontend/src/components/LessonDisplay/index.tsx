@@ -51,39 +51,29 @@ const LessonDisplay: FC<Props> = ({ lessons }) => {
     <Styled.LessonDisplay>
       <UnderlineTitle title="추천하는 수련" />
       <Styled.CarouselContainer>
-        <Styled.ArrowLeft
-          onClick={moveCarouselToLeft}
-          cursor={leftArrowCursorStyle}
-        />
+        <Styled.ArrowLeft onClick={moveCarouselToLeft} cursor={leftArrowCursorStyle} />
         <Styled.Carousel ref={carouselRef}>
-          {lessons.map(
-            ({ id, title, description, teacherName, thumbnailUrl }: Lesson) => (
-              <Styled.Content key={id}>
-                <Styled.Thumbnail
-                  imgUrl={concatHostToImagePath(thumbnailUrl)}
-                />
-                <Styled.Info>
+          {lessons.map(({ id, title, description, teacherName, thumbnailUrl }: Lesson) => (
+            <Styled.Content key={id}>
+              <Styled.Thumbnail imgUrl={concatHostToImagePath(thumbnailUrl)} />
+              <Styled.Info>
+                <div>
+                  <h3>{title}</h3>
+                  <h4>{teacherName}</h4>
+                </div>
+                <article>
                   <div>
-                    <h3>{title}</h3>
-                    <h4>{teacherName}</h4>
+                    <Viewer description={description} />
                   </div>
-                  <article>
-                    <div>
-                      <Viewer description={description} />
-                    </div>
-                    <button>
-                      <Link to={`/lesson/${id}`}>자세히 보기</Link>
-                    </button>
-                  </article>
-                </Styled.Info>
-              </Styled.Content>
-            )
-          )}
+                  <button>
+                    <Link to={`/lesson/${id}`}>자세히 보기</Link>
+                  </button>
+                </article>
+              </Styled.Info>
+            </Styled.Content>
+          ))}
         </Styled.Carousel>
-        <Styled.ArrowRight
-          onClick={moveCarouselToRight}
-          cursor={rightArrowCursorStyle}
-        />
+        <Styled.ArrowRight onClick={moveCarouselToRight} cursor={rightArrowCursorStyle} />
       </Styled.CarouselContainer>
     </Styled.LessonDisplay>
   );

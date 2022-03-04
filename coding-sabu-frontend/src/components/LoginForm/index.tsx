@@ -38,10 +38,7 @@ const LoginForm: FC<Props> = ({ visibleAuthForm, setModalToRender }) => {
 
   const dispatch = useDispatch();
 
-  const closeLoginForm = useCallback(
-    () => dispatch(hideAuthForm()),
-    [dispatch]
-  );
+  const closeLoginForm = useCallback(() => dispatch(hideAuthForm()), [dispatch]);
 
   const onSubmit: SubmitHandler<LoginInfo> = loginInfo => {
     dispatch(login(loginInfo));
@@ -57,11 +54,7 @@ const LoginForm: FC<Props> = ({ visibleAuthForm, setModalToRender }) => {
   }, [visibleAuthForm, setFocus, clearErrors]);
 
   return (
-    <Modal
-      modalTitle="로그인"
-      visibleModal={visibleAuthForm}
-      closeModal={closeLoginForm}
-    >
+    <Modal modalTitle="로그인" visibleModal={visibleAuthForm} closeModal={closeLoginForm}>
       <div>
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <Input
@@ -77,9 +70,7 @@ const LoginForm: FC<Props> = ({ visibleAuthForm, setModalToRender }) => {
             placeholder="영문 대소문자, 숫자, 특수문자 포함(! @ # $)"
             {...register('password')}
           />
-          {errors.password && (
-            <InputError>{errors.password.message}</InputError>
-          )}
+          {errors.password && <InputError>{errors.password.message}</InputError>}
           <ButtonContainer>
             <Button color="yellow" radius={10} height={2.5}>
               로그인

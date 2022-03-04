@@ -56,11 +56,7 @@ const Lecture: FC = () => {
             <Route
               path={match.url}
               render={routeProps => (
-                <LectureContent
-                  key={unitId}
-                  content={content}
-                  {...routeProps}
-                />
+                <LectureContent key={unitId} content={content} {...routeProps} />
               )}
             />
           </LectureWrapper>

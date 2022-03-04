@@ -31,6 +31,5 @@ const uiSlicer = createSlice({
   }
 });
 
-export const { showHud, hideHud, showAuthForm, hideAuthForm } =
-  uiSlicer.actions;
+export const { showHud, hideHud, showAuthForm, hideAuthForm } = uiSlicer.actions;
 export default uiSlicer.reducer;

@@ -11,12 +11,7 @@ interface Props {
   children: ReactNode;
 }
 
-const Modal: FC<Props> = ({
-  modalTitle,
-  visibleModal,
-  closeModal,
-  children
-}) => {
+const Modal: FC<Props> = ({ modalTitle, visibleModal, closeModal, children }) => {
   const modalTarget = useRef<HTMLDivElement>(document.createElement('div'));
 
   useEffect(() => {

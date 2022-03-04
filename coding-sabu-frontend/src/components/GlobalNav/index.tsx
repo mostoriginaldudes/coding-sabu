@@ -1,12 +1,4 @@
-import {
-  useState,
-  useEffect,
-  useCallback,
-  useMemo,
-  FC,
-  memo,
-  MouseEventHandler
-} from 'react';
+import { useState, useEffect, useCallback, useMemo, FC, memo, MouseEventHandler } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { AiFillCaretDown as DownArrow } from 'react-icons/ai';
@@ -33,9 +25,7 @@ import AUTH_SUCCESS from 'fixtures/auth/success';
 import AUTH_FAIL from 'fixtures/auth/fail';
 
 const GlobalNav: FC = () => {
-  const [authModalType, setAuthModalType] = useState<'login' | 'signup'>(
-    'login'
-  );
+  const [authModalType, setAuthModalType] = useState<'login' | 'signup'>('login');
   const [visibleUserMenu, setVisibleUserMenu] = useState<boolean>(false);
   const { token, user, visibleAuthForm } = useSelector((state: RootState) => ({
     token: state.auth.token,
@@ -57,18 +47,12 @@ const GlobalNav: FC = () => {
     [visibleUserMenu, setVisibleUserMenu]
   );
 
-  const dispatchShowAuthForm = useCallback(
-    () => dispatch(showAuthForm()),
-    [dispatch]
-  );
+  const dispatchShowAuthForm = useCallback(() => dispatch(showAuthForm()), [dispatch]);
 
   const isLoggedIn = useMemo(() => Boolean(token && user.data), [token, user]);
 
   const profileImage = useMemo(
-    () =>
-      user.data?.profileImage === 'img/default.png'
-        ? false
-        : user.data?.profileImage,
+    () => (user.data?.profileImage === 'img/default.png' ? false : user.data?.profileImage),
     [user]
   );
 
@@ -91,12 +75,7 @@ const GlobalNav: FC = () => {
       <GlobalNavStyle>
         <Link to="/">
           <FlexRow>
-            <Image
-              src={logo}
-              alt="logo"
-              width={unitRegular}
-              height={unitRegular}
-            />
+            <Image src={logo} alt="logo" width={unitRegular} height={unitRegular} />
             <EmphasisText>코딩사부</EmphasisText>
           </FlexRow>
         </Link>
@@ -108,11 +87,7 @@ const GlobalNav: FC = () => {
             {profileImage ? (
               <UserProfileImage profileImageUrl={profileImage} />
             ) : (
-              <UserDefaultProfileImage
-                color={white}
-                fontSize={unitRegular / 3}
-                cursor="pointer"
-              />
+              <UserDefaultProfileImage color={white} fontSize={unitRegular / 3} cursor="pointer" />
             )}
             <DownArrow cursor="pointer" />
             <UserMenu

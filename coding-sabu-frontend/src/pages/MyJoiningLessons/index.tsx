@@ -9,20 +9,12 @@ import Loader from 'styles/Loader';
 import useRedirect from 'hooks/useRedirect';
 
 const MyJoiningLessons: FC = () => {
-  const { loading, data, error } = useSelector(
-    (state: RootState) => state.lesson.myJoiningLessons
-  );
+  const { loading, data, error } = useSelector((state: RootState) => state.lesson.myJoiningLessons);
   const dispatch = useDispatch();
 
-  const dispatchMyJoiningLessons = useCallback(
-    () => dispatch(fetchMyJoiningLessons()),
-    [dispatch]
-  );
+  const dispatchMyJoiningLessons = useCallback(() => dispatch(fetchMyJoiningLessons()), [dispatch]);
 
-  const myJoiningLessonList = useMemo(
-    () => (data === null ? ([] as Lesson[]) : data),
-    [data]
-  );
+  const myJoiningLessonList = useMemo(() => (data === null ? ([] as Lesson[]) : data), [data]);
 
   useRedirect('/', [error]);
 

@@ -36,15 +36,8 @@ const App: FC = () => {
           <Route path="/myteaching" component={MyTeachingLessons} />
           <Route path="/lesson/form" component={LessonForm} />
           <Route path="/lesson/:id" component={LessonDetail} exact />
-          <Route
-            path="/lesson/:lessonId/lecture/form"
-            component={LectureForm}
-          />
-          <Route
-            path="/lesson/:lessonId/lecture/:unitId"
-            component={Lecture}
-            exact
-          />
+          <Route path="/lesson/:lessonId/lecture/form" component={LectureForm} />
+          <Route path="/lesson/:lessonId/lecture/:unitId" component={Lecture} exact />
           <Route path="/logout" component={Logout} />
           <Route path="*" component={NotFound} />
         </Switch>

@@ -1,7 +1,6 @@
 export const getModalRoot = () => {
   const createModalRootElement = () => {
-    const modalRootElement =
-      document.getElementById('modal') || document.createElement('div');
+    const modalRootElement = document.getElementById('modal') || document.createElement('div');
     modalRootElement.setAttribute('id', 'modal');
     return modalRootElement as HTMLDivElement;
   };
@@ -14,5 +13,4 @@ export const getModalRoot = () => {
   return attachModalRootElementToDom(createModalRootElement());
 };
 
-export const concatHostToImagePath = (path?: string) =>
-  `${process.env.REACT_APP_BASE_URL}${path}`;
+export const concatHostToImagePath = (path?: string) => `${process.env.REACT_APP_BASE_URL}${path}`;

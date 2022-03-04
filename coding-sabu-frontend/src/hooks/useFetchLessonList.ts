@@ -8,10 +8,7 @@ function useFetchLessonList() {
   const { lessons } = useSelector((state: RootState) => state.lesson);
   const dispatch = useDispatch();
 
-  const dispatchLessons = useCallback(
-    () => dispatch(fetchLessons()),
-    [dispatch]
-  );
+  const dispatchLessons = useCallback(() => dispatch(fetchLessons()), [dispatch]);
 
   const lessonsArray = useMemo(() => {
     if (lessons.data === null) {

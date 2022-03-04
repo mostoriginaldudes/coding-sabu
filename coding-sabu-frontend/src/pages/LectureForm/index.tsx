@@ -44,10 +44,7 @@ const LectureForm: React.FC<RouteComponentProps> = ({ history }) => {
     }
   }, [history, myTeachingLessons, user, lessonId]);
 
-  const onChangeUnit = useCallback(
-    ({ target: { value } }) => setUnit(value),
-    [setUnit]
-  );
+  const onChangeUnit = useCallback(({ target: { value } }) => setUnit(value), [setUnit]);
 
   const checkIfInputEmpty = useCallback(() => {
     if (unit.length === 0 || content.length === 0) {

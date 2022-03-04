@@ -10,8 +10,7 @@ export const fetchMyJoiningLessonListRequest = () =>
 export const fetchMyTeachingLessonListRequest = () =>
   httpRequest.get<LessonListResponse>('/lesson/teachings');
 
-export const fetchOneLessonRequest = (id: number) =>
-  httpRequest.get<Lesson>(`/lesson/${id}`);
+export const fetchOneLessonRequest = (id: number) => httpRequest.get<Lesson>(`/lesson/${id}`);
 
 export const createLessonRequest = (lesson: FormData) =>
   httpRequest.post<Lesson>('/lesson', lesson);

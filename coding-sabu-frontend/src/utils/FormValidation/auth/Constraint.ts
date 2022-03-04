@@ -41,8 +41,7 @@ class Constraint {
       .test({
         name: 'matched-password',
         message: '비밀번호가 일치하지 않습니다.',
-        test: (passwordCheck, testContext) =>
-          passwordCheck === testContext.parent.password
+        test: (passwordCheck, testContext) => passwordCheck === testContext.parent.password
       });
 
     this.nickname = yup

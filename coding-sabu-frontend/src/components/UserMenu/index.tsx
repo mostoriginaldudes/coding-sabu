@@ -10,11 +10,7 @@ interface Props {
   setVisibleUserMenu: (visibleUserMenu: boolean) => void;
 }
 
-const UserMenu: FC<Props> = ({
-  userInfo,
-  visibleUserMenu,
-  setVisibleUserMenu
-}) => {
+const UserMenu: FC<Props> = ({ userInfo, visibleUserMenu, setVisibleUserMenu }) => {
   const offUserMenu = useCallback(() => {
     setVisibleUserMenu(false);
   }, [setVisibleUserMenu]);

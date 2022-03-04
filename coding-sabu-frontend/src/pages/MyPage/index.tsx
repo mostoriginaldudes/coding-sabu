@@ -18,9 +18,7 @@ const MyPage: React.FC<RouteComponentProps> = ({ history }) => {
   }));
   const dispatch = useDispatch();
 
-  const [imgUrl, setImgUrl] = useState<string | undefined>(
-    user.data?.profileImage
-  );
+  const [imgUrl, setImgUrl] = useState<string | undefined>(user.data?.profileImage);
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const hasBeenUploaded = useMemo(() => user.data?.profileImage !== '', [user]);
 
@@ -88,16 +86,10 @@ const MyPage: React.FC<RouteComponentProps> = ({ history }) => {
     return <Redirect to="/" />;
   }
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      noValidate
-      encType="multipart/form-data"
-    >
+    <form onSubmit={handleSubmit(onSubmit)} noValidate encType="multipart/form-data">
       <Styled.Row>
         <Styled.ProfileContainer imgUrl={imgUrl}>
-          {hasBeenUploaded && (
-            <label htmlFor="profileImage">프로필 사진 업로드</label>
-          )}
+          {hasBeenUploaded && <label htmlFor="profileImage">프로필 사진 업로드</label>}
           <Styled.ProfileInput
             type="file"
             id="profileImage"
@@ -116,18 +108,14 @@ const MyPage: React.FC<RouteComponentProps> = ({ history }) => {
             readOnly
             disabled
           />
-          {errors.email && (
-            <Styled.InputError>{errors.email.message}</Styled.InputError>
-          )}
+          {errors.email && <Styled.InputError>{errors.email.message}</Styled.InputError>}
           <Input
             label="새 비밀번호 (변경하고 싶지 않다면 기존 비밀번호)"
             type="password"
             placeholder="영문 대소문자, 숫자, 특수문자 포함(! @ # $)"
             {...register('password', { deps: ['passwordCheck'] })}
           />
-          {errors.password && (
-            <Styled.InputError>{errors.password.message}</Styled.InputError>
-          )}
+          {errors.password && <Styled.InputError>{errors.password.message}</Styled.InputError>}
           <Input
             type="password"
             label="비밀번호 확인"
@@ -135,9 +123,7 @@ const MyPage: React.FC<RouteComponentProps> = ({ history }) => {
             {...register('passwordCheck', { deps: ['password'] })}
           />
           {errors.passwordCheck && (
-            <Styled.InputError>
-              {errors.passwordCheck.message}
-            </Styled.InputError>
+            <Styled.InputError>{errors.passwordCheck.message}</Styled.InputError>
           )}
         </Styled.InputContainer>
       </Styled.Row>
@@ -148,18 +134,9 @@ const MyPage: React.FC<RouteComponentProps> = ({ history }) => {
           placeholder="닉네임을 입력해주세요."
           {...register('nickname')}
         />
-        {errors.nickname && (
-          <Styled.InputError>{errors.nickname.message}</Styled.InputError>
-        )}
-        <Input
-          type="text"
-          label="전화번호"
-          placeholder="010-0000-0000"
-          {...register('phoneNum')}
-        />
-        {errors.phoneNum && (
-          <Styled.InputError>{errors.phoneNum.message}</Styled.InputError>
-        )}
+        {errors.nickname && <Styled.InputError>{errors.nickname.message}</Styled.InputError>}
+        <Input type="text" label="전화번호" placeholder="010-0000-0000" {...register('phoneNum')} />
+        {errors.phoneNum && <Styled.InputError>{errors.phoneNum.message}</Styled.InputError>}
         <Input
           type="text"
           label="자기소개"
@@ -167,21 +144,13 @@ const MyPage: React.FC<RouteComponentProps> = ({ history }) => {
           {...register('description')}
           height={5}
         />
-        {errors.description && (
-          <Styled.InputError>{errors.description.message}</Styled.InputError>
-        )}
+        {errors.description && <Styled.InputError>{errors.description.message}</Styled.InputError>}
       </div>
       <Styled.ButtonWrapper>
         <Button type="submit" color="yellow" radius={5} height={2.5}>
           내 정보 변경
         </Button>
-        <Button
-          type="button"
-          color="white"
-          radius={5}
-          height={2.5}
-          onClick={movePreviousPage}
-        >
+        <Button type="button" color="white" radius={5} height={2.5} onClick={movePreviousPage}>
           취소
         </Button>
       </Styled.ButtonWrapper>

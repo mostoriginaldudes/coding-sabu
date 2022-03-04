@@ -33,12 +33,7 @@ const MyTeachingLessons: FC = () => {
   return (
     <Styled.Container>
       {isNotTeacher && <Redirect to="/" />}
-      <Styled.CreateLessonButton
-        color="black"
-        height={2}
-        radius={10}
-        onClick={goToLessonForm}
-      >
+      <Styled.CreateLessonButton color="black" height={2} radius={10} onClick={goToLessonForm}>
         수련 개설
       </Styled.CreateLessonButton>
       <UnderlineTitle title="내 가르침 목록" />

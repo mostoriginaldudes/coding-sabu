@@ -18,9 +18,7 @@ export interface LessonRequest {
   imageThumbnail: File;
 }
 
-export type LessonFormAction =
-  | HTMLInputElement
-  | { name: 'description'; value: string };
+export type LessonFormAction = HTMLInputElement | { name: 'description'; value: string };
 
 export interface LessonListResponse {
   lessons: Lesson[];

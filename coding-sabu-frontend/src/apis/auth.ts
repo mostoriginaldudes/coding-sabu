@@ -10,10 +10,8 @@ export const signupRequest = (signupInfo: SignupInfo) =>
 export const checkEmailRequest = (email: string) =>
   httpRequest.get<string>(`/auth/user/email/${email}`);
 
-export const editUserRequest = (userInfo: FormData) =>
-  httpRequest.put<User>('/user', userInfo);
+export const editUserRequest = (userInfo: FormData) => httpRequest.put<User>('/user', userInfo);
 
 export const logoutRequest = () => httpRequest.get<void>('/auth/logout');
 
-export const reissueAccessTokenRequest = () =>
-  httpRequest.get<void>('/auth/access');
+export const reissueAccessTokenRequest = () => httpRequest.get<void>('/auth/access');

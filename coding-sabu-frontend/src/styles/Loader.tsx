@@ -15,16 +15,7 @@ interface Props {
 }
 
 const Loader: FC<Props> = ({ loading }) => {
-  return (
-    <>
-      <ClipLoader
-        size={100}
-        color={colors.black}
-        css={overrideStyles}
-        loading={loading}
-      />
-    </>
-  );
+  return <ClipLoader size={100} color={colors.black} css={overrideStyles} loading={loading} />;
 };
 
 export default Loader;

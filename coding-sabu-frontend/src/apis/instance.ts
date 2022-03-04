@@ -59,8 +59,7 @@ instance.interceptors.response.use(res => {
 
 const isSuccess = (status: number) => status === 200 || status === 201;
 
-const existAccessToken = (res: AxiosResponse) =>
-  res.headers && res.headers.authorization;
+const existAccessToken = (res: AxiosResponse) => res.headers && res.headers.authorization;
 
 const saveAccessTokenToStore = (res: AxiosResponse) => {
   if (existAccessToken(res)) {

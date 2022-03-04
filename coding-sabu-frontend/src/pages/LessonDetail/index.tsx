@@ -7,11 +7,7 @@ import TextBox from 'components/TextBox';
 import Viewer from 'components/Viewer';
 import useRouting from 'hooks/useRouting';
 import { RootState } from 'store';
-import {
-  fetchMyJoiningLessons,
-  fetchOneLesson,
-  joinLesson
-} from 'store/lesson';
+import { fetchMyJoiningLessons, fetchOneLesson, joinLesson } from 'store/lesson';
 import { fetchLecture } from 'store/lecture';
 import { showAuthForm, showHud } from 'store/ui';
 import AuthenticationError from 'errors/AuthenticationError';
@@ -28,14 +24,15 @@ interface Props extends RouteComponentProps<{ id: string }> {}
 
 const LessonDetail: React.FC<Props> = ({ match }) => {
   const { id } = match.params;
-  const { user, lesson, lecture, myJoiningLessons, myTeachingLessons } =
-    useSelector((state: RootState) => ({
+  const { user, lesson, lecture, myJoiningLessons, myTeachingLessons } = useSelector(
+    (state: RootState) => ({
       user: state.auth.user,
       lesson: state.lesson.lessonDetailInfo,
       myJoiningLessons: state.lesson.myJoiningLessons,
       myTeachingLessons: state.lesson.myTeachingLessons,
       lecture: state.lecture.lectureUnits
-    }));
+    })
+  );
   const dispatch = useDispatch();
   const thumbnailUrl = concatHostToImagePath(lesson.data?.thumbnailUrl);
   const { forward, back } = useRouting();
@@ -71,9 +68,7 @@ const LessonDetail: React.FC<Props> = ({ match }) => {
   const enrollLesson = async () => {
     try {
       if (user.data) {
-        await dispatch(
-          joinLesson({ lessonId: parseInt(id), userId: user.data.id })
-        );
+        await dispatch(joinLesson({ lessonId: parseInt(id), userId: user.data.id }));
         enrollLessonSuccess();
         await dispatch(fetchMyJoiningLessons());
       } else {
@@ -95,9 +90,7 @@ const LessonDetail: React.FC<Props> = ({ match }) => {
   const hasJoinedLesson = useMemo(() => {
     if (user.data && myJoiningLessons.data) {
       return Boolean(
-        myJoiningLessons.data.find(
-          myJoiningLesson => myJoiningLesson.id === parseInt(id)
-        )
+        myJoiningLessons.data.find(myJoiningLesson => myJoiningLesson.id === parseInt(id))
       );
     }
     return false;
@@ -106,9 +99,7 @@ const LessonDetail: React.FC<Props> = ({ match }) => {
   const isToughtByMe = useMemo(() => {
     if (user.data && myTeachingLessons.data) {
       return Boolean(
-        myTeachingLessons.data.find(
-          myTeachingLesson => myTeachingLesson.id === parseInt(id)
-        )
+        myTeachingLessons.data.find(myTeachingLesson => myTeachingLesson.id === parseInt(id))
       );
     }
     return false;
@@ -128,9 +119,7 @@ const LessonDetail: React.FC<Props> = ({ match }) => {
             <Styled.NavButton
               color="yellow"
               radius={5}
-              onClick={() =>
-                forward(`/lesson/${id}/lecture/${lecture.data![0].id}`)
-              }
+              onClick={() => forward(`/lesson/${id}/lecture/${lecture.data![0].id}`)}
             >
               수련장 이동
             </Styled.NavButton>
@@ -161,12 +150,7 @@ const LessonDetail: React.FC<Props> = ({ match }) => {
               </Button>
             )}
             {hasJoinedLesson || isToughtByMe || (
-              <Button
-                color="yellow"
-                radius={5}
-                height={3}
-                onClick={enrollLesson}
-              >
+              <Button color="yellow" radius={5} height={3} onClick={enrollLesson}>
                 수련 등록
               </Button>
             )}
