@@ -5,7 +5,7 @@ import UnderlineTitle from 'styles/UnderlineTitle';
 import Editor from 'components/Editor';
 import Input from 'components/Input';
 import Button from 'components/Button';
-import Row from 'styles/Row';
+import { Row } from 'styles/module';
 import { createLectureRequest } from 'apis';
 import { Lecture, LectureRequestInfo } from 'types';
 import { showHud } from 'store/ui';
