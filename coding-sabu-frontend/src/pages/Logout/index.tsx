@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import { useState, useEffect, useCallback, FC } from 'react';
 import { Redirect } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
