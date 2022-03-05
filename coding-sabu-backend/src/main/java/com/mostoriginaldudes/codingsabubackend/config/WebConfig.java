@@ -27,7 +27,6 @@ public class WebConfig implements WebMvcConfigurer {
 
   private final List<String> AddAuthInterceptorUrl = Arrays.asList(
     "/user",
-    "/auth/logout",
     "/lesson/me", "/lesson/**/student", "/lesson/teachings",
     "/lesson/**/lecture"
   );
