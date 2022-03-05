@@ -28,8 +28,15 @@ public class JsonWebToken {
   }
 
   public String issueJsonWebToken(String claimKey, UserDto user) {
-    String subject = "coding-sabu";
-    Date expiryDate = new Date(System.currentTimeMillis() + Duration.ofMinutes(EXPIRY_TIME).toMillis());
+    String subject = "coding-sabu " + claimKey;
+
+    long expiryMs = System.currentTimeMillis();
+    if(claimKey.equals(ACCESS_TOKEN)) {
+      expiryMs += Duration.ofMinutes(EXPIRY_TIME).toMillis();
+    } else {
+      expiryMs += Duration.ofDays(14).toMillis();
+    }
+    Date expiryDate = new Date(expiryMs);
 
     return Jwts.builder()
       .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
