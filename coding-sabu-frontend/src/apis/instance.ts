@@ -1,4 +1,5 @@
 import Axios, {
+  AxiosError,
   AxiosInstance,
   AxiosInterceptorManager,
   AxiosRequestConfig,
@@ -6,7 +7,9 @@ import Axios, {
 } from 'axios';
 
 import store from 'store';
-import { setToken } from 'store/auth';
+import { setToken, logout } from 'store/auth';
+import { FORBIDDEN, UNAUTHORIZED } from 'fixtures/auth/constants';
+import { reissueAccessTokenRequest } from './auth';
 
 type Response<T = any> = {
   response: T;
@@ -50,12 +53,24 @@ const loadAccessTokenToHttpHeader = (req: AxiosRequestConfig) => {
   return req;
 };
 
-instance.interceptors.response.use(res => {
-  if (isSuccess(res.status)) {
-    saveAccessTokenToStore(res);
+instance.interceptors.response.use(
+  res => {
+    if (isSuccess(res.status)) {
+      saveAccessTokenToStore(res);
+    }
+    return res.data;
+  },
+  async (error: AxiosError) => {
+    const { response } = error;
+    const statusCode = response?.status;
+
+    if (statusCode === UNAUTHORIZED) {
+      await reissueAccessTokenRequest();
+    } else if (statusCode === FORBIDDEN) {
+      injectedStore.dispatch(logout());
+    }
   }
-  return res.data;
-});
+);
 
 const isSuccess = (status: number) => status === 200 || status === 201;
 
