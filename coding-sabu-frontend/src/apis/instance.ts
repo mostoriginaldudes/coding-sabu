@@ -69,6 +69,7 @@ instance.interceptors.response.use(
     } else if (statusCode === FORBIDDEN) {
       injectedStore.dispatch(logout());
     }
+    return Promise.reject(error);
   }
 );
 
