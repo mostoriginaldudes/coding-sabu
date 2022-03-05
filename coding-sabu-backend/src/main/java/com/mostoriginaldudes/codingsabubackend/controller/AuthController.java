@@ -70,7 +70,7 @@ public class AuthController {
   public ResponseEntity<?> logout(HttpServletResponse response) {
     authService.deleteRefreshToken(response);
 
-    return ResponseEntity.ok().body(null);
+    return ResponseEntity.ok(null);
   }
 
   @GetMapping("/user/email/{email}")
