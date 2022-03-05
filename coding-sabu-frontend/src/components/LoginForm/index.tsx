@@ -1,4 +1,4 @@
-import { useEffect, useCallback, FC, memo } from 'react';
+import { useEffect, useCallback, FC } from 'react';
 import { useDispatch } from 'react-redux';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -10,15 +10,13 @@ import Button from 'components/Button';
 
 import { ThunkAsyncState } from 'store';
 import { login } from 'store/auth';
-import { hideAuthForm, showHud } from 'store/ui';
+import { hideAuthForm } from 'store/ui';
 
 import { LoginInfo, User } from 'types';
 
 import { ButtonContainer, InputError } from './LoginForm.style';
 
 import useScrollLock from 'hooks/useScrollLock';
-import AUTH_SUCCESS from 'fixtures/auth/success';
-import AUTH_FAIL from 'fixtures/auth/fail';
 
 interface Props {
   visibleAuthForm: boolean;
@@ -27,6 +25,8 @@ interface Props {
 }
 
 const LoginForm: FC<Props> = ({ visibleAuthForm, setModalToRender, user }) => {
+  useScrollLock(visibleAuthForm, [visibleAuthForm]);
+
   const {
     register,
     handleSubmit,
@@ -42,25 +42,10 @@ const LoginForm: FC<Props> = ({ visibleAuthForm, setModalToRender, user }) => {
 
   const closeLoginForm = useCallback(() => dispatch(hideAuthForm()), [dispatch]);
 
-  const displayLoginSuccess = useCallback(() => {
-    dispatch(showHud(AUTH_SUCCESS.LOGIN));
-    dispatch(hideAuthForm());
-  }, [dispatch]);
-
-  const displayLoginFail = useCallback(() => {
-    dispatch(showHud(AUTH_FAIL.LOGIN));
-  }, [dispatch]);
-
-  const onSubmit: SubmitHandler<LoginInfo> = loginInfo => {
-    dispatch(login(loginInfo));
-  };
-
-  useScrollLock(visibleAuthForm, [visibleAuthForm]);
-
-  useEffect(() => {
-    user.data && !user.error && displayLoginSuccess();
-    !user.data && user.error && displayLoginFail();
-  }, [user, displayLoginSuccess, displayLoginFail]);
+  const onSubmit: SubmitHandler<LoginInfo> = useCallback(
+    async loginInfo => await dispatch(login(loginInfo)),
+    [dispatch]
+  );
 
   useEffect(() => {
     visibleAuthForm && setFocus('email');
@@ -106,4 +91,4 @@ const LoginForm: FC<Props> = ({ visibleAuthForm, setModalToRender, user }) => {
   );
 };
 
-export default memo(LoginForm);
+export default LoginForm;
