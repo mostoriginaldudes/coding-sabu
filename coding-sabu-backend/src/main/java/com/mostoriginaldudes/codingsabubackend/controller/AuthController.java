@@ -61,7 +61,7 @@ public class AuthController {
       authService.deleteRefreshToken(response);
 
       return ResponseEntity
-        .status(HttpStatus.UNAUTHORIZED)
+        .status(HttpStatus.FORBIDDEN)
         .body(null);
     }
   }
