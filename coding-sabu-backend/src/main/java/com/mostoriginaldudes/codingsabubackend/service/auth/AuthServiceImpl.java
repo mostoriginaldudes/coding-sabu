@@ -108,7 +108,7 @@ public class AuthServiceImpl implements AuthService {
 
     Claims claims = jwt.verifyJsonWebToken(unverifiedRefreshToken);
     String refreshToken = (String) claims.get(REFRESH_TOKEN);
-    Integer userId = (Integer) claims.get("userId");
+    Integer userId = (Integer) claims.get("id");
 
     if (REFRESH_TOKEN_UUID.equals(refreshToken)) {
       return createAuthToken(ACCESS_TOKEN, userService.getUserInfo(userId));
