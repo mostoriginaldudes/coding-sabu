@@ -105,10 +105,12 @@ const LessonDetail: React.FC<Props> = ({ match }) => {
     return false;
   }, [myTeachingLessons, id, user]);
 
+  const isLoggedIn = useMemo(() => Boolean(user.data), [user]);
+
   useEffect(() => {
     dispatchFetchOneLesson(id);
-    dispatchFetchLecture(parseInt(id));
-  }, [id, dispatchFetchOneLesson, dispatchFetchLecture, myJoiningLessons]);
+    isLoggedIn && dispatchFetchLecture(parseInt(id));
+  }, [id, dispatchFetchOneLesson, dispatchFetchLecture, myJoiningLessons, isLoggedIn]);
 
   return (
     <Styled.LessonDetailContainer>
@@ -149,7 +151,7 @@ const LessonDetail: React.FC<Props> = ({ match }) => {
                 수련 챕터 작성
               </Button>
             )}
-            {hasJoinedLesson || isToughtByMe || (
+            {hasJoinedLesson || isToughtByMe || !isLoggedIn || (
               <Button color="yellow" radius={5} height={3} onClick={enrollLesson}>
                 수련 등록
               </Button>

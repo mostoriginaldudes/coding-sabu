@@ -67,7 +67,9 @@ instance.interceptors.response.use(
     if (statusCode === UNAUTHORIZED) {
       await reissueAccessTokenRequest();
     } else if (statusCode === FORBIDDEN) {
-      injectedStore.dispatch(logout());
+      if (isLoggedIn()) {
+        injectedStore.dispatch(logout());
+      }
     }
     return Promise.reject(error);
   }
@@ -85,5 +87,7 @@ const saveAccessTokenToStore = (res: AxiosResponse) => {
     }
   }
 };
+
+const isLoggedIn = () => Boolean(injectedStore.getState().auth.user.data);
 
 export default instance;
