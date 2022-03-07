@@ -2,14 +2,16 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Redirect, RouteComponentProps } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import Input from 'components/Input';
-import Button from 'components/Button';
-import { EditUserInfo } from 'types';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { RootState } from 'store';
 import { editUser } from 'store/auth';
-import { yupResolver } from '@hookform/resolvers/yup';
+import { EditUserInfo } from 'types';
 import validationSchema from 'utils/FormValidation/auth/ValidationSchema';
 import * as Styled from './MyPage.style';
+import loadable from '@loadable/component';
+
+const Input = loadable(() => import('components/Input'));
+const Button = loadable(() => import('components/Button'));
 
 const MyPage: React.FC<RouteComponentProps> = ({ history }) => {
   const { user, token } = useSelector((state: RootState) => ({

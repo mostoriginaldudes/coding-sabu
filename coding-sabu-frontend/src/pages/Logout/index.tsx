@@ -3,10 +3,12 @@ import { Redirect } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { css } from '@emotion/react';
 import { logout } from 'store/auth';
-import Loader from 'styles/Loader';
-import { colors } from 'styles/theme';
 import { showHud } from 'store/ui';
+import { colors } from 'styles/theme';
 import AUTH_SUCCESS from 'fixtures/auth/success';
+import loadable from '@loadable/component';
+
+const Loader = loadable(() => import('components/Loader'));
 
 const style = css`
   & > h2 {

@@ -33,15 +33,13 @@ const SignupForm: FC<Props> = ({ visibleAuthForm, setModalToRender }) => {
   });
 
   const onSubmit: SubmitHandler<SignupFormInfo> = async ({ passwordCheck, ...signupProps }) => {
-    try {
-      await dispatch(signup(signupProps as SignupInfo));
-      await dispatch(
-        login({
-          email: signupProps.email,
-          password: signupProps.password
-        } as LoginInfo)
-      );
-    } catch (error) {}
+    await dispatch(signup(signupProps as SignupInfo));
+    await dispatch(
+      login({
+        email: signupProps.email,
+        password: signupProps.password
+      } as LoginInfo)
+    );
   };
 
   const closeSignupForm = useCallback(() => {
@@ -77,14 +75,14 @@ const SignupForm: FC<Props> = ({ visibleAuthForm, setModalToRender }) => {
             label="비밀번호"
             type="password"
             placeholder="영문 대소문자, 숫자, 특수문자 포함(! @ # $)"
-            {...register('password')}
+            {...register('password', { deps: ['passwordCheck'] })}
           />
           {errors.password && <Styled.InputError>{errors.password.message}</Styled.InputError>}
           <Input
             type="password"
             label="비밀번호 확인"
             placeholder="비밀번호를 한번 더 입력해주세요."
-            {...register('passwordCheck')}
+            {...register('passwordCheck', { deps: ['password'] })}
           />
           {errors.passwordCheck && (
             <Styled.InputError>{errors.passwordCheck.message}</Styled.InputError>

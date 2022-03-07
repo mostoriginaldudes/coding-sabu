@@ -1,10 +1,6 @@
-import React, { useEffect, useCallback, useMemo } from 'react';
+import { useEffect, useCallback, useMemo, memo, FC } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import NotFound from 'pages/NotFound';
-import Button from 'components/Button';
-import TextBox from 'components/TextBox';
-import Viewer from 'components/Viewer';
 import useRouting from 'hooks/useRouting';
 import { RootState } from 'store';
 import { fetchMyJoiningLessons, fetchOneLesson, joinLesson } from 'store/lesson';
@@ -15,14 +11,20 @@ import { concatHostToImagePath } from 'utils';
 import LESSON_SUCCESS from 'fixtures/lesson/success';
 import LESSON_FAIL from 'fixtures/lesson/fail';
 import AUTH_FAIL from 'fixtures/auth/fail';
-import Loader from 'styles/Loader';
 import { Row } from 'styles/module';
-import UnderlineTitle from 'styles/UnderlineTitle';
 import * as Styled from './LessonDetail.style';
+import loadable from '@loadable/component';
+
+const NotFound = loadable(() => import('pages/NotFound'));
+const Button = loadable(() => import('components/Button'));
+const TextBox = loadable(() => import('components/TextBox'));
+const Viewer = loadable(() => import('components/Viewer'));
+const Loader = loadable(() => import('components/Loader'));
+const UnderlineTitle = loadable(() => import('components/UnderlineTitle'));
 
 interface Props extends RouteComponentProps<{ id: string }> {}
 
-const LessonDetail: React.FC<Props> = ({ match }) => {
+const LessonDetail: FC<Props> = ({ match }) => {
   const { id } = match.params;
   const { user, lesson, lecture, myJoiningLessons, myTeachingLessons } = useSelector(
     (state: RootState) => ({
@@ -49,6 +51,28 @@ const LessonDetail: React.FC<Props> = ({ match }) => {
     [dispatch]
   );
 
+  const enrollIfLoggedIn = () => {
+    if (isLoggedIn) {
+      enrollLesson();
+    } else {
+      dispatch(showAuthForm());
+    }
+  };
+
+  const enrollLesson = async () => {
+    try {
+      if (user.data) {
+        await dispatch(joinLesson({ lessonId: parseInt(id), userId: user.data.id }));
+        enrollLessonSuccess();
+        await dispatch(fetchMyJoiningLessons());
+      } else {
+        throw new AuthenticationError(AUTH_FAIL.REQUIRED_LOGIN);
+      }
+    } catch (error) {
+      enrollLessonFail(error as Error);
+    }
+  };
+
   const enrollLessonSuccess = useCallback(() => {
     dispatch(showHud(LESSON_SUCCESS.REGISTER));
   }, [dispatch]);
@@ -64,20 +88,6 @@ const LessonDetail: React.FC<Props> = ({ match }) => {
     },
     [dispatch]
   );
-
-  const enrollLesson = async () => {
-    try {
-      if (user.data) {
-        await dispatch(joinLesson({ lessonId: parseInt(id), userId: user.data.id }));
-        enrollLessonSuccess();
-        await dispatch(fetchMyJoiningLessons());
-      } else {
-        throw new AuthenticationError(AUTH_FAIL.REQUIRED_LOGIN);
-      }
-    } catch (error) {
-      enrollLessonFail(error as Error);
-    }
-  };
 
   const localizedPrice = useMemo(() => {
     if (lesson.data?.price === 0) {
@@ -105,10 +115,12 @@ const LessonDetail: React.FC<Props> = ({ match }) => {
     return false;
   }, [myTeachingLessons, id, user]);
 
+  const isLoggedIn = useMemo(() => Boolean(user.data), [user]);
+
   useEffect(() => {
     dispatchFetchOneLesson(id);
-    dispatchFetchLecture(parseInt(id));
-  }, [id, dispatchFetchOneLesson, dispatchFetchLecture, myJoiningLessons]);
+    isLoggedIn && dispatchFetchLecture(parseInt(id));
+  }, [id, dispatchFetchOneLesson, dispatchFetchLecture, myJoiningLessons, isLoggedIn]);
 
   return (
     <Styled.LessonDetailContainer>
@@ -149,8 +161,8 @@ const LessonDetail: React.FC<Props> = ({ match }) => {
                 수련 챕터 작성
               </Button>
             )}
-            {hasJoinedLesson || isToughtByMe || (
-              <Button color="yellow" radius={5} height={3} onClick={enrollLesson}>
+            {!hasJoinedLesson && !isToughtByMe && (
+              <Button color="yellow" radius={5} height={3} onClick={enrollIfLoggedIn}>
                 수련 등록
               </Button>
             )}
@@ -165,4 +177,4 @@ const LessonDetail: React.FC<Props> = ({ match }) => {
   );
 };
 
-export default React.memo(LessonDetail);
+export default memo(LessonDetail);

@@ -2,7 +2,7 @@ import { FC, useState, useRef, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Lesson } from 'types';
 import { concatHostToImagePath } from 'utils';
-import UnderlineTitle from 'styles/UnderlineTitle';
+import UnderlineTitle from 'components/UnderlineTitle';
 import * as Styled from './LessonDisplay.style';
 import Viewer from 'components/Viewer';
 

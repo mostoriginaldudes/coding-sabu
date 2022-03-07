@@ -1,18 +1,20 @@
 import { useState, useEffect, useCallback } from 'react';
 import { RouteComponentProps, useRouteMatch } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import UnderlineTitle from 'styles/UnderlineTitle';
-import Editor from 'components/Editor';
-import Input from 'components/Input';
-import Button from 'components/Button';
-import { Row } from 'styles/module';
 import { createLectureRequest } from 'apis';
 import { Lecture, LectureRequestInfo } from 'types';
+import { RootState } from 'store';
 import { showHud } from 'store/ui';
 import LECTURE_FAIL from 'fixtures/lecture/fail';
 import LECTURE_SUCCESS from 'fixtures/lecture/success';
 import { ValidationError } from 'yup';
-import { RootState } from 'store';
+import { Row } from 'styles/module';
+import loadable from '@loadable/component';
+
+const UnderlineTitle = loadable(() => import('components/UnderlineTitle'));
+const Editor = loadable(() => import('components/Editor'));
+const Input = loadable(() => import('components/Input'));
+const Button = loadable(() => import('components/Button'));
 
 type RouteParams = {
   lessonId: string;
