@@ -3,6 +3,7 @@ import LessonItem from 'components/LessonItem';
 import useRouting from 'hooks/useRouting';
 import { Lesson } from 'types';
 import * as Styled from './LessonList.style';
+import Loader from 'components/Loader';
 
 interface Props {
   lessons: Lesson[];
