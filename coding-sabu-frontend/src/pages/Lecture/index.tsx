@@ -3,13 +3,15 @@ import { Route, useRouteMatch } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 import { RootState } from 'store';
-import UnderlineTitle from 'styles/UnderlineTitle';
-import { Lesson } from 'types';
-import NotFound from 'pages/NotFound';
-import LectureUnitList from 'components/LectureUnitList';
-import LectureContent from 'components/LectureContent';
 import { fetchLecture } from 'store/lecture';
-import Loader from 'styles/Loader';
+import { Lesson } from 'types';
+import loadable from '@loadable/component';
+
+const NotFound = loadable(() => import('pages/NotFound'));
+const UnderlineTitle = loadable(() => import('components/UnderlineTitle'));
+const LectureUnitList = loadable(() => import('components/LectureUnitList'));
+const LectureContent = loadable(() => import('components/LectureContent'));
+const Loader = loadable(() => import('components/Loader'));
 
 const LectureWrapper = styled.div`
   display: flex;

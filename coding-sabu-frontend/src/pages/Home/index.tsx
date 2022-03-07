@@ -1,9 +1,11 @@
 import { FC, memo } from 'react';
-import LessonDisplay from 'components/LessonDisplay';
-import LessonList from 'components/LessonList';
-import UnderlineTitle from 'styles/UnderlineTitle';
+import loadable from '@loadable/component';
 import useFetchLessonList from 'hooks/useFetchLessonList';
-import Loader from 'styles/Loader';
+
+const LessonDisplay = loadable(() => import('components/LessonDisplay'));
+const Loader = loadable(() => import('components/Loader'));
+const LessonList = loadable(() => import('components/LessonList'));
+const UnderlineTitle = loadable(() => import('components/UnderlineTitle'));
 
 const Home: FC = () => {
   const { loading, data } = useFetchLessonList();

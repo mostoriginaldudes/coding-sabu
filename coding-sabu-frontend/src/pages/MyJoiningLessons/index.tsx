@@ -1,12 +1,14 @@
 import { FC, memo, useEffect, useCallback, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import LessonList from 'components/LessonList';
-import UnderlineTitle from 'styles/UnderlineTitle';
-import { RootState } from 'store';
-import { Lesson } from 'types';
-import { fetchMyJoiningLessons } from 'store/lesson';
-import Loader from 'styles/Loader';
 import useRedirect from 'hooks/useRedirect';
+import { RootState } from 'store';
+import { fetchMyJoiningLessons } from 'store/lesson';
+import { Lesson } from 'types';
+import loadable from '@loadable/component';
+
+const LessonList = loadable(() => import('components/LessonList'));
+const UnderlineTitle = loadable(() => import('components/UnderlineTitle'));
+const Loader = loadable(() => import('components/Loader'));
 
 const MyJoiningLessons: FC = () => {
   const { loading, data, error } = useSelector((state: RootState) => state.lesson.myJoiningLessons);

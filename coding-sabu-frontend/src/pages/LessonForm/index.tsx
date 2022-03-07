@@ -2,19 +2,21 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import Input from 'components/Input';
-import Editor from 'components/Editor';
-import Button from 'components/Button';
-import UnderlineTitle from 'styles/UnderlineTitle';
-import useRouting from 'hooks/useRouting';
-import { createLessonRequest } from 'apis';
-import { RootState } from 'store';
-import * as Styled from './LessonForm.style';
-import { showHud } from 'store/ui';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { createLessonRequest } from 'apis';
+import useRouting from 'hooks/useRouting';
+import { RootState } from 'store';
+import { showHud } from 'store/ui';
+import * as Styled from './LessonForm.style';
 import validationSchema from 'utils/FormValidation/lesson/ValidationSchema';
 import LESSON_SUCCESS from 'fixtures/lesson/success';
 import LESSON_FAIL from 'fixtures/lesson/fail';
+import loadable from '@loadable/component';
+
+const Input = loadable(() => import('components/Input'));
+const Editor = loadable(() => import('components/Editor'));
+const Button = loadable(() => import('components/Button'));
+const UnderlineTitle = loadable(() => import('components/UnderlineTitle'));
 
 interface LessonFormProps {
   title: string;

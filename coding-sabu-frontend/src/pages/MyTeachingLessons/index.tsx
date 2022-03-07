@@ -1,12 +1,14 @@
 import { useEffect, useCallback, useMemo, FC, memo } from 'react';
 import { Redirect } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import LessonList from 'components/LessonList';
 import useRouting from 'hooks/useRouting';
 import { RootState } from 'store';
 import { fetchMyTeachingLessons } from 'store/lesson';
-import UnderlineTitle from 'styles/UnderlineTitle';
 import * as Styled from './MyTeachingLessons.style';
+import loadable from '@loadable/component';
+
+const LessonList = loadable(() => import('components/LessonList'));
+const UnderlineTitle = loadable(() => import('components/UnderlineTitle'));
 
 const MyTeachingLessons: FC = () => {
   const { forward } = useRouting();
