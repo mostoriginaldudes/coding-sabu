@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo, useCallback, FC, memo, ChangeEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -22,7 +22,7 @@ interface LessonFormProps {
   price: number;
 }
 
-const LessonForm: React.FC = () => {
+const LessonForm: FC = () => {
   const [imgUrl, setImgUrl] = useState<string>('');
   const [imgFile, setImgFile] = useState<File | null>(null);
   const [description, setDescription] = useState<string>('');
@@ -83,7 +83,7 @@ const LessonForm: React.FC = () => {
   const hasBeenUploaded = useMemo(() => imgUrl !== '', [imgUrl]);
 
   const uploadThumbnail = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
+    (e: ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files![0];
       if (file) {
         const lessonImgUrl = URL.createObjectURL(file);
@@ -159,4 +159,4 @@ const LessonForm: React.FC = () => {
   );
 };
 
-export default React.memo(LessonForm);
+export default memo(LessonForm);

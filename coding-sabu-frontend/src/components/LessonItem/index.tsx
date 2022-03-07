@@ -1,15 +1,9 @@
-import React, { useMemo } from 'react';
+import { useMemo, FC, memo } from 'react';
 import { Lesson } from 'types';
 import { concatHostToImagePath } from 'utils';
 import * as Styled from './LessonItem.style';
 
-const LessonItem: React.FC<Lesson> = ({
-  teacherName,
-  title,
-  price,
-  thumbnailUrl,
-  studentCount
-}) => {
+const LessonItem: FC<Lesson> = ({ teacherName, title, price, thumbnailUrl, studentCount }) => {
   const formattedPrice = useMemo(() => {
     if (price === 0) {
       return 'FREE';
@@ -35,4 +29,4 @@ const LessonItem: React.FC<Lesson> = ({
   );
 };
 
-export default React.memo(LessonItem);
+export default memo(LessonItem);

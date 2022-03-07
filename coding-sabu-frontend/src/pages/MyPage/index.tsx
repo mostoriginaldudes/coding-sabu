@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, FC, memo, ChangeEvent } from 'react';
 import { Redirect, RouteComponentProps } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm, SubmitHandler } from 'react-hook-form';
@@ -13,7 +13,7 @@ import loadable from '@loadable/component';
 const Input = loadable(() => import('components/Input'));
 const Button = loadable(() => import('components/Button'));
 
-const MyPage: React.FC<RouteComponentProps> = ({ history }) => {
+const MyPage: FC<RouteComponentProps> = ({ history }) => {
   const { user, token } = useSelector((state: RootState) => ({
     user: state.auth.user,
     token: state.auth.token
@@ -62,7 +62,7 @@ const MyPage: React.FC<RouteComponentProps> = ({ history }) => {
   };
 
   const uploadProfile = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
+    (e: ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files![0];
       if (file) {
         const profileImgUrl = URL.createObjectURL(file);
@@ -160,4 +160,4 @@ const MyPage: React.FC<RouteComponentProps> = ({ history }) => {
   );
 };
 
-export default React.memo(MyPage);
+export default memo(MyPage);
