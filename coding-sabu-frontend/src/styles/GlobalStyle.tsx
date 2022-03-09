@@ -1,8 +1,6 @@
 import { Global, css } from '@emotion/react';
 import emotionNormalize from 'emotion-normalize';
-import { colors } from './theme';
-import 'assets/fonts/D2Coding.ttf';
-import 'assets/fonts/D2CodingBold.ttf';
+import { colors } from './modules/theme';
 
 const style = css`
   ${emotionNormalize}

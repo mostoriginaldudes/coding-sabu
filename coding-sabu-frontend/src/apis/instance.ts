@@ -11,6 +11,12 @@ import { setToken, logout } from 'store/auth';
 import { FORBIDDEN, UNAUTHORIZED } from 'fixtures/auth/constants';
 import { reissueAccessTokenRequest } from './auth';
 
+type Store = typeof store;
+let injectedStore: Store;
+export function injectStore(store: Store) {
+  injectedStore = store;
+}
+
 type Response<T = any> = {
   response: T;
   token?: string;
@@ -31,16 +37,10 @@ interface HttpRequestInstance extends AxiosInstance {
 }
 
 const instance: HttpRequestInstance = Axios.create({
-  baseURL: process.env.REACT_APP_BASE_URL,
+  baseURL: process.env.NEXT_PUBLIC_BASE_URL,
   timeout: 15000,
   withCredentials: true
 });
-
-type Store = typeof store;
-let injectedStore: Store;
-export const injectStore = (_store: Store) => {
-  injectedStore = _store;
-};
 
 instance.interceptors.request.use(req => {
   return loadAccessTokenToHttpHeader(req);

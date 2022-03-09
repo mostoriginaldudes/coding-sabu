@@ -31,5 +31,6 @@ const uiSlicer = createSlice({
   }
 });
 
+export type UIActions = typeof uiSlicer.actions;
 export const { showHud, hideHud, showAuthForm, hideAuthForm } = uiSlicer.actions;
 export default uiSlicer.reducer;
