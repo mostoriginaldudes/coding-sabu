@@ -36,6 +36,13 @@ public class WebConfig implements WebMvcConfigurer {
     registry.addMapping("/**")
       .allowedOrigins(allowCorsUrl)
       .allowCredentials(true)
+      .allowedHeaders(
+        HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS,
+        HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN,
+        HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS,
+        HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS,
+        HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS
+      )
       .allowedMethods("*")
       .exposedHeaders(HttpHeaders.AUTHORIZATION)
       .maxAge(3000);
