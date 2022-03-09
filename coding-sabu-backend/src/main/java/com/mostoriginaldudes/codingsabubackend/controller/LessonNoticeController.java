@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/lesson/{lessonId}/notice")
+@RequestMapping("/api/v1/lesson/{lessonId}/notice")
 public class LessonNoticeController {
 
   private final AuthService authService;

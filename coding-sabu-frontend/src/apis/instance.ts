@@ -37,7 +37,7 @@ interface HttpRequestInstance extends AxiosInstance {
 }
 
 const instance: HttpRequestInstance = Axios.create({
-  baseURL: process.env.NEXT_PUBLIC_BASE_URL,
+  baseURL: `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1`,
   timeout: 15000,
   withCredentials: true
 });
