@@ -227,4 +227,5 @@ export const joinLesson = createAsyncThunk(
   }
 );
 
+export type LessonActions = typeof lessonSlice.actions;
 export default lessonSlice.reducer;

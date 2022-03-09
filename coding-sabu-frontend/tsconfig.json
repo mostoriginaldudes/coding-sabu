@@ -17,17 +17,22 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "noEmit": true,
-    "jsx": "react-jsx",
+    "jsx": "preserve",
     "jsxImportSource": "@emotion/react",
     "isolatedModules": true,
     "typeRoots": [
       "node_modules/@types",
       "src/types"
     ],
-    "baseUrl": "src"
+    "baseUrl": "./src",
+    "incremental": true
   },
   "include": [
+    "next-env.d.ts",
     "src",
-    "src/types/images.d.ts"
+    "src/types/images.d.ts",
+  ],
+  "exclude": [
+    "node_modules"
   ]
 }

@@ -1,17 +1,12 @@
-import { useEffect, useRef, useLayoutEffect } from 'react';
+import { DependencyList, useEffect, useLayoutEffect, useRef } from 'react';
 
 type Callback = () => void;
 
-export default function useTimeout(callback: Callback, delay: number) {
-  const savedCallback = useRef<Callback>(callback);
-
-  useLayoutEffect(() => {
-    savedCallback.current = callback;
-  }, [callback]);
-
+export default function useTimeout(callback: Callback, delay: number, deps: DependencyList) {
   useEffect(() => {
-    const id = setTimeout(() => savedCallback.current(), delay);
-
-    return () => clearTimeout(id);
-  }, [delay]);
+    const timer = setTimeout(callback, delay + 1000);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, deps);
 }

@@ -18,7 +18,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/lesson")
+@RequestMapping("/api/v1/lesson")
 public class LessonController {
 
   private final LessonService lessonService;

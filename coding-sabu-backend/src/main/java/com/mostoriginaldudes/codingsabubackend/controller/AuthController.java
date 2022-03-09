@@ -21,7 +21,7 @@ import static com.mostoriginaldudes.codingsabubackend.util.constant.Constant.REF
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/v1/auth")
 public class AuthController {
 
   private final AuthService authService;

@@ -159,6 +159,7 @@ const editUser = createAsyncThunk(
   }
 );
 
+export type AuthActions = typeof authSlice.actions;
 export const { setToken } = authSlice.actions;
 export { login, signup, logout, editUser };
 export default authSlice.reducer;
