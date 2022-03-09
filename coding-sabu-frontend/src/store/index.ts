@@ -1,4 +1,4 @@
-import { configureStore, combineReducers, AnyAction, Reducer } from '@reduxjs/toolkit';
+import { configureStore, combineReducers, Reducer } from '@reduxjs/toolkit';
 import {
   persistReducer,
   FLUSH,
