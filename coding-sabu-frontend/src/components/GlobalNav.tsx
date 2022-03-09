@@ -23,8 +23,7 @@ import {
 import AUTH_SUCCESS from 'fixtures/auth/success';
 import AUTH_FAIL from 'fixtures/auth/fail';
 import { User } from 'types';
-import { fetchLessons, fetchMyJoiningLessons, fetchMyTeachingLessons } from 'store/lesson';
-import { useLayoutEffect } from 'react';
+import { fetchMyJoiningLessons, fetchMyTeachingLessons } from 'store/lesson';
 
 const GlobalNav: FC = () => {
   const [authModalType, setAuthModalType] = useState<'login' | 'signup'>('login');
@@ -54,7 +53,10 @@ const GlobalNav: FC = () => {
   const isLoggedIn = useMemo(() => Boolean(token && user.data), [token, user]);
 
   const profileImage = useMemo(
-    () => (user.data?.profileImage === 'img/default.png' ? false : user.data?.profileImage),
+    () =>
+      user.data?.profileImage === '/static/images/profile/default.png'
+        ? false
+        : user.data?.profileImage,
     [user]
   );
 
@@ -85,7 +87,7 @@ const GlobalNav: FC = () => {
   return (
     <HeaderContainer data-testid="header">
       <GlobalNavStyle>
-        <Link href="/">
+        <Link href="/" passHref>
           <FlexRow style={{ cursor: 'pointer' }}>
             <Image src="/images/logo.svg" alt="logo" width={unitRegular} height={unitRegular} />
             <EmphasisText>코딩사부</EmphasisText>
