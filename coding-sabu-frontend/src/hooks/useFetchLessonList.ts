@@ -1,28 +1,30 @@
 import { useEffect, useCallback, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from 'store';
+import { RootState, ThunkAsyncState } from 'store';
 import { fetchLessons } from 'store/lesson';
 import { Lesson } from 'types';
 
 function useFetchLessonList() {
-  const { lessons } = useSelector((state: RootState) => state.lesson);
+  const { loading, data } = useSelector(
+    (state: RootState) => state.lesson as ThunkAsyncState<Lesson[]>
+  );
   const dispatch = useDispatch();
 
   const dispatchLessons = useCallback(() => dispatch(fetchLessons()), [dispatch]);
 
   const lessonsArray = useMemo(() => {
-    if (lessons.data === null) {
+    if (data === null) {
       return [] as Lesson[];
     } else {
-      return lessons.data;
+      return data;
     }
-  }, [lessons]);
+  }, [data]);
 
   useEffect(() => {
     dispatchLessons();
   }, [dispatchLessons]);
 
-  return { ...lessons, data: lessonsArray };
+  return { loading, data: lessonsArray };
 }
 
 export default useFetchLessonList;
