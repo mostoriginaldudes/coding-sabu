@@ -71,13 +71,7 @@ interface Props {
 }
 
 export const UserProfileImage: FC<Props> = ({ profileImageUrl }) => {
-  return (
-    <Image
-      src={`${process.env.NEXT_PUBLIC_BASE_URL}${profileImageUrl}`}
-      alt="프로필 사진"
-      css={userProfileStyle}
-    />
-  );
+  return <Image src={profileImageUrl} alt="프로필 사진" css={userProfileStyle} />;
 };
 
 export const ButtonToMyClass = styled(Button)`

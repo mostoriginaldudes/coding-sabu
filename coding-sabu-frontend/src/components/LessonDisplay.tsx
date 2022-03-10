@@ -1,7 +1,6 @@
 import { FC, useState, useRef, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { Lesson } from 'types';
-import { concatHostToImagePath } from 'utils';
 import UnderlineTitle from 'components/UnderlineTitle';
 import * as Styled from 'styles/LessonDisplay';
 import dynamic from 'next/dynamic';
@@ -57,7 +56,7 @@ const LessonDisplay: FC<Props> = ({ lessons }) => {
         <Styled.Carousel ref={carouselRef}>
           {lessons.map(({ id, title, description, teacherName, thumbnailUrl }: Lesson) => (
             <Styled.Content key={id}>
-              <Styled.Thumbnail imgUrl={concatHostToImagePath(thumbnailUrl)} />
+              <Styled.Thumbnail imgUrl={thumbnailUrl} />
               <Styled.Info>
                 <div>
                   <h3>{title}</h3>
