@@ -6,7 +6,6 @@ import { fetchMyJoiningLessons, fetchOneLesson, joinLesson } from 'store/lesson'
 import { fetchLecture } from 'store/lecture';
 import { showAuthForm, showHud } from 'store/ui';
 import AuthenticationError from 'errors/AuthenticationError';
-import { concatHostToImagePath } from 'utils';
 import LESSON_SUCCESS from 'fixtures/lesson/success';
 import LESSON_FAIL from 'fixtures/lesson/fail';
 import AUTH_FAIL from 'fixtures/auth/fail';
@@ -37,7 +36,6 @@ export default function LessonDetail() {
     })
   );
   const dispatch = useDispatch();
-  const thumbnailUrl = concatHostToImagePath(lesson.data?.thumbnailUrl);
 
   const dispatchFetchOneLesson = useCallback(
     (lessonId: string) => {
@@ -150,7 +148,7 @@ export default function LessonDetail() {
             )}
             <UnderlineTitle title={lesson.data.title} />
             <Row>
-              <Styled.ThumbnailContainer imgUrl={thumbnailUrl} />
+              <Styled.ThumbnailContainer imgUrl={lesson.data?.thumbnailUrl} />
               <Styled.InfoContainer>
                 <TextBox legend="사부명">{lesson.data.teacherName}</TextBox>
                 <TextBox legend="수련비용">{localizedPrice}</TextBox>
