@@ -1,30 +1,26 @@
 package com.mostoriginaldudes.codingsabubackend.service.user;
 
 import com.mostoriginaldudes.codingsabubackend.auth.Security;
-import com.mostoriginaldudes.codingsabubackend.config.FileUploadConfig;
 import com.mostoriginaldudes.codingsabubackend.dto.EditUserInfoDto;
 import com.mostoriginaldudes.codingsabubackend.dto.UserDto;
 import com.mostoriginaldudes.codingsabubackend.dto.request.EditUserInfoRequestDto;
 import com.mostoriginaldudes.codingsabubackend.dto.response.EditUserInfoResponseDto;
 import com.mostoriginaldudes.codingsabubackend.respository.UserRepository;
+import com.mostoriginaldudes.codingsabubackend.util.uploader.S3Uploader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileOutputStream;
-import java.io.InputStream;
+import java.io.IOException;
 import java.util.Optional;
-import java.util.UUID;
-
-import static com.mostoriginaldudes.codingsabubackend.exception.ExceptionMessage.FAIL_FILE_UPLOAD;
 
 @RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
 
   private final UserRepository userRepository;
-  private final FileUploadConfig fileUploadConfig;
+  private final S3Uploader s3Uploader;
 
   @Override
   @Transactional
@@ -84,29 +80,11 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public String uploadProfileImage(MultipartFile profileImage) {
-    String imageFileName = profileImage.getOriginalFilename();
-    String imagePath = UUID.randomUUID() + imageFileName;
-    String imageRealFilePath = fileUploadConfig.getProfileLocation() + imagePath;
-    String imageUrl = fileUploadConfig.getProfileUrl() + imagePath;
-
     try {
-      FileOutputStream fileOutputStream = new FileOutputStream(imageRealFilePath);
-      InputStream inputStream = profileImage.getInputStream();
-
-      int fileReadCount = 0;
-      byte[] imageFileBuffer = new byte[1024];
-
-      while((fileReadCount = inputStream.read(imageFileBuffer)) != -1) {
-        fileOutputStream.write(imageFileBuffer, 0, fileReadCount);
-      }
-
-      fileOutputStream.close();
-      inputStream.close();
-
-      return imageUrl;
-
-    } catch(Exception e) {
-      throw new RuntimeException(FAIL_FILE_UPLOAD.getExceptionMessage());
+      return s3Uploader.uploadFile(profileImage, "profile");
+    } catch (IOException e) {
+      e.printStackTrace();
+      return e.getMessage();
     }
   }
 

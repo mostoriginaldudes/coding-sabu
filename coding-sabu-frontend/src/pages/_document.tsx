@@ -6,7 +6,7 @@ export default function Document() {
       <Head>
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link
-          href="http://cdn.jsdelivr.net/gh/joungkyun/font-d2coding@1.3.2/d2coding.css"
+          href="https://cdn.jsdelivr.net/gh/joungkyun/font-d2coding@1.3.2/d2coding.css"
           rel="stylesheet"
           type="text/css"
         />
