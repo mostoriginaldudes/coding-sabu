@@ -23,18 +23,8 @@ public class S3Uploader {
   @Value("${cloud.aws.s3.bucket}")
   private String bucket;
 
-  @Value("${file.upload.thumbnailUrl}")
-  private String thumbnailUrl;
-
-  @Value("${file.upload.profileUrl}")
-  private String profileUrl;
-
   public String uploadFile(MultipartFile multipartFile, String type) throws IOException {
-    if("profile".equals(type)) {
-      return upload(multipartFile, profileUrl);
-    } else {
-      return upload(multipartFile, thumbnailUrl);
-    }
+      return upload(multipartFile, type);
   }
 
   private String upload(MultipartFile multipartFile, String dirName) throws IOException {
