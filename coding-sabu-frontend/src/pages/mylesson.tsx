@@ -1,34 +1,11 @@
-import { useEffect, useCallback, useMemo } from 'react';
-import { useRouter } from 'next/router';
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from 'store';
-import { fetchMyJoiningLessons } from 'store/lesson';
-import { showHud } from 'store/ui';
 import LessonList from 'components/LessonList';
 import UnderlineTitle from 'components/UnderlineTitle';
 import Loader from 'components/Loader';
-import { Lesson } from 'types';
-import AUTH_FAIL from 'fixtures/auth/fail';
 import Head from 'next/head';
+import useFetchLessonList from 'hooks/useFetchLessonList';
 
 export default function MyJoiningLessons() {
-  const { loading, data, error } = useSelector((state: RootState) => state.lesson.myJoiningLessons);
-  const dispatch = useDispatch();
-
-  const dispatchMyJoiningLessons = useCallback(() => dispatch(fetchMyJoiningLessons()), [dispatch]);
-
-  const myJoiningLessonList = useMemo(() => (data === null ? ([] as Lesson[]) : data), [data]);
-
-  const router = useRouter();
-  useEffect(() => {
-    if (error) {
-      dispatch(showHud(AUTH_FAIL.UNAUTHORIZED));
-    }
-  }, [error]);
-
-  useEffect(() => {
-    dispatchMyJoiningLessons();
-  }, [dispatchMyJoiningLessons]);
+  const [loading, lessons] = useFetchLessonList('myJoiningLessons');
 
   return (
     <div>
@@ -37,7 +14,7 @@ export default function MyJoiningLessons() {
       </Head>
       <UnderlineTitle title="내 수련 목록" />
       <Loader loading={loading} />
-      <LessonList lessons={myJoiningLessonList} />
+      <LessonList lessons={lessons} />
     </div>
   );
 }
