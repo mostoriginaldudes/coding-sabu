@@ -13,6 +13,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Component
@@ -51,7 +52,7 @@ public class S3Uploader {
   }
 
   private Optional<File> convert(MultipartFile file) throws IOException {
-    File convertFile = new File(file.getOriginalFilename());
+    File convertFile = new File(UUID.randomUUID() + file.getOriginalFilename());
 
     if (convertFile.createNewFile()) {
       try (FileOutputStream fos = new FileOutputStream(convertFile)) {
