@@ -11,7 +11,7 @@ const nextConfig = {
     return [
       {
         // matching all API routes
-        source: `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/`,
+        source: `/api/v1/`,
         headers: [
           { key: 'Access-Control-Allow-Credentials', value: 'true' },
           { key: 'Access-Control-Allow-Origin', value: '*' },

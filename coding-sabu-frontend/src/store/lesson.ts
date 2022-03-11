@@ -137,7 +137,7 @@ const lessonSlice = createSlice({
           error: action.error as Error
         };
       })
-      .addCase(joinLesson.pending, (state, action) => {
+      .addCase(joinLesson.pending, state => {
         state.myJoiningLessons = {
           loading: true,
           data: null,
