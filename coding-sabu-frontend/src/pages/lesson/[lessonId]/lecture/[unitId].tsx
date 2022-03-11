@@ -3,7 +3,7 @@ import { useEffect, useMemo } from 'react';
 import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from 'react-redux';
 import styled from '@emotion/styled';
-import { RootState, ThunkAsyncState } from 'store';
+import store, { RootState, ThunkAsyncState } from 'store';
 import { fetchLecture } from 'store/lecture';
 import { Lecture, Lesson } from 'types';
 import UnderlineTitle from 'components/UnderlineTitle';
@@ -32,13 +32,13 @@ const Lecture: NextPage = () => {
   );
 
   const content = useMemo(
-    () => lecture.data?.find(unit => unit.id === parseInt(unitId))?.content || '',
-    [unitId]
+    () => lecture.data?.find(unit => unit.id === parseInt(unitId))?.content,
+    [lecture, unitId]
   );
 
   useEffect(() => {
     dispatch(fetchLecture(parseInt(lessonId)));
-  }, [lessonId]);
+  }, []);
 
   return (
     <div>
@@ -60,3 +60,9 @@ const Lecture: NextPage = () => {
 };
 
 export default Lecture;
+
+export async function getServerSideProps() {
+  return {
+    props: {}
+  };
+}
