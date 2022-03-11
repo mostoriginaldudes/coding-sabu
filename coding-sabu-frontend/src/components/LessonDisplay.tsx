@@ -4,6 +4,7 @@ import { Lesson } from 'types';
 import UnderlineTitle from 'components/UnderlineTitle';
 import * as Styled from 'styles/LessonDisplay';
 import dynamic from 'next/dynamic';
+import lesson from 'store/lesson';
 
 const Viewer = dynamic(() => import('components/Viewer'), { ssr: false });
 
@@ -32,15 +33,21 @@ const LessonDisplay: FC<Props> = ({ lessons }) => {
     }
   };
 
-  const leftArrowCursorStyle = useMemo(
-    () => (lessonIndex === 0 ? 'not-allowed' : 'pointer'),
-    [lessonIndex]
-  );
+  const leftArrowCursorStyle = useMemo(() => {
+    if (lesson && lesson.length > 0) {
+      return lessonIndex === 0 ? 'not-allowed' : 'pointer';
+    } else {
+      return 'auto';
+    }
+  }, [lessonIndex]);
 
-  const rightArrowCursorStyle = useMemo(
-    () => (lessonIndex === lessons.length! - 1 ? 'not-allowed' : 'pointer'),
-    [lessonIndex, lessons]
-  );
+  const rightArrowCursorStyle = useMemo(() => {
+    if (lesson && lesson.length > 0) {
+      return lessonIndex === lessons.length! - 1 ? 'not-allowed' : 'pointer';
+    } else {
+      return 'auto';
+    }
+  }, [lessonIndex, lessons]);
 
   useEffect(() => {
     if (carouselRef.current) {

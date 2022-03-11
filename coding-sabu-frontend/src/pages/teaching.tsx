@@ -1,38 +1,25 @@
 import { useEffect, useCallback, useMemo } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from 'store';
-import { fetchMyTeachingLessons } from 'store/lesson';
-import * as Styled from 'styles/MyTeachingLessons';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { useSelector } from 'react-redux';
+import { RootState, ThunkAsyncState } from 'store';
+import useFetchLessonList from 'hooks/useFetchLessonList';
 import LessonList from 'components/LessonList';
 import UnderlineTitle from 'components/UnderlineTitle';
-import { useRouter } from 'next/router';
-import Head from 'next/head';
+import * as Styled from 'styles/MyTeachingLessons';
+import { User } from 'types';
 
 export default function MyTeachingLessons() {
+  const user = useSelector((state: RootState) => state.auth.user as ThunkAsyncState<User>);
+  const [_, lessons] = useFetchLessonList('myTeachingLessons');
+
   const router = useRouter();
-  const { user, myTeachingLessons } = useSelector((state: RootState) => ({
-    user: state.auth.user,
-    myTeachingLessons: state.lesson.myTeachingLessons
-  }));
-  const dispatch = useDispatch();
-
+  const goToLessonForm = useCallback(() => router.push('/lesson/form'), []);
   const isNotTeacher = useMemo(() => user.data?.userType !== 'teacher', [user]);
-
-  const dispatchFetchMyTeachingLessons = useCallback(() => {
-    dispatch(fetchMyTeachingLessons());
-  }, [dispatch]);
-
-  const goToLessonForm = useCallback(() => {
-    router.push('/lesson/form');
-  }, []);
 
   useEffect(() => {
     isNotTeacher && router.replace('/');
   }, [isNotTeacher]);
-
-  useEffect(() => {
-    dispatchFetchMyTeachingLessons();
-  }, [dispatchFetchMyTeachingLessons]);
 
   return (
     <div>
@@ -44,9 +31,7 @@ export default function MyTeachingLessons() {
           수련 개설
         </Styled.CreateLessonButton>
         <UnderlineTitle title="내 가르침 목록" />
-        {myTeachingLessons && myTeachingLessons.data && (
-          <LessonList lessons={myTeachingLessons.data} />
-        )}
+        <LessonList lessons={lessons} />
       </Styled.Container>
     </div>
   );

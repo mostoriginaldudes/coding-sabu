@@ -1,16 +1,20 @@
 import { useEffect, useCallback, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, ThunkAsyncState } from 'store';
-import { fetchLessons } from 'store/lesson';
+import { fetchLessons, fetchMyJoiningLessons, fetchMyTeachingLessons } from 'store/lesson';
 import { Lesson } from 'types';
 
-function useFetchLessonList() {
+type ListType = 'lessons' | 'myJoiningLessons' | 'myTeachingLessons';
+
+function useFetchLessonList(listType: ListType) {
   const { loading, data } = useSelector(
-    (state: RootState) => state.lesson as ThunkAsyncState<Lesson[]>
+    (state: RootState) => state.lesson[listType] as ThunkAsyncState<Lesson[]>
   );
   const dispatch = useDispatch();
 
   const dispatchLessons = useCallback(() => dispatch(fetchLessons()), [dispatch]);
+  const dispatchJoiningLessons = useCallback(() => dispatch(fetchMyJoiningLessons()), [dispatch]);
+  const dispatchTeachingLessons = useCallback(() => dispatch(fetchMyTeachingLessons()), [dispatch]);
 
   const lessonsArray = useMemo(() => {
     if (data === null) {
@@ -21,10 +25,18 @@ function useFetchLessonList() {
   }, [data]);
 
   useEffect(() => {
-    dispatchLessons();
-  }, [dispatchLessons]);
+    listType === 'lessons' && dispatchLessons();
+  }, []);
 
-  return { loading, data: lessonsArray };
+  useEffect(() => {
+    listType === 'myJoiningLessons' && dispatchJoiningLessons();
+  }, []);
+
+  useEffect(() => {
+    listType === 'myTeachingLessons' && dispatchTeachingLessons();
+  }, []);
+
+  return [loading, lessonsArray] as [boolean, Lesson[]];
 }
 
 export default useFetchLessonList;
