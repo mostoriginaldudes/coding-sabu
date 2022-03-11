@@ -23,11 +23,7 @@ public class S3Uploader {
   @Value("${cloud.aws.s3.bucket}")
   private String bucket;
 
-  public String uploadFile(MultipartFile multipartFile, String type) throws IOException {
-      return upload(multipartFile, type);
-  }
-
-  private String upload(MultipartFile multipartFile, String dirName) throws IOException {
+  public String uploadFile(MultipartFile multipartFile, String dirName) throws IOException {
     File uploadFile = convert(multipartFile)
       .orElseThrow(() -> new IllegalArgumentException("MultipartFile -> File로 전환 실패"));
 
@@ -55,7 +51,7 @@ public class S3Uploader {
   }
 
   private Optional<File> convert(MultipartFile file) throws IOException {
-    File convertFile = new File(Objects.requireNonNull(file.getOriginalFilename()));
+    File convertFile = new File(file.getOriginalFilename());
 
     if (convertFile.createNewFile()) {
       try (FileOutputStream fos = new FileOutputStream(convertFile)) {
