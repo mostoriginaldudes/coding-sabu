@@ -10,12 +10,9 @@ import java.util.Optional;
 public class CookieParser {
 
   public Optional<String> parseCookie(String keyOfCookie, Cookie[] cookies) {
-    return Optional.ofNullable(
-      Arrays.stream(cookies)
-        .filter(cookie -> keyOfCookie.equals(cookie.getName()))
-        .findFirst()
-        .map(Cookie::getValue)
-        .orElse(null)
-    );
+    return Arrays.stream(cookies)
+      .filter(cookie -> keyOfCookie.equals(cookie.getName()))
+      .findFirst()
+      .map(Cookie::getValue);
   }
 }
