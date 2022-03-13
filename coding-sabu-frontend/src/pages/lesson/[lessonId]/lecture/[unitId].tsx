@@ -3,7 +3,7 @@ import { useEffect, useMemo } from 'react';
 import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from 'react-redux';
 import styled from '@emotion/styled';
-import store, { RootState, ThunkAsyncState } from 'store';
+import { RootState, ThunkAsyncState } from 'store';
 import { fetchLecture } from 'store/lecture';
 import { Lecture, Lesson } from 'types';
 import UnderlineTitle from 'components/UnderlineTitle';
