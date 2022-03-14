@@ -1,4 +1,4 @@
-import { FC, MouseEventHandler } from 'react';
+import { FC } from 'react';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 import { AiOutlineUser } from 'react-icons/ai';
@@ -71,13 +71,7 @@ interface Props {
 }
 
 export const UserProfileImage: FC<Props> = ({ profileImageUrl }) => {
-  return (
-    <Image
-      src={`${process.env.NEXT_PUBLIC_BASE_URL}${profileImageUrl}`}
-      alt="프로필 사진"
-      css={userProfileStyle}
-    />
-  );
+  return <Image src={profileImageUrl} alt="프로필 사진" css={userProfileStyle} />;
 };
 
 export const ButtonToMyClass = styled(Button)`

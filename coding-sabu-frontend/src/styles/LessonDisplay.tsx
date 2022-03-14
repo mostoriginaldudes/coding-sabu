@@ -44,7 +44,7 @@ const carouselArrowStyle = css`
 `;
 
 interface ArrowStyle {
-  cursor: 'not-allowed' | 'pointer';
+  cursor: 'not-allowed' | 'pointer' | 'auto';
 }
 const ArrowLeft = styled(HiChevronLeft)<ArrowStyle>`
   ${carouselArrowStyle}

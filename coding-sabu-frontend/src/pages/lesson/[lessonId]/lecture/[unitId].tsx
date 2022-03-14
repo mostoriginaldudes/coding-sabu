@@ -18,7 +18,7 @@ const LectureWrapper = styled.div`
 
 const Lecture: NextPage = () => {
   const { lessons, lecture } = useSelector((state: RootState) => ({
-    lessons: state.lesson.myTeachingLessons as ThunkAsyncState<Lesson[]>,
+    lessons: state.lesson.lessons as ThunkAsyncState<Lesson[]>,
     lecture: state.lecture.lectureUnits as ThunkAsyncState<Lecture[]>
   }));
   const dispatch = useDispatch();
@@ -32,13 +32,13 @@ const Lecture: NextPage = () => {
   );
 
   const content = useMemo(
-    () => lecture.data?.find(unit => unit.id === parseInt(unitId))?.content || '',
-    [unitId]
+    () => lecture.data?.find(unit => unit.id === parseInt(unitId))?.content,
+    [lecture, unitId]
   );
 
   useEffect(() => {
     dispatch(fetchLecture(parseInt(lessonId)));
-  }, [lessonId]);
+  }, []);
 
   return (
     <div>
@@ -60,3 +60,9 @@ const Lecture: NextPage = () => {
 };
 
 export default Lecture;
+
+export async function getServerSideProps() {
+  return {
+    props: {}
+  };
+}

@@ -17,6 +17,7 @@ import com.mostoriginaldudes.codingsabubackend.util.cookie.CookieParser;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.MalformedJwtException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +36,9 @@ public class AuthServiceImpl implements AuthService {
   private final JsonWebToken jwt;
   private final CookieParser cookieParser;
   private final UserService userService;
+
+  @Value("${client.url}")
+  private String clientUrl;
 
   @Override
   public LoginResponseDto login(LoginRequestDto loginRequest, HttpServletResponse response) {
@@ -143,6 +147,7 @@ public class AuthServiceImpl implements AuthService {
     Cookie cookie = new Cookie(REFRESH_TOKEN, refreshToken);
     cookie.setMaxAge(7 * 24 * 60 * 60);
     cookie.setHttpOnly(true);
+    cookie.setSecure("https".contains(clientUrl));
     cookie.setPath("/");
     response.addCookie(cookie);
   }

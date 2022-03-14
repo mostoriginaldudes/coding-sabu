@@ -6,14 +6,13 @@ import Axios, {
   AxiosResponse
 } from 'axios';
 
-import store from 'store';
 import { setToken, logout } from 'store/auth';
 import { FORBIDDEN, UNAUTHORIZED } from 'fixtures/auth/constants';
 import { reissueAccessTokenRequest } from './auth';
+import { StoreType } from 'store';
 
-type Store = typeof store;
-let injectedStore: Store;
-export function injectStore(store: Store) {
+let injectedStore: StoreType;
+export function injectStore(store: StoreType) {
   injectedStore = store;
 }
 
@@ -68,7 +67,7 @@ instance.interceptors.response.use(
       await reissueAccessTokenRequest();
     } else if (statusCode === FORBIDDEN) {
       if (isLoggedIn()) {
-        injectedStore.dispatch(logout());
+        injectedStore.dispatch(logout() as any);
       }
     }
     return Promise.reject(error);
@@ -83,7 +82,7 @@ const saveAccessTokenToStore = (res: AxiosResponse) => {
   if (existAccessToken(res)) {
     const newAccessToken = res.headers.authorization;
     if (injectedStore.getState().auth.token !== newAccessToken) {
-      injectedStore.dispatch(setToken(newAccessToken));
+      injectedStore.dispatch(setToken(newAccessToken) as any);
     }
   }
 };

@@ -141,7 +141,7 @@ const signup = createAsyncThunk(SIGNUP, async (signupInfo: SignupInfo, { rejectW
 const logout = createAsyncThunk(LOGOUT, async (_: void, { rejectWithValue }) => {
   try {
     await logoutRequest();
-    return;
+    return null;
   } catch (error) {
     return rejectWithValue((error as Error).message);
   }
@@ -159,7 +159,12 @@ const editUser = createAsyncThunk(
   }
 );
 
-export type AuthActions = typeof authSlice.actions;
+export type AuthActions =
+  | typeof authSlice.actions
+  | typeof login
+  | typeof signup
+  | typeof logout
+  | typeof editUser;
 export const { setToken } = authSlice.actions;
 export { login, signup, logout, editUser };
 export default authSlice.reducer;

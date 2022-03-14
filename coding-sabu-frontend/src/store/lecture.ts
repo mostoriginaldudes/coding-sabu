@@ -60,6 +60,6 @@ const fetchLecture = createAsyncThunk(
   }
 );
 
-export type LectureActions = typeof lectureSlice.actions;
+export type LectureActions = typeof lectureSlice.actions | ReturnType<typeof fetchLecture>;
 export { fetchLecture };
 export default lectureSlice.reducer;

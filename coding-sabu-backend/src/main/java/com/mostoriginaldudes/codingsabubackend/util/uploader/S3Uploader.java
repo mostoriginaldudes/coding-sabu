@@ -13,6 +13,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Component
@@ -23,21 +24,7 @@ public class S3Uploader {
   @Value("${cloud.aws.s3.bucket}")
   private String bucket;
 
-  @Value("${file.upload.thumbnailUrl}")
-  private String thumbnailUrl;
-
-  @Value("${file.upload.profileUrl}")
-  private String profileUrl;
-
-  public String uploadFile(MultipartFile multipartFile, String type) throws IOException {
-    if("profile".equals(type)) {
-      return upload(multipartFile, profileUrl);
-    } else {
-      return upload(multipartFile, thumbnailUrl);
-    }
-  }
-
-  private String upload(MultipartFile multipartFile, String dirName) throws IOException {
+  public String uploadFile(MultipartFile multipartFile, String dirName) throws IOException {
     File uploadFile = convert(multipartFile)
       .orElseThrow(() -> new IllegalArgumentException("MultipartFile -> File로 전환 실패"));
 
@@ -65,7 +52,7 @@ public class S3Uploader {
   }
 
   private Optional<File> convert(MultipartFile file) throws IOException {
-    File convertFile = new File(Objects.requireNonNull(file.getOriginalFilename()));
+    File convertFile = new File(UUID.randomUUID() + file.getOriginalFilename());
 
     if (convertFile.createNewFile()) {
       try (FileOutputStream fos = new FileOutputStream(convertFile)) {
