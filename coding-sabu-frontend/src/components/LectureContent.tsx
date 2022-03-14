@@ -5,13 +5,13 @@ import dynamic from 'next/dynamic';
 const Viewer = dynamic(() => import('components/Viewer'), { ssr: false });
 
 interface Props {
-  content: string;
+  content: string | undefined;
 }
 
 const LectureContent: FC<Props> = ({ content }) => {
   return (
     <Styled.ContentWrapper>
-      <Viewer description={content} />
+      <Viewer description={content || ''} />
     </Styled.ContentWrapper>
   );
 };

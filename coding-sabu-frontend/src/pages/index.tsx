@@ -7,28 +7,26 @@ import Head from 'next/head';
 import { FiAlertTriangle } from 'react-icons/fi';
 import { Empty } from 'styles/Home';
 import { useMemo } from 'react';
+import { wrapper } from 'store';
 
 export default function Home() {
-  const { loading, data } = useFetchLessonList();
+  const [loading, allLessons] = useFetchLessonList('lessons');
 
-  const hasContent = useMemo(() => data && data.length > 0, [data]);
+  const hasContent = useMemo(() => allLessons && allLessons.length > 0, [allLessons]);
 
   return (
     <div>
       <Head>
         <title>HOME | 코딩사부</title>
       </Head>
-
-      {loading && <Loader loading={loading} />}
-
+      <Loader loading={loading} />
       {!loading && hasContent && (
         <>
-          <LessonDisplay lessons={data} />
+          <LessonDisplay lessons={allLessons} />
           <UnderlineTitle title="수련 목록" />
-          <LessonList lessons={data} />
+          <LessonList lessons={allLessons} />
         </>
       )}
-
       {!loading && !hasContent && (
         <Empty>
           <h1>콘텐츠가 없습니다.</h1>
@@ -39,8 +37,8 @@ export default function Home() {
   );
 }
 
-export function getStaticProps() {
+export const getServerSideProps = wrapper.getServerSideProps(store => async context => {
   return {
     props: {}
   };
-}
+});

@@ -1,6 +1,5 @@
 import { useMemo, FC, memo } from 'react';
 import { Lesson } from 'types';
-import { concatHostToImagePath } from 'utils';
 import * as Styled from 'styles/LessonItem';
 
 const LessonItem: FC<Lesson> = ({ teacherName, title, price, thumbnailUrl, studentCount }) => {
@@ -14,7 +13,7 @@ const LessonItem: FC<Lesson> = ({ teacherName, title, price, thumbnailUrl, stude
 
   return (
     <Styled.LessonContainer>
-      <Styled.Thumbnail thumbnailUrl={concatHostToImagePath(thumbnailUrl)} />
+      <Styled.Thumbnail thumbnailUrl={thumbnailUrl} />
       <Styled.LessonInfo>
         <Styled.LessonHeader>
           <Styled.LessonTitle>{title}</Styled.LessonTitle>
