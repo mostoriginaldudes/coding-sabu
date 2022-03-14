@@ -1,4 +1,4 @@
-import { configureStore, combineReducers, Reducer } from '@reduxjs/toolkit';
+import { configureStore, combineReducers, Reducer, Store, Action } from '@reduxjs/toolkit';
 import {
   persistReducer,
   FLUSH,
@@ -12,8 +12,8 @@ import {
 import storage from 'redux-persist/lib/storage';
 import hardSet from 'redux-persist/lib/stateReconciler/hardSet';
 import logger from 'redux-logger';
-import { HYDRATE } from 'next-redux-wrapper';
-import authReducer, { AuthActions } from './auth';
+import { HYDRATE, createWrapper, MakeStore } from 'next-redux-wrapper';
+import authReducer, { AuthActions, State as AuthState } from './auth';
 import lessonReducer, { LessonActions } from './lesson';
 import lectureReducer, { LectureActions } from './lecture';
 import uiReducer, { UIActions } from './ui';
@@ -24,7 +24,7 @@ export type ThunkAsyncState<T> = {
   error: Error | null;
 };
 
-const persistConfig: PersistConfig<any> = {
+const persistConfig: PersistConfig<AuthState> = {
   key: 'auth',
   version: 1,
   storage,
@@ -32,11 +32,14 @@ const persistConfig: PersistConfig<any> = {
 };
 
 const rootReducer = combineReducers({
-  auth: persistReducer(persistConfig, authReducer),
+  auth: persistReducer<AuthState, Action<AuthActions>>(persistConfig, authReducer),
   lesson: lessonReducer,
   lecture: lectureReducer,
   ui: uiReducer
 });
+
+type CustomActions = AuthActions | LessonActions | LectureActions | UIActions;
+type TotalActions = Action<CustomActions> & { type: typeof HYDRATE; payload: any };
 
 const defaultMiddlewareOptions = {
   serializableCheck: {
@@ -44,13 +47,7 @@ const defaultMiddlewareOptions = {
   }
 };
 
-const reducer = (
-  state: ReturnType<typeof rootReducer>,
-  action: AuthActions &
-    LessonActions &
-    LectureActions &
-    UIActions & { type: typeof HYDRATE } & { payload: any }
-) => {
+const reducer = (state: ReturnType<typeof rootReducer>, action: TotalActions) => {
   if (action.type === HYDRATE) {
     return {
       ...state,
@@ -61,7 +58,7 @@ const reducer = (
   }
 };
 
-const store = configureStore({
+export const store = configureStore({
   reducer: reducer as Reducer,
   devTools: process.env.NODE_ENV === 'development',
   middleware: getDefaultMiddleware => {
@@ -71,5 +68,11 @@ const store = configureStore({
   }
 });
 
+const makeStore: MakeStore<StoreType> = () => store;
+
 export type RootState = ReturnType<typeof store.getState>;
-export default store;
+export type StoreType = Store<RootState, Action<TotalActions>>;
+
+export const wrapper = createWrapper(makeStore, {
+  debug: process.env.NODE_ENV !== 'production'
+});
