@@ -18,7 +18,7 @@ const LectureWrapper = styled.div`
 
 const Lecture: NextPage = () => {
   const { lessons, lecture } = useSelector((state: RootState) => ({
-    lessons: state.lesson.myTeachingLessons as ThunkAsyncState<Lesson[]>,
+    lessons: state.lesson.lessons as ThunkAsyncState<Lesson[]>,
     lecture: state.lecture.lectureUnits as ThunkAsyncState<Lecture[]>
   }));
   const dispatch = useDispatch();
