@@ -15,6 +15,7 @@ import Button from 'components/Button';
 import UnderlineTitle from 'components/UnderlineTitle';
 import dynamic from 'next/dynamic';
 import Head from 'next/head';
+import useRedux from 'hooks/useRedux';
 
 const Editor = dynamic(() => import('components/Editor'), { ssr: false });
 
@@ -28,9 +29,12 @@ export default function LessonForm() {
   const [imgUrl, setImgUrl] = useState<string>('');
   const [imgFile, setImgFile] = useState<File | null>(null);
   const [description, setDescription] = useState<string>('');
+  const { useAppDispatch, useAppSelector } = useRedux();
+  const dispatch = useAppDispatch();
 
-  const teacherId = useSelector((state: RootState) => state.auth.user.data?.id);
-  const dispatch = useDispatch();
+  const { teacherId } = useAppSelector(state => ({
+    teacherId: state.auth.user.data?.id
+  }));
 
   const {
     register,

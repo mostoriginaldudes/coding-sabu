@@ -1,7 +1,5 @@
 import { useEffect, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/router';
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState, ThunkAsyncState } from 'store';
 import { fetchMyJoiningLessons, fetchOneLesson, joinLesson } from 'store/lesson';
 import { fetchLecture } from 'store/lecture';
 import { showAuthForm, showHud } from 'store/ui';
@@ -15,10 +13,9 @@ import Button from 'components/Button';
 import TextBox from 'components/TextBox';
 import Loader from 'components/Loader';
 import UnderlineTitle from 'components/UnderlineTitle';
-import dynamic from 'next/dynamic';
-import { Lecture, Lesson, User } from 'types';
 import LECTURE_FAIL from 'fixtures/lecture/fail';
 import Head from 'next/head';
+import useRedux from 'hooks/useRedux';
 
 const Viewer = dynamic(() => import('components/Viewer'), { ssr: false });
 
@@ -26,16 +23,15 @@ export default function LessonDetail() {
   const router = useRouter();
   const { lessonId } = router.query as { lessonId: string };
 
-  const { user, lesson, lecture, myJoiningLessons, myTeachingLessons } = useSelector(
-    (state: RootState) => ({
-      user: state.auth.user as ThunkAsyncState<User>,
-      lesson: state.lesson.lessonDetailInfo as ThunkAsyncState<Lesson>,
-      myJoiningLessons: state.lesson.myJoiningLessons as ThunkAsyncState<Lesson[]>,
-      myTeachingLessons: state.lesson.myTeachingLessons as ThunkAsyncState<Lesson[]>,
-      lecture: state.lecture.lectureUnits as ThunkAsyncState<Lecture[]>
-    })
-  );
-  const dispatch = useDispatch();
+  const { useAppDispatch, useAppSelector } = useRedux();
+  const { user, lesson, lecture, myJoiningLessons, myTeachingLessons } = useAppSelector(state => ({
+    user: state.auth.user,
+    lesson: state.lesson.lessonDetailInfo,
+    myJoiningLessons: state.lesson.myJoiningLessons,
+    myTeachingLessons: state.lesson.myTeachingLessons,
+    lecture: state.lecture.lectureUnits
+  }));
+  const dispatch = useAppDispatch();
 
   const dispatchFetchOneLesson = useCallback(
     (lessonId: string) => {

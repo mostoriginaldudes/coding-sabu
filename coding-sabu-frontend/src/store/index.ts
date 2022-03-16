@@ -76,3 +76,5 @@ export type StoreType = Store<RootState, Action<TotalActions>>;
 export const wrapper = createWrapper(makeStore, {
   debug: process.env.NODE_ENV !== 'production'
 });
+
+export type AppDispatch = typeof store.dispatch;
