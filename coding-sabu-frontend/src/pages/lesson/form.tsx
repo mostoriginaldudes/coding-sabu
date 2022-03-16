@@ -1,20 +1,20 @@
-import { useState, useEffect, useMemo, useCallback, ChangeEvent } from 'react';
 import { useRouter } from 'next/router';
-import { useSelector, useDispatch } from 'react-redux';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { createLessonRequest } from 'apis';
-import { RootState } from 'store';
-import { showHud } from 'store/ui';
-import * as Styled from 'styles/LessonForm';
-import validationSchema from 'utils/FormValidation/lesson/ValidationSchema';
-import LESSON_SUCCESS from 'fixtures/lesson/success';
-import LESSON_FAIL from 'fixtures/lesson/fail';
-import Input from 'components/Input';
-import Button from 'components/Button';
-import UnderlineTitle from 'components/UnderlineTitle';
 import dynamic from 'next/dynamic';
 import Head from 'next/head';
+import { useState, useEffect, useMemo, useCallback, ChangeEvent } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { createLesson } from 'store/lesson';
+import { showHud } from 'store/ui';
+import Input from 'components/Input';
+import Button from 'components/Button';
+import LESSON_SUCCESS from 'fixtures/lesson/success';
+import LESSON_FAIL from 'fixtures/lesson/fail';
+import validationSchema from 'utils/FormValidation/lesson/ValidationSchema';
+import UnderlineTitle from 'components/UnderlineTitle';
+import * as Styled from 'styles/LessonForm';
+import { unwrapResult } from '@reduxjs/toolkit';
+import useRedux from 'hooks/useRedux';
 
 const Editor = dynamic(() => import('components/Editor'), { ssr: false });
 
@@ -28,9 +28,12 @@ export default function LessonForm() {
   const [imgUrl, setImgUrl] = useState<string>('');
   const [imgFile, setImgFile] = useState<File | null>(null);
   const [description, setDescription] = useState<string>('');
+  const { useAppDispatch, useAppSelector } = useRedux();
+  const dispatch = useAppDispatch();
 
-  const teacherId = useSelector((state: RootState) => state.auth.user.data?.id);
-  const dispatch = useDispatch();
+  const { teacherId } = useAppSelector(state => ({
+    teacherId: state.auth.user.data?.id
+  }));
 
   const {
     register,
@@ -50,7 +53,7 @@ export default function LessonForm() {
       dispatch(showHud(LESSON_SUCCESS.OPEN));
       router.replace(`/lesson/${id}`);
     },
-    [dispatch]
+    [dispatch, router]
   );
 
   const createLessonFail = useCallback(() => {
@@ -73,8 +76,9 @@ export default function LessonForm() {
 
   const onSubmit: SubmitHandler<LessonFormProps> = async lessonForm => {
     try {
-      const newLesson = await createLessonRequest(getFormData(lessonForm));
-      createLessonSuccess(newLesson.id);
+      const wrappedResult = await dispatch(createLesson(getFormData(lessonForm)));
+      const unwrappedResult = unwrapResult(wrappedResult);
+      createLessonSuccess(unwrappedResult.id);
     } catch (error) {
       createLessonFail();
     }

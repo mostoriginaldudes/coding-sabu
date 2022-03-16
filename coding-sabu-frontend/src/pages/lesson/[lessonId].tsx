@@ -1,24 +1,22 @@
-import { useEffect, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/router';
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState, ThunkAsyncState } from 'store';
+import dynamic from 'next/dynamic';
+import Head from 'next/head';
+import { useEffect, useCallback, useMemo } from 'react';
 import { fetchMyJoiningLessons, fetchOneLesson, joinLesson } from 'store/lesson';
 import { fetchLecture } from 'store/lecture';
 import { showAuthForm, showHud } from 'store/ui';
-import AuthenticationError from 'errors/AuthenticationError';
-import LESSON_SUCCESS from 'fixtures/lesson/success';
-import LESSON_FAIL from 'fixtures/lesson/fail';
-import AUTH_FAIL from 'fixtures/auth/fail';
-import { Row } from 'styles/modules/common';
-import * as Styled from 'styles/LessonDetail';
 import Button from 'components/Button';
 import TextBox from 'components/TextBox';
 import Loader from 'components/Loader';
 import UnderlineTitle from 'components/UnderlineTitle';
-import dynamic from 'next/dynamic';
-import { Lecture, Lesson, User } from 'types';
+import useRedux from 'hooks/useRedux';
+import AuthenticationError from 'errors/AuthenticationError';
+import LESSON_SUCCESS from 'fixtures/lesson/success';
+import LESSON_FAIL from 'fixtures/lesson/fail';
+import AUTH_FAIL from 'fixtures/auth/fail';
 import LECTURE_FAIL from 'fixtures/lecture/fail';
-import Head from 'next/head';
+import { Row } from 'styles/modules/common';
+import * as Styled from 'styles/LessonDetail';
 
 const Viewer = dynamic(() => import('components/Viewer'), { ssr: false });
 
@@ -26,16 +24,15 @@ export default function LessonDetail() {
   const router = useRouter();
   const { lessonId } = router.query as { lessonId: string };
 
-  const { user, lesson, lecture, myJoiningLessons, myTeachingLessons } = useSelector(
-    (state: RootState) => ({
-      user: state.auth.user as ThunkAsyncState<User>,
-      lesson: state.lesson.lessonDetailInfo as ThunkAsyncState<Lesson>,
-      myJoiningLessons: state.lesson.myJoiningLessons as ThunkAsyncState<Lesson[]>,
-      myTeachingLessons: state.lesson.myTeachingLessons as ThunkAsyncState<Lesson[]>,
-      lecture: state.lecture.lectureUnits as ThunkAsyncState<Lecture[]>
-    })
-  );
-  const dispatch = useDispatch();
+  const { useAppDispatch, useAppSelector } = useRedux();
+  const { user, lesson, lecture, myJoiningLessons, myTeachingLessons } = useAppSelector(state => ({
+    user: state.auth.user,
+    lesson: state.lesson.lessonDetailInfo,
+    myJoiningLessons: state.lesson.myJoiningLessons,
+    myTeachingLessons: state.lesson.myTeachingLessons,
+    lecture: state.lecture.lectureUnits
+  }));
+  const dispatch = useAppDispatch();
 
   const dispatchFetchOneLesson = useCallback(
     (lessonId: string) => {
@@ -48,6 +45,8 @@ export default function LessonDetail() {
     (lessonId: number) => dispatch(fetchLecture(lessonId)),
     [dispatch]
   );
+
+  const isLoggedIn = useMemo(() => Boolean(user.data), [user]);
 
   const enrollIfLoggedIn = () => {
     if (isLoggedIn) {
@@ -93,44 +92,47 @@ export default function LessonDetail() {
     } else {
       return `${lesson.data?.price.toLocaleString()}원`;
     }
-  }, [lesson.data]);
+  }, [lesson]);
 
-  const hasJoinedLesson = useMemo(() => {
+  const hasJoinedLesson = () => {
     if (user.data && myJoiningLessons.data) {
       return Boolean(
         myJoiningLessons.data.find(myJoiningLesson => myJoiningLesson.id === parseInt(lessonId))
       );
     }
     return false;
-  }, [myJoiningLessons.data, lessonId, user.data]);
+  };
 
-  const isToughtByMe = useMemo(() => {
+  const isToughtByMe = () => {
     if (user.data && myTeachingLessons.data) {
       return Boolean(
         myTeachingLessons.data.find(myTeachingLesson => myTeachingLesson.id === parseInt(lessonId))
       );
     }
     return false;
-  }, [myTeachingLessons.data, lessonId, user.data]);
+  };
 
-  const isLoggedIn = useMemo(() => Boolean(user.data), [user]);
-
-  const hasLecture = useMemo(() => {
-    return Boolean(lecture.data?.find(unit => unit.lessonId === parseInt(lessonId)));
-  }, [lecture]);
+  const hasLecture = () =>
+    Boolean(lecture.data?.find(unit => unit.lessonId === parseInt(lessonId)));
 
   const moveToLecture = useCallback(() => {
-    if (hasLecture) {
+    if (hasLecture()) {
       router.push(`/lesson/${lessonId}/lecture/${lecture.data![0].id}`);
     } else {
       dispatch(showHud(LECTURE_FAIL.EMPTY_LECTURE));
     }
   }, [hasLecture]);
 
+  const fetchLessonDetail = async () => {
+    await dispatchFetchOneLesson(lessonId);
+    if (isLoggedIn) {
+      await dispatchFetchLecture(parseInt(lessonId));
+    }
+  };
+
   useEffect(() => {
-    dispatchFetchOneLesson(lessonId);
-    isLoggedIn && dispatchFetchLecture(parseInt(lessonId));
-  }, [lessonId, dispatchFetchOneLesson, dispatchFetchLecture, myJoiningLessons, isLoggedIn]);
+    fetchLessonDetail();
+  }, []);
 
   return (
     <div>
@@ -141,7 +143,7 @@ export default function LessonDetail() {
         <Loader loading={lesson.loading} />
         {lesson.data && (
           <>
-            {(hasJoinedLesson || isToughtByMe) && (
+            {(hasJoinedLesson() || isToughtByMe()) && (
               <Styled.NavButton color="yellow" radius={5} onClick={moveToLecture}>
                 수련장 이동
               </Styled.NavButton>
@@ -161,7 +163,7 @@ export default function LessonDetail() {
               </Styled.ViewerContainer>
             </Row>
             <Row>
-              {isToughtByMe && (
+              {isToughtByMe() && (
                 <Button
                   color="white"
                   radius={5}
@@ -171,7 +173,7 @@ export default function LessonDetail() {
                   수련 챕터 작성
                 </Button>
               )}
-              {!hasJoinedLesson && !isToughtByMe && (
+              {!hasJoinedLesson() && !isToughtByMe() && (
                 <Button color="yellow" radius={5} height={3} onClick={enrollIfLoggedIn}>
                   수련 등록
                 </Button>

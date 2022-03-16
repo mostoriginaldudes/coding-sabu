@@ -1,5 +1,8 @@
-import { useState, useEffect, useCallback } from 'react';
+import { GetStaticPropsContext } from 'next';
 import { useRouter } from 'next/router';
+import dynamic from 'next/dynamic';
+import Head from 'next/head';
+import { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createLectureRequest } from 'apis';
 import { Lecture, LectureRequestInfo, Lesson } from 'types';
@@ -12,9 +15,6 @@ import { Row } from 'styles/modules/common';
 import UnderlineTitle from 'components/UnderlineTitle';
 import Input from 'components/Input';
 import Button from 'components/Button';
-import dynamic from 'next/dynamic';
-import { GetStaticPropsContext } from 'next';
-import Head from 'next/head';
 
 const Editor = dynamic(() => import('components/Editor'), { ssr: false });
 

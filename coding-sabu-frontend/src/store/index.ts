@@ -1,4 +1,5 @@
-import { configureStore, combineReducers, Reducer, Store, Action } from '@reduxjs/toolkit';
+import { configureStore, combineReducers, Reducer, Action } from '@reduxjs/toolkit';
+import logger from 'redux-logger';
 import {
   persistReducer,
   FLUSH,
@@ -11,9 +12,8 @@ import {
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import hardSet from 'redux-persist/lib/stateReconciler/hardSet';
-import logger from 'redux-logger';
-import { HYDRATE, createWrapper, MakeStore } from 'next-redux-wrapper';
-import authReducer, { AuthActions, State as AuthState } from './auth';
+import { createWrapper, HYDRATE, MakeStore } from 'next-redux-wrapper';
+import authReducer, { AuthActions } from './auth';
 import lessonReducer, { LessonActions } from './lesson';
 import lectureReducer, { LectureActions } from './lecture';
 import uiReducer, { UIActions } from './ui';
@@ -24,7 +24,7 @@ export type ThunkAsyncState<T> = {
   error: Error | null;
 };
 
-const persistConfig: PersistConfig<AuthState> = {
+const persistConfig: PersistConfig<any> = {
   key: 'auth',
   version: 1,
   storage,
@@ -32,14 +32,11 @@ const persistConfig: PersistConfig<AuthState> = {
 };
 
 const rootReducer = combineReducers({
-  auth: persistReducer<AuthState, Action<AuthActions>>(persistConfig, authReducer),
+  auth: persistReducer(persistConfig, authReducer),
   lesson: lessonReducer,
   lecture: lectureReducer,
   ui: uiReducer
 });
-
-type CustomActions = AuthActions | LessonActions | LectureActions | UIActions;
-type TotalActions = Action<CustomActions> & { type: typeof HYDRATE; payload: any };
 
 const defaultMiddlewareOptions = {
   serializableCheck: {
@@ -47,16 +44,11 @@ const defaultMiddlewareOptions = {
   }
 };
 
-const reducer = (state: ReturnType<typeof rootReducer>, action: TotalActions) => {
-  if (action.type === HYDRATE) {
-    return {
-      ...state,
-      ...action.payload
-    };
-  } else {
-    return rootReducer(state, action);
-  }
-};
+type CustomActions = AuthActions | LessonActions | LectureActions | UIActions;
+type TotalActions = Action<CustomActions> & { type: typeof HYDRATE; payload: any };
+
+const reducer = (state: ReturnType<typeof rootReducer>, action: TotalActions) =>
+  rootReducer(state, action);
 
 export const store = configureStore({
   reducer: reducer as Reducer,
@@ -70,9 +62,11 @@ export const store = configureStore({
 
 const makeStore: MakeStore<StoreType> = () => store;
 
-export type RootState = ReturnType<typeof store.getState>;
-export type StoreType = Store<RootState, Action<TotalActions>>;
+export type RootState = ReturnType<typeof rootReducer>;
+export type StoreType = typeof store;
 
 export const wrapper = createWrapper(makeStore, {
   debug: process.env.NODE_ENV !== 'production'
 });
+
+export type AppDispatch = typeof store.dispatch;
