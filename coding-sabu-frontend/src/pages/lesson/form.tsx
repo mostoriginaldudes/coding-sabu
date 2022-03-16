@@ -14,7 +14,7 @@ import Input from 'components/Input';
 import Button from 'components/Button';
 import UnderlineTitle from 'components/UnderlineTitle';
 import dynamic from 'next/dynamic';
-import Head from 'next/head';
+import { unwrapResult } from '@reduxjs/toolkit';
 import useRedux from 'hooks/useRedux';
 
 const Editor = dynamic(() => import('components/Editor'), { ssr: false });
@@ -77,8 +77,9 @@ export default function LessonForm() {
 
   const onSubmit: SubmitHandler<LessonFormProps> = async lessonForm => {
     try {
-      const newLesson = await createLessonRequest(getFormData(lessonForm));
-      createLessonSuccess(newLesson.id);
+      const wrappedResult = await dispatch(createLesson(getFormData(lessonForm)));
+      const unwrappedResult = unwrapResult(wrappedResult);
+      createLessonSuccess(unwrappedResult.id);
     } catch (error) {
       createLessonFail();
     }

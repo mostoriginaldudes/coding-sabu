@@ -123,10 +123,16 @@ export default function LessonDetail() {
     }
   }, [hasLecture]);
 
+  const fetchLessonDetail = async () => {
+    await dispatchFetchOneLesson(lessonId);
+    if (isLoggedIn) {
+      await dispatchFetchLecture(parseInt(lessonId));
+    }
+  };
+
   useEffect(() => {
-    dispatchFetchOneLesson(lessonId);
-    isLoggedIn && dispatchFetchLecture(parseInt(lessonId));
-  }, [lessonId, dispatchFetchOneLesson, dispatchFetchLecture, myJoiningLessons, isLoggedIn]);
+    fetchLessonDetail();
+  }, []);
 
   return (
     <div>
