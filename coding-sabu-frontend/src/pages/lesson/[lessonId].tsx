@@ -117,7 +117,7 @@ export default function LessonDetail() {
 
   const hasLecture = useMemo(() => {
     return Boolean(lecture.data?.find(unit => unit.lessonId === parseInt(lessonId)));
-  }, []);
+  }, [lecture]);
 
   const moveToLecture = useCallback(() => {
     if (hasLecture) {

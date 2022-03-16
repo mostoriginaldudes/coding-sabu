@@ -7,6 +7,7 @@ import Head from 'next/head';
 import { FiAlertTriangle } from 'react-icons/fi';
 import { Empty } from 'styles/Home';
 import { useMemo } from 'react';
+import { wrapper } from 'store';
 
 export default function Home() {
   const [loading, allLessons] = useFetchLessonList('lessons');
@@ -36,8 +37,8 @@ export default function Home() {
   );
 }
 
-export function getStaticProps() {
+export const getServerSideProps = wrapper.getServerSideProps(store => async context => {
   return {
     props: {}
   };
-}
+});
