@@ -1,6 +1,7 @@
 import { NextPage } from 'next';
-import { useEffect, useMemo } from 'react';
 import { useRouter } from 'next/router';
+import Head from 'next/head';
+import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import styled from '@emotion/styled';
 import { RootState, ThunkAsyncState } from 'store';
@@ -10,7 +11,6 @@ import UnderlineTitle from 'components/UnderlineTitle';
 import LectureUnitList from 'components/LectureUnitList';
 import LectureContent from 'components/LectureContent';
 import Loader from 'components/Loader';
-import Head from 'next/head';
 
 const LectureWrapper = styled.div`
   display: flex;

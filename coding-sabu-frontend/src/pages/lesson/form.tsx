@@ -1,19 +1,18 @@
-import { useState, useEffect, useMemo, useCallback, ChangeEvent } from 'react';
 import { useRouter } from 'next/router';
-import { useSelector, useDispatch } from 'react-redux';
+import dynamic from 'next/dynamic';
+import Head from 'next/head';
+import { useState, useEffect, useMemo, useCallback, ChangeEvent } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { createLessonRequest } from 'apis';
-import { RootState } from 'store';
+import { createLesson } from 'store/lesson';
 import { showHud } from 'store/ui';
-import * as Styled from 'styles/LessonForm';
-import validationSchema from 'utils/FormValidation/lesson/ValidationSchema';
-import LESSON_SUCCESS from 'fixtures/lesson/success';
-import LESSON_FAIL from 'fixtures/lesson/fail';
 import Input from 'components/Input';
 import Button from 'components/Button';
+import LESSON_SUCCESS from 'fixtures/lesson/success';
+import LESSON_FAIL from 'fixtures/lesson/fail';
+import validationSchema from 'utils/FormValidation/lesson/ValidationSchema';
 import UnderlineTitle from 'components/UnderlineTitle';
-import dynamic from 'next/dynamic';
+import * as Styled from 'styles/LessonForm';
 import { unwrapResult } from '@reduxjs/toolkit';
 import useRedux from 'hooks/useRedux';
 
@@ -54,7 +53,7 @@ export default function LessonForm() {
       dispatch(showHud(LESSON_SUCCESS.OPEN));
       router.replace(`/lesson/${id}`);
     },
-    [dispatch]
+    [dispatch, router]
   );
 
   const createLessonFail = useCallback(() => {

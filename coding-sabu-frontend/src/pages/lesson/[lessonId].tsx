@@ -1,21 +1,22 @@
-import { useEffect, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/router';
+import dynamic from 'next/dynamic';
+import Head from 'next/head';
+import { useEffect, useCallback, useMemo } from 'react';
 import { fetchMyJoiningLessons, fetchOneLesson, joinLesson } from 'store/lesson';
 import { fetchLecture } from 'store/lecture';
 import { showAuthForm, showHud } from 'store/ui';
-import AuthenticationError from 'errors/AuthenticationError';
-import LESSON_SUCCESS from 'fixtures/lesson/success';
-import LESSON_FAIL from 'fixtures/lesson/fail';
-import AUTH_FAIL from 'fixtures/auth/fail';
-import { Row } from 'styles/modules/common';
-import * as Styled from 'styles/LessonDetail';
 import Button from 'components/Button';
 import TextBox from 'components/TextBox';
 import Loader from 'components/Loader';
 import UnderlineTitle from 'components/UnderlineTitle';
-import LECTURE_FAIL from 'fixtures/lecture/fail';
-import Head from 'next/head';
 import useRedux from 'hooks/useRedux';
+import AuthenticationError from 'errors/AuthenticationError';
+import LESSON_SUCCESS from 'fixtures/lesson/success';
+import LESSON_FAIL from 'fixtures/lesson/fail';
+import AUTH_FAIL from 'fixtures/auth/fail';
+import LECTURE_FAIL from 'fixtures/lecture/fail';
+import { Row } from 'styles/modules/common';
+import * as Styled from 'styles/LessonDetail';
 
 const Viewer = dynamic(() => import('components/Viewer'), { ssr: false });
 
@@ -44,6 +45,8 @@ export default function LessonDetail() {
     (lessonId: number) => dispatch(fetchLecture(lessonId)),
     [dispatch]
   );
+
+  const isLoggedIn = useMemo(() => Boolean(user.data), [user]);
 
   const enrollIfLoggedIn = () => {
     if (isLoggedIn) {
@@ -109,11 +112,8 @@ export default function LessonDetail() {
     return false;
   };
 
-  const isLoggedIn = useMemo(() => Boolean(user.data), [user]);
-
   const hasLecture = () =>
-    return Boolean(lecture.data?.find(unit => unit.lessonId === parseInt(lessonId)));
-  }, [lecture]);
+    Boolean(lecture.data?.find(unit => unit.lessonId === parseInt(lessonId)));
 
   const moveToLecture = useCallback(() => {
     if (hasLecture()) {
