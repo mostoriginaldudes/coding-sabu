@@ -93,34 +93,34 @@ export default function LessonDetail() {
     } else {
       return `${lesson.data?.price.toLocaleString()}원`;
     }
-  }, [lesson.data]);
+  }, [lesson]);
 
-  const hasJoinedLesson = useMemo(() => {
+  const hasJoinedLesson = () => {
     if (user.data && myJoiningLessons.data) {
       return Boolean(
         myJoiningLessons.data.find(myJoiningLesson => myJoiningLesson.id === parseInt(lessonId))
       );
     }
     return false;
-  }, [myJoiningLessons.data, lessonId, user.data]);
+  };
 
-  const isToughtByMe = useMemo(() => {
+  const isToughtByMe = () => {
     if (user.data && myTeachingLessons.data) {
       return Boolean(
         myTeachingLessons.data.find(myTeachingLesson => myTeachingLesson.id === parseInt(lessonId))
       );
     }
     return false;
-  }, [myTeachingLessons.data, lessonId, user.data]);
+  };
 
   const isLoggedIn = useMemo(() => Boolean(user.data), [user]);
 
-  const hasLecture = useMemo(() => {
+  const hasLecture = () =>
     return Boolean(lecture.data?.find(unit => unit.lessonId === parseInt(lessonId)));
   }, [lecture]);
 
   const moveToLecture = useCallback(() => {
-    if (hasLecture) {
+    if (hasLecture()) {
       router.push(`/lesson/${lessonId}/lecture/${lecture.data![0].id}`);
     } else {
       dispatch(showHud(LECTURE_FAIL.EMPTY_LECTURE));
@@ -141,7 +141,7 @@ export default function LessonDetail() {
         <Loader loading={lesson.loading} />
         {lesson.data && (
           <>
-            {(hasJoinedLesson || isToughtByMe) && (
+            {(hasJoinedLesson() || isToughtByMe()) && (
               <Styled.NavButton color="yellow" radius={5} onClick={moveToLecture}>
                 수련장 이동
               </Styled.NavButton>
@@ -161,7 +161,7 @@ export default function LessonDetail() {
               </Styled.ViewerContainer>
             </Row>
             <Row>
-              {isToughtByMe && (
+              {isToughtByMe() && (
                 <Button
                   color="white"
                   radius={5}
@@ -171,7 +171,7 @@ export default function LessonDetail() {
                   수련 챕터 작성
                 </Button>
               )}
-              {!hasJoinedLesson && !isToughtByMe && (
+              {!hasJoinedLesson() && !isToughtByMe() && (
                 <Button color="yellow" radius={5} height={3} onClick={enrollIfLoggedIn}>
                   수련 등록
                 </Button>
