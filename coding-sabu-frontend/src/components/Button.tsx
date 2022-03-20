@@ -1,11 +1,12 @@
 import styled from '@emotion/styled';
-import { ButtonHTMLAttributes, ReactNode } from 'react';
+import { ButtonHTMLAttributes, ReactElement } from 'react';
 import { colors } from 'styles/modules/theme';
+
 const { yellow, black, white } = colors;
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   color: 'yellow' | 'black' | 'white';
-  children: ReactNode | string;
+  children: ReactElement | string;
   radius?: number;
   height?: number;
 }

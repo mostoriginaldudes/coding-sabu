@@ -1,4 +1,4 @@
-import { FC, memo, ReactNode, useEffect, useRef } from 'react';
+import { FC, memo, ReactElement } from 'react';
 import { createPortal } from 'react-dom';
 import { getModalRoot } from 'utils';
 import { HiX } from 'react-icons/hi';
@@ -8,7 +8,7 @@ interface Props {
   modalTitle: string;
   visibleModal: boolean;
   closeModal: () => void;
-  children: ReactNode;
+  children: ReactElement;
 }
 
 const Modal: FC<Props> = ({ modalTitle, visibleModal, closeModal, children }) => {
