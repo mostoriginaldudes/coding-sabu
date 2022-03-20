@@ -6,9 +6,9 @@ import type { Lesson } from 'types';
 type ListType = 'lessons' | 'myJoiningLessons' | 'myTeachingLessons';
 
 function useFetchLessonList(listType: ListType) {
-  const { useAppSelector, useAppDispatch } = useRedux();
-  const { loading, data } = useAppSelector(state => state.lesson[listType]);
+  const { useAppDispatch, useAppSelector } = useRedux();
   const dispatch = useAppDispatch();
+  const { loading, data } = useAppSelector(state => state.lesson[listType]);
 
   const dispatchLessons = useCallback(() => dispatch(fetchLessons()), [dispatch]);
   const dispatchJoiningLessons = useCallback(() => dispatch(fetchMyJoiningLessons()), [dispatch]);

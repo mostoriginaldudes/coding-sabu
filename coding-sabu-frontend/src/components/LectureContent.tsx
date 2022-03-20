@@ -1,6 +1,6 @@
+import dynamic from 'next/dynamic';
 import { FC } from 'react';
 import * as Styled from 'styles/LectureContent';
-import dynamic from 'next/dynamic';
 
 const Viewer = dynamic(() => import('components/Viewer'), { ssr: false });
 

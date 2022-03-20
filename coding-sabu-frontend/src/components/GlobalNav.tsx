@@ -1,12 +1,15 @@
 import Link from 'next/link';
-import { useState, useCallback, useMemo, FC, memo, MouseEventHandler, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { FC, useState, useEffect, useCallback, useMemo, memo, MouseEventHandler } from 'react';
 import { AiFillCaretDown as DownArrow } from 'react-icons/ai';
 import LoginForm from 'components/LoginForm';
 import SignupForm from 'components/SignupForm';
 import Button from 'components/Button';
 import UserMenu from 'components/UserMenu';
-import { RootState, ThunkAsyncState } from 'store';
+import AUTH_SUCCESS from 'fixtures/auth/success';
+import AUTH_FAIL from 'fixtures/auth/fail';
+import useRedux from 'hooks/useRedux';
+import { ThunkAsyncState } from 'store';
+import { fetchMyJoiningLessons, fetchMyTeachingLessons } from 'store/lesson';
 import { hideAuthForm, showAuthForm, showHud } from 'store/ui';
 import { FlexRow } from 'styles/modules/common';
 import {
@@ -20,20 +23,21 @@ import {
   white,
   UserProfileImage
 } from 'styles/GlobalNav';
-import AUTH_SUCCESS from 'fixtures/auth/success';
-import AUTH_FAIL from 'fixtures/auth/fail';
 import { User } from 'types';
-import { fetchMyJoiningLessons, fetchMyTeachingLessons } from 'store/lesson';
 
 const GlobalNav: FC = () => {
   const [authModalType, setAuthModalType] = useState<'login' | 'signup'>('login');
   const [visibleUserMenu, setVisibleUserMenu] = useState<boolean>(false);
-  const { token, user, visibleAuthForm } = useSelector((state: RootState) => ({
+
+  const { useAppDispatch, useAppSelector } = useRedux();
+
+  const dispatch = useAppDispatch();
+
+  const { token, user, visibleAuthForm } = useAppSelector(state => ({
     token: state.auth.token as string | null,
     user: state.auth.user as ThunkAsyncState<User>,
     visibleAuthForm: state.ui.visibleAuthForm as boolean
   }));
-  const dispatch = useDispatch();
 
   const setModalToRender = useCallback(
     modalType => setAuthModalType(modalType),

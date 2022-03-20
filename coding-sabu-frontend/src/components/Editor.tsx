@@ -1,4 +1,4 @@
-import { FC, useEffect, useCallback, useRef } from 'react';
+import { FC, useCallback, useRef } from 'react';
 import { Editor as ToastEditor } from '@toast-ui/react-editor';
 import colorSyntax from '@toast-ui/editor-plugin-color-syntax';
 import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight';

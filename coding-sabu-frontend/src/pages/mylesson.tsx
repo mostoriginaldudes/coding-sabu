@@ -1,7 +1,7 @@
+import Head from 'next/head';
 import LessonList from 'components/LessonList';
 import UnderlineTitle from 'components/UnderlineTitle';
 import Loader from 'components/Loader';
-import Head from 'next/head';
 import useFetchLessonList from 'hooks/useFetchLessonList';
 
 export default function MyJoiningLessons() {

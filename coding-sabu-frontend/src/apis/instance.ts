@@ -5,11 +5,10 @@ import Axios, {
   AxiosRequestConfig,
   AxiosResponse
 } from 'axios';
-
-import { setToken, logout } from 'store/auth';
-import { FORBIDDEN, UNAUTHORIZED } from 'fixtures/auth/constants';
 import { reissueAccessTokenRequest } from './auth';
+import { FORBIDDEN, UNAUTHORIZED } from 'fixtures/auth/constants';
 import { StoreType } from 'store';
+import { setToken, logout } from 'store/auth';
 
 let injectedStore: StoreType;
 export function injectStore(store: StoreType) {

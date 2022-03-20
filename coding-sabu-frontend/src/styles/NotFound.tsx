@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
-import { colors } from 'styles/modules/theme';
 import Button from 'components/Button';
+import { colors } from 'styles/modules/theme';
 
 export const Container = styled.div`
   width: 100%;

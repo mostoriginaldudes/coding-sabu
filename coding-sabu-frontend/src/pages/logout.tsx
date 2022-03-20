@@ -1,13 +1,13 @@
-import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
-import { useDispatch } from 'react-redux';
+import Head from 'next/head';
+import { useState, useEffect, useCallback } from 'react';
 import { css } from '@emotion/react';
+import Loader from 'components/Loader';
+import useRedux from 'hooks/useRedux';
+import AUTH_SUCCESS from 'fixtures/auth/success';
 import { logout, setToken } from 'store/auth';
 import { showHud } from 'store/ui';
 import { colors } from 'styles/modules/theme';
-import AUTH_SUCCESS from 'fixtures/auth/success';
-import Loader from 'components/Loader';
-import Head from 'next/head';
 
 const style = css`
   & > h2 {
@@ -18,8 +18,9 @@ const style = css`
 
 export default function Logout() {
   const router = useRouter();
+  const { useAppDispatch } = useRedux();
+  const dispatch = useAppDispatch();
   const [readyToRedirect, setReadyToRedirect] = useState<boolean>(false);
-  const dispatch = useDispatch();
 
   const dispatchLogout = useCallback(async () => {
     await dispatch(logout());

@@ -1,8 +1,8 @@
-import { useCallback, FC } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { Lecture as LectureInfo } from 'types';
+import { FC, useCallback } from 'react';
 import * as Styled from 'styles/LectureUnitList';
+import { Lecture as LectureInfo } from 'types';
 
 interface Props {
   readonly lecture: LectureInfo[];

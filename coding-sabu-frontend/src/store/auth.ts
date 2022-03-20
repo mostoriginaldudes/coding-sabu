@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { ThunkAsyncState } from '.';
-import { LoginInfo, SignupInfo, User } from 'types';
 import { editUserRequest, loginRequest, logoutRequest, signupRequest } from 'apis';
+import { LoginInfo, SignupInfo, User } from 'types';
 
 const LOGIN = 'auth/LOGIN' as const;
 const SIGNUP = 'auth/SIGNUP' as const;

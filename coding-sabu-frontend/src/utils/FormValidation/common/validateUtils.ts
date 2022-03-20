@@ -1,6 +1,6 @@
-import { checkEmailRequest } from 'apis';
 import debounce from 'lodash.debounce';
 import * as yup from 'yup';
+import { checkEmailRequest } from 'apis';
 
 const validateEmail = debounce(
   (email: string | undefined, _: yup.TestContext, resolve: (val: boolean) => void) => {

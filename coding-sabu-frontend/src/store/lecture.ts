@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { ThunkAsyncState } from '.';
-import { Lecture } from 'types';
 import { fetchLectureRequest } from 'apis';
+import { Lecture } from 'types';
 
 const FETCH_LECTURE = 'lecture/FETCH_LECTURE' as const;
 

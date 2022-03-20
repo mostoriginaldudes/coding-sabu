@@ -1,4 +1,4 @@
-import { useMemo, FC } from 'react';
+import { FC } from 'react';
 import { ClipLoader } from 'react-spinners';
 import { css } from '@emotion/react';
 import { colors } from 'styles/modules/theme';

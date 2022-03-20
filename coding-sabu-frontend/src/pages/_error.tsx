@@ -1,9 +1,9 @@
-import styled from '@emotion/styled';
-import Button from 'components/Button';
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FcDisclaimer } from 'react-icons/fc';
+import styled from '@emotion/styled';
+import Button from 'components/Button';
 
 const Container = styled.div`
   width: 100%;

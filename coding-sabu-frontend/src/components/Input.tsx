@@ -1,4 +1,3 @@
-import { FC } from 'react';
 import { forwardRef, InputHTMLAttributes } from 'react';
 import * as Styled from 'styles/Input';
 
