@@ -10,7 +10,8 @@ import Input from 'components/Input';
 import Button from 'components/Button';
 import LECTURE_FAIL from 'fixtures/lecture/fail';
 import LECTURE_SUCCESS from 'fixtures/lecture/success';
-import { ValidationError } from 'yup';
+import useRedux from 'hooks/useRedux';
+import { ThunkAsyncState } from 'store';
 import { showHud } from 'store/ui';
 import { Row } from 'styles/modules/common';
 import { Lecture, LectureRequestInfo, Lesson } from 'types';
@@ -24,11 +25,12 @@ interface Props {
 export default function LectureForm({ lessonId }: Props) {
   const router = useRouter();
 
-  const { user, myTeachingLessons } = useSelector((state: RootState) => ({
+  const { useAppDispatch, useAppSelector } = useRedux();
+  const { user, myTeachingLessons } = useAppSelector(state => ({
     user: state.auth.user,
     myTeachingLessons: state.lesson.myTeachingLessons as ThunkAsyncState<Lesson[]>
   }));
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const [unit, setUnit] = useState<string>('');
   const [content, setContent] = useState<string>('');

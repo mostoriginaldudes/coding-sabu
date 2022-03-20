@@ -1,11 +1,11 @@
 import { FC, useEffect, useCallback } from 'react';
-import { useDispatch } from 'react-redux';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import Modal from 'components/Modal';
 import Input from 'components/Input';
 import Button from 'components/Button';
 import useScrollLock from 'hooks/useScrollLock';
+import useRedux from 'hooks/useRedux';
 import { ThunkAsyncState } from 'store';
 import { login } from 'store/auth';
 import { hideAuthForm } from 'store/ui';
@@ -31,7 +31,8 @@ const LoginForm: FC<Props> = ({ visibleAuthForm, setModalToRender }) => {
     resolver: yupResolver(validationSchema.getLogin())
   });
 
-  const dispatch = useDispatch();
+  const { useAppDispatch } = useRedux();
+  const dispatch = useAppDispatch();
 
   const closeLoginForm = useCallback(() => dispatch(hideAuthForm()), [dispatch]);
 

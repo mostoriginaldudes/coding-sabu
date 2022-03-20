@@ -10,11 +10,11 @@ import Button from 'components/Button';
 import UnderlineTitle from 'components/UnderlineTitle';
 import LESSON_SUCCESS from 'fixtures/lesson/success';
 import LESSON_FAIL from 'fixtures/lesson/fail';
+import useRedux from 'hooks/useRedux';
 import { createLesson } from 'store/lesson';
 import { showHud } from 'store/ui';
 import * as Styled from 'styles/LessonForm';
 import validationSchema from 'utils/FormValidation/lesson/ValidationSchema';
-import useRedux from 'hooks/useRedux';
 
 const Editor = dynamic(() => import('components/Editor'), { ssr: false });
 
