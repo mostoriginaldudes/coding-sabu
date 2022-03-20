@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
-import { flexCenter } from 'styles/modules/common';
 import { colors, media } from 'styles/modules/theme';
+import { flexCenter } from 'styles/modules/common';
 
 export const SignupButtonWrapper = styled.div`
   ${flexCenter}

@@ -1,8 +1,8 @@
-import { FC, ReactNode } from 'react';
+import { FC } from 'react';
 import * as Styled from 'styles/TextBox';
 interface Props {
   legend: string;
-  children: ReactNode;
+  children: string | number;
 }
 
 const TextBox: FC<Props> = ({ legend, children }) => {

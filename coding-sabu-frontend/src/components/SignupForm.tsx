@@ -1,17 +1,17 @@
-import { useEffect, useCallback, FC, memo } from 'react';
+import { FC, useEffect, useCallback, memo } from 'react';
 import { useDispatch } from 'react-redux';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import Modal from 'components/Modal';
 import Input from 'components/Input';
 import Button from 'components/Button';
-import { LoginInfo, SignupFormInfo, SignupInfo, User } from 'types';
+import useScrollLock from 'hooks/useScrollLock';
 import { ThunkAsyncState } from 'store';
 import { login, signup } from 'store/auth';
 import { hideAuthForm } from 'store/ui';
-import validationSchema from 'utils/FormValidation/auth/ValidationSchema';
-import useScrollLock from 'hooks/useScrollLock';
 import * as Styled from 'styles/SignupForm';
+import type { LoginInfo, SignupFormInfo, SignupInfo, User } from 'types';
+import validationSchema from 'utils/FormValidation/auth/ValidationSchema';
 
 interface Props {
   visibleAuthForm: boolean;

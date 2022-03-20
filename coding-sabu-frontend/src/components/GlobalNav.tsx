@@ -1,12 +1,13 @@
 import Link from 'next/link';
-import { useState, useCallback, useMemo, FC, memo, MouseEventHandler, useEffect } from 'react';
+import { FC, useState, useEffect, useCallback, useMemo, memo, MouseEventHandler } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { AiFillCaretDown as DownArrow } from 'react-icons/ai';
 import LoginForm from 'components/LoginForm';
 import SignupForm from 'components/SignupForm';
 import Button from 'components/Button';
 import UserMenu from 'components/UserMenu';
-import { RootState, ThunkAsyncState } from 'store';
+import AUTH_SUCCESS from 'fixtures/auth/success';
+import AUTH_FAIL from 'fixtures/auth/fail';
 import { hideAuthForm, showAuthForm, showHud } from 'store/ui';
 import { FlexRow } from 'styles/modules/common';
 import {
@@ -20,10 +21,7 @@ import {
   white,
   UserProfileImage
 } from 'styles/GlobalNav';
-import AUTH_SUCCESS from 'fixtures/auth/success';
-import AUTH_FAIL from 'fixtures/auth/fail';
 import { User } from 'types';
-import { fetchMyJoiningLessons, fetchMyTeachingLessons } from 'store/lesson';
 
 const GlobalNav: FC = () => {
   const [authModalType, setAuthModalType] = useState<'login' | 'signup'>('login');

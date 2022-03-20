@@ -1,22 +1,17 @@
-import { useEffect, useCallback, FC } from 'react';
+import { FC, useEffect, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import validationSchema from 'utils/FormValidation/auth/ValidationSchema';
-
 import Modal from 'components/Modal';
 import Input from 'components/Input';
 import Button from 'components/Button';
-
+import useScrollLock from 'hooks/useScrollLock';
 import { ThunkAsyncState } from 'store';
 import { login } from 'store/auth';
 import { hideAuthForm } from 'store/ui';
-
-import { LoginInfo, User } from 'types';
-
 import { ButtonContainer, InputError } from 'styles/LoginForm';
-
-import useScrollLock from 'hooks/useScrollLock';
+import { LoginInfo, User } from 'types';
+import validationSchema from 'utils/FormValidation/auth/ValidationSchema';
 
 interface Props {
   visibleAuthForm: boolean;
@@ -24,9 +19,7 @@ interface Props {
   user: ThunkAsyncState<User>;
 }
 
-const LoginForm: FC<Props> = ({ visibleAuthForm, setModalToRender, user }) => {
-  useScrollLock(visibleAuthForm, [visibleAuthForm]);
-
+const LoginForm: FC<Props> = ({ visibleAuthForm, setModalToRender }) => {
   const {
     register,
     handleSubmit,
@@ -46,6 +39,8 @@ const LoginForm: FC<Props> = ({ visibleAuthForm, setModalToRender, user }) => {
     async loginInfo => await dispatch(login(loginInfo)),
     [dispatch]
   );
+
+  useScrollLock(visibleAuthForm, [visibleAuthForm]);
 
   useEffect(() => {
     visibleAuthForm && setFocus('email');

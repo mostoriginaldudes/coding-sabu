@@ -3,18 +3,17 @@ import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
 import Head from 'next/head';
 import { useState, useEffect, useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { createLectureRequest } from 'apis';
-import { Lecture, LectureRequestInfo, Lesson } from 'types';
-import { RootState, ThunkAsyncState } from 'store';
-import { showHud } from 'store/ui';
-import LECTURE_FAIL from 'fixtures/lecture/fail';
-import LECTURE_SUCCESS from 'fixtures/lecture/success';
 import { ValidationError } from 'yup';
-import { Row } from 'styles/modules/common';
+import { createLectureRequest } from 'apis';
 import UnderlineTitle from 'components/UnderlineTitle';
 import Input from 'components/Input';
 import Button from 'components/Button';
+import LECTURE_FAIL from 'fixtures/lecture/fail';
+import LECTURE_SUCCESS from 'fixtures/lecture/success';
+import { ValidationError } from 'yup';
+import { showHud } from 'store/ui';
+import { Row } from 'styles/modules/common';
+import { Lecture, LectureRequestInfo, Lesson } from 'types';
 
 const Editor = dynamic(() => import('components/Editor'), { ssr: false });
 

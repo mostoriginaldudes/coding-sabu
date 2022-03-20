@@ -1,12 +1,13 @@
-import { useCallback, useMemo, FC, memo, useEffect } from 'react';
+import Image from 'next/image';
+import { FC, useCallback, useMemo, memo } from 'react';
 import { createPortal } from 'react-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from 'store';
 import { hideHud } from 'store/ui';
 import COMMON from 'fixtures/common/success';
-import { HeadUpDpWrapper, size, delay } from 'styles/HeadUpDisplay';
 import useTimeout from 'hooks/useTimeout';
-import Image from 'next/image';
+import { hideHud } from 'store/ui';
+import { HeadUpDpWrapper, size, delay } from 'styles/HeadUpDisplay';
 
 const HeadUpDisplay: FC = () => {
   const { visibleHud, hudStatusText } = useSelector((state: RootState) => ({

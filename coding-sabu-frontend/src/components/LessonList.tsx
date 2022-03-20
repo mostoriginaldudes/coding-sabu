@@ -1,8 +1,8 @@
-import { useState, FC, useEffect, useCallback } from 'react';
-import LessonItem from 'components/LessonItem';
-import { Lesson } from 'types';
-import * as Styled from 'styles/LessonList';
 import { useRouter } from 'next/router';
+import { FC } from 'react';
+import LessonItem from 'components/LessonItem';
+import * as Styled from 'styles/LessonList';
+import { Lesson } from 'types';
 
 interface Props {
   lessons: Lesson[];

@@ -2,18 +2,18 @@ import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
 import Head from 'next/head';
 import { useState, useEffect, useMemo, useCallback, ChangeEvent } from 'react';
+import { unwrapResult } from '@reduxjs/toolkit';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { createLesson } from 'store/lesson';
-import { showHud } from 'store/ui';
 import Input from 'components/Input';
 import Button from 'components/Button';
+import UnderlineTitle from 'components/UnderlineTitle';
 import LESSON_SUCCESS from 'fixtures/lesson/success';
 import LESSON_FAIL from 'fixtures/lesson/fail';
-import validationSchema from 'utils/FormValidation/lesson/ValidationSchema';
-import UnderlineTitle from 'components/UnderlineTitle';
+import { createLesson } from 'store/lesson';
+import { showHud } from 'store/ui';
 import * as Styled from 'styles/LessonForm';
-import { unwrapResult } from '@reduxjs/toolkit';
+import validationSchema from 'utils/FormValidation/lesson/ValidationSchema';
 import useRedux from 'hooks/useRedux';
 
 const Editor = dynamic(() => import('components/Editor'), { ssr: false });
@@ -25,10 +25,13 @@ interface LessonFormProps {
 
 export default function LessonForm() {
   const router = useRouter();
+
   const [imgUrl, setImgUrl] = useState<string>('');
   const [imgFile, setImgFile] = useState<File | null>(null);
   const [description, setDescription] = useState<string>('');
+
   const { useAppDispatch, useAppSelector } = useRedux();
+
   const dispatch = useAppDispatch();
 
   const { teacherId } = useAppSelector(state => ({

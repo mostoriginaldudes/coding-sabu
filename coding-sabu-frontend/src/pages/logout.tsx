@@ -1,13 +1,13 @@
-import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
+import Head from 'next/head';
+import { useState, useEffect, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { css } from '@emotion/react';
+import Loader from 'components/Loader';
+import AUTH_SUCCESS from 'fixtures/auth/success';
 import { logout, setToken } from 'store/auth';
 import { showHud } from 'store/ui';
 import { colors } from 'styles/modules/theme';
-import AUTH_SUCCESS from 'fixtures/auth/success';
-import Loader from 'components/Loader';
-import Head from 'next/head';
 
 const style = css`
   & > h2 {

@@ -1,9 +1,8 @@
-import { FC, useCallback, useRef } from 'react';
 import Link from 'next/link';
+import { FC, useCallback, useRef } from 'react';
 import useClickOutside from 'hooks/useClickOutside';
-import { User } from 'types';
 import * as Styled from 'styles/UserMenu';
-import { useEffect } from 'react';
+import { User } from 'types';
 
 interface Props {
   userInfo: User | null;

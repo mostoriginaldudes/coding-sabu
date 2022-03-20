@@ -1,10 +1,10 @@
-import { FC, useState, useRef, useEffect, useMemo } from 'react';
-import Link from 'next/link';
-import { Lesson } from 'types';
-import UnderlineTitle from 'components/UnderlineTitle';
-import * as Styled from 'styles/LessonDisplay';
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
+import { FC, useState, useEffect, useMemo, useRef } from 'react';
+import UnderlineTitle from 'components/UnderlineTitle';
 import lesson from 'store/lesson';
+import * as Styled from 'styles/LessonDisplay';
+import { Lesson } from 'types';
 
 const Viewer = dynamic(() => import('components/Viewer'), { ssr: false });
 

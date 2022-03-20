@@ -1,13 +1,13 @@
-import useFetchLessonList from 'hooks/useFetchLessonList';
+import Head from 'next/head';
+import { useMemo } from 'react';
+import { FiAlertTriangle } from 'react-icons/fi';
 import Loader from 'components/Loader';
 import LessonDisplay from 'components/LessonDisplay';
 import UnderlineTitle from 'components/UnderlineTitle';
 import LessonList from 'components/LessonList';
-import Head from 'next/head';
-import { FiAlertTriangle } from 'react-icons/fi';
-import { Empty } from 'styles/Home';
-import { useMemo } from 'react';
+import useFetchLessonList from 'hooks/useFetchLessonList';
 import { wrapper } from 'store';
+import { Empty } from 'styles/Home';
 
 export default function Home() {
   const [loading, allLessons] = useFetchLessonList('lessons');

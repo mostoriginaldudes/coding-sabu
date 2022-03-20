@@ -1,7 +1,6 @@
 import styled from '@emotion/styled';
-import { Row as FlexRow } from 'styles/modules/common';
 import { colors, media } from 'styles/modules/theme';
-import { flexCenter } from 'styles/modules/common';
+import { flexCenter, Row as FlexRow } from 'styles/modules/common';
 
 export const InputContainer = styled.div`
   display: flex;

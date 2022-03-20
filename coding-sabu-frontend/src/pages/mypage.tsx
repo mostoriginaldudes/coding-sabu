@@ -1,18 +1,17 @@
-import { useState, useEffect, useCallback, useMemo, ChangeEvent } from 'react';
 import { useRouter } from 'next/router';
+import Head from 'next/head';
+import { useState, useEffect, useCallback, useMemo, ChangeEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { RootState } from 'store';
-import { editUser } from 'store/auth';
-import { EditUserInfo } from 'types';
-import validationSchema from 'utils/FormValidation/auth/ValidationSchema';
-import * as Styled from 'styles/MyPage';
 import Input from 'components/Input';
 import Button from 'components/Button';
-import Head from 'next/head';
-import { showHud } from 'store/ui';
 import AUTH_FAIL from 'fixtures/auth/fail';
+import { editUser } from 'store/auth';
+import { showHud } from 'store/ui';
+import validationSchema from 'utils/FormValidation/auth/ValidationSchema';
+import * as Styled from 'styles/MyPage';
+import { EditUserInfo } from 'types';
 
 export default function MyPage() {
   const router = useRouter();
@@ -21,6 +20,7 @@ export default function MyPage() {
 
   const [imgUrl, setImgUrl] = useState<string | undefined>(data?.profileImage);
   const [profileImage, setProfileImage] = useState<File | null>(null);
+
   const hasBeenUploaded = useMemo(() => data?.profileImage !== '', [data]);
 
   const {

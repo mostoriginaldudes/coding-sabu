@@ -5,12 +5,12 @@ import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import styled from '@emotion/styled';
 import { RootState, ThunkAsyncState } from 'store';
-import { fetchLecture } from 'store/lecture';
-import type { Lecture, Lesson } from 'types';
 import UnderlineTitle from 'components/UnderlineTitle';
 import LectureUnitList from 'components/LectureUnitList';
 import LectureContent from 'components/LectureContent';
 import Loader from 'components/Loader';
+import { fetchLecture } from 'store/lecture';
+import type { Lecture, Lesson } from 'types';
 
 const LectureWrapper = styled.div`
   display: flex;

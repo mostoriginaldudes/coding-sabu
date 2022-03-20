@@ -1,6 +1,5 @@
 import { FC, memo, ReactElement } from 'react';
 import { createPortal } from 'react-dom';
-import { getModalRoot } from 'utils';
 import { HiX } from 'react-icons/hi';
 import * as Styled from 'styles/Modal';
 

@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { ThunkAsyncState } from '.';
-import { Lesson } from 'types';
 import {
   createLessonRequest,
   fetchLessonListRequest,
@@ -9,6 +8,7 @@ import {
   fetchOneLessonRequest,
   joinLessonRequest
 } from 'apis';
+import { Lesson } from 'types';
 
 const FETCH_LESSONS = 'lesson/FETCH_LESSONS' as const;
 const FETCH_MY_JOINING_LESSONS = 'lesson/FETCH_MY_JOINING_LESSONS' as const;

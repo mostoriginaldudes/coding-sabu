@@ -1,6 +1,6 @@
-import { useMemo, FC, memo } from 'react';
-import { Lesson } from 'types';
+import { FC, useMemo, memo } from 'react';
 import * as Styled from 'styles/LessonItem';
+import { Lesson } from 'types';
 
 const LessonItem: FC<Lesson> = ({ teacherName, title, price, thumbnailUrl, studentCount }) => {
   const formattedPrice = useMemo(() => {

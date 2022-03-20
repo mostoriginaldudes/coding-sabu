@@ -1,6 +1,6 @@
+import { HiChevronLeft, HiChevronRight } from 'react-icons/hi';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
-import { HiChevronLeft, HiChevronRight } from 'react-icons/hi';
 import { flexCenter } from 'styles/modules/common';
 import { colors, media } from 'styles/modules/theme';
 
