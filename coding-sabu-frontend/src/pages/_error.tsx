@@ -28,7 +28,7 @@ export default function Error() {
         <Image src="/images/logo.svg" alt="코딩사부 로고" layout="fixed" width={500} height={300} />
         <h1>심각한 에러가 발생하였습니다.</h1>
         <FcDisclaimer />
-        <Link href="/">
+        <Link href="/" passHref>
           <Button color="black">홈으로 이동</Button>
         </Link>
       </Wrapper>
