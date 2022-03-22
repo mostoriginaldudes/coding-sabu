@@ -1,18 +1,20 @@
 import { useRouter } from 'next/router';
-import Head from 'next/head';
 import { useEffect, useCallback, useMemo } from 'react';
-import { ThunkAsyncState } from 'store';
 import LessonList from 'components/LessonList';
+import Loader from 'components/Loader';
 import UnderlineTitle from 'components/UnderlineTitle';
-import useFetchLessonList from 'hooks/useFetchLessonList';
+import PageHead from 'components/PageHead';
 import useRedux from 'hooks/useRedux';
+import { wrapper } from 'store';
+import { fetchMyTeachingLessons } from 'store/lesson';
 import * as Styled from 'styles/MyTeachingLessons';
-import { User } from 'types';
 
 export default function MyTeachingLessons() {
   const { useAppSelector } = useRedux();
-  const user = useAppSelector(state => state.auth.user as ThunkAsyncState<User>);
-  const [_, lessons] = useFetchLessonList('myTeachingLessons');
+  const { user, myTeachingLessons } = useAppSelector(state => ({
+    user: state.auth.user,
+    myTeachingLessons: state.lesson.myTeachingLessons
+  }));
 
   const router = useRouter();
   const goToLessonForm = useCallback(() => router.push('/lesson/form'), []);
@@ -24,16 +26,23 @@ export default function MyTeachingLessons() {
 
   return (
     <div>
-      <Head>
-        <title>내 가르침 | 코딩사부</title>
-      </Head>
+      <PageHead title="내 가르침" />
       <Styled.Container>
         <Styled.CreateLessonButton color="black" height={2} radius={10} onClick={goToLessonForm}>
           수련 개설
         </Styled.CreateLessonButton>
         <UnderlineTitle title="내 가르침 목록" />
-        <LessonList lessons={lessons} />
+        <Loader loading={myTeachingLessons.loading} />
+        <LessonList lessons={myTeachingLessons.data || []} />
       </Styled.Container>
     </div>
   );
 }
+
+export const getServerSideProps = wrapper.getServerSideProps(store => async () => {
+  await store.dispatch(fetchMyTeachingLessons());
+
+  return {
+    props: {}
+  };
+});

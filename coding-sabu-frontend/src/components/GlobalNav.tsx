@@ -8,35 +8,21 @@ import UserMenu from 'components/UserMenu';
 import AUTH_SUCCESS from 'fixtures/auth/success';
 import AUTH_FAIL from 'fixtures/auth/fail';
 import useRedux from 'hooks/useRedux';
-import { ThunkAsyncState } from 'store';
 import { fetchMyJoiningLessons, fetchMyTeachingLessons } from 'store/lesson';
 import { hideAuthForm, showAuthForm, showHud } from 'store/ui';
 import { FlexRow } from 'styles/modules/common';
-import {
-  EmphasisText,
-  GlobalNavStyle,
-  HeaderContainer,
-  Image,
-  unitRegular,
-  ButtonToMyClass,
-  UserDefaultProfileImage,
-  white,
-  UserProfileImage
-} from 'styles/GlobalNav';
-import { User } from 'types';
+import * as Styled from 'styles/GlobalNav';
 
 const GlobalNav: FC = () => {
   const [authModalType, setAuthModalType] = useState<'login' | 'signup'>('login');
   const [visibleUserMenu, setVisibleUserMenu] = useState<boolean>(false);
 
   const { useAppDispatch, useAppSelector } = useRedux();
-
   const dispatch = useAppDispatch();
-
   const { token, user, visibleAuthForm } = useAppSelector(state => ({
-    token: state.auth.token as string | null,
-    user: state.auth.user as ThunkAsyncState<User>,
-    visibleAuthForm: state.ui.visibleAuthForm as boolean
+    token: state.auth.token,
+    user: state.auth.user,
+    visibleAuthForm: state.ui.visibleAuthForm
   }));
 
   const setModalToRender = useCallback(
@@ -89,26 +75,31 @@ const GlobalNav: FC = () => {
   }, [user, displayLoginSuccess, displayLoginFail]);
 
   return (
-    <HeaderContainer data-testid="header">
-      <GlobalNavStyle>
+    <Styled.HeaderContainer data-testid="header">
+      <Styled.GlobalNavStyle>
         <Link href="/" passHref>
           <FlexRow style={{ cursor: 'pointer' }}>
-            <Image src="/images/logo.svg" alt="logo" width={unitRegular} height={unitRegular} />
-            <EmphasisText>코딩사부</EmphasisText>
+            <Styled.Image
+              src="/images/logo.svg"
+              alt="logo"
+              width={Styled.unitRegular}
+              height={Styled.unitRegular}
+            />
+            <Styled.EmphasisText>코딩사부</Styled.EmphasisText>
           </FlexRow>
         </Link>
         {isLoggedIn ? (
           <FlexRow role="toggleMenu">
-            <ButtonToMyClass radius={unitRegular} color="white">
+            <Styled.ButtonToMyClass radius={Styled.unitRegular} color="white">
               <Link href="/mylesson">수련 관리</Link>
-            </ButtonToMyClass>
+            </Styled.ButtonToMyClass>
             <FlexRow onClick={toggleUserMenu}>
               {profileImage ? (
-                <UserProfileImage profileImageUrl={profileImage} />
+                <Styled.UserProfileImage profileImageUrl={profileImage} />
               ) : (
-                <UserDefaultProfileImage
-                  color={white}
-                  fontSize={unitRegular / 3}
+                <Styled.UserDefaultProfileImage
+                  color="white"
+                  fontSize={Styled.unitRegular / 3}
                   cursor="pointer"
                 />
               )}
@@ -140,8 +131,8 @@ const GlobalNav: FC = () => {
             )}
           </>
         )}
-      </GlobalNavStyle>
-    </HeaderContainer>
+      </Styled.GlobalNavStyle>
+    </Styled.HeaderContainer>
   );
 };
 

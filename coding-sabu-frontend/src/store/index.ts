@@ -1,19 +1,10 @@
 import { configureStore, combineReducers, Reducer, Action } from '@reduxjs/toolkit';
 import logger from 'redux-logger';
-import {
-  persistReducer,
-  FLUSH,
-  REHYDRATE,
-  PAUSE,
-  PERSIST,
-  PURGE,
-  REGISTER,
-  PersistConfig
-} from 'redux-persist';
+import { persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import hardSet from 'redux-persist/lib/stateReconciler/hardSet';
 import { createWrapper, HYDRATE, MakeStore } from 'next-redux-wrapper';
-import authReducer, { AuthActions } from './auth';
+import authReducer, { State as AuthState, AuthActions } from './auth';
 import lessonReducer, { LessonActions } from './lesson';
 import lectureReducer, { LectureActions } from './lecture';
 import uiReducer, { UIActions } from './ui';
@@ -24,15 +15,25 @@ export type ThunkAsyncState<T> = {
   error: Error | null;
 };
 
-const persistConfig: PersistConfig<any> = {
+type CustomActions = AuthActions | LessonActions | LectureActions | UIActions;
+type TotalActions = Action<CustomActions> & { type: typeof HYDRATE; payload: any };
+
+export type RootState = ReturnType<typeof rootReducer>;
+export type StoreType = typeof store;
+export type AppDispatch = typeof store.dispatch;
+
+const envIsDev = process.env.NODE_ENV === 'development';
+
+const persistConfig = {
   key: 'auth',
   version: 1,
   storage,
-  stateReconciler: hardSet
+  stateReconciler: hardSet,
+  debug: envIsDev
 };
 
 const rootReducer = combineReducers({
-  auth: persistReducer(persistConfig, authReducer),
+  auth: persistReducer<AuthState, TotalActions>(persistConfig, authReducer),
   lesson: lessonReducer,
   lecture: lectureReducer,
   ui: uiReducer
@@ -44,17 +45,23 @@ const defaultMiddlewareOptions = {
   }
 };
 
-type CustomActions = AuthActions | LessonActions | LectureActions | UIActions;
-type TotalActions = Action<CustomActions> & { type: typeof HYDRATE; payload: any };
-
-const reducer = (state: ReturnType<typeof rootReducer>, action: TotalActions) =>
-  rootReducer(state, action);
+const reducer = (state: RootState, action: TotalActions): RootState => {
+  switch (action.type) {
+    case HYDRATE:
+      return {
+        ...state,
+        ...action.payload
+      };
+    default:
+      return rootReducer(state, action);
+  }
+};
 
 export const store = configureStore({
-  reducer: reducer as Reducer,
-  devTools: process.env.NODE_ENV === 'development',
+  reducer: reducer as Reducer<RootState, TotalActions>,
+  devTools: envIsDev,
   middleware: getDefaultMiddleware => {
-    return process.env.NODE_ENV === 'production'
+    return !envIsDev
       ? getDefaultMiddleware(defaultMiddlewareOptions)
       : getDefaultMiddleware(defaultMiddlewareOptions).concat(logger);
   }
@@ -62,11 +69,6 @@ export const store = configureStore({
 
 const makeStore: MakeStore<StoreType> = () => store;
 
-export type RootState = ReturnType<typeof rootReducer>;
-export type StoreType = typeof store;
-
 export const wrapper = createWrapper(makeStore, {
-  debug: process.env.NODE_ENV !== 'production'
+  debug: envIsDev
 });
-
-export type AppDispatch = typeof store.dispatch;

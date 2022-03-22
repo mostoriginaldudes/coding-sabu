@@ -1,6 +1,6 @@
-import Head from 'next/head';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import PageHead from 'components/PageHead';
 import * as Styled from 'styles/NotFound';
 
 export default function NotFound() {
@@ -8,9 +8,7 @@ export default function NotFound() {
 
   return (
     <div>
-      <Head>
-        <title>Not Found | 코딩사부</title>
-      </Head>
+      <PageHead title="Not Found" />
       <Styled.Container>
         <h2>요청하신 컨텐츠 혹은 페이지가 없습니다.</h2>
         <h4>올바른 자원을 요청해주세요.</h4>
@@ -28,3 +26,9 @@ export default function NotFound() {
     </div>
   );
 }
+
+export const getStaticProps = () => {
+  return {
+    props: {}
+  };
+};
