@@ -1,10 +1,10 @@
 import { useRouter } from 'next/router';
-import Head from 'next/head';
 import { useState, useEffect, useCallback, useMemo, ChangeEvent } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import Input from 'components/Input';
 import Button from 'components/Button';
+import PageHead from 'components/PageHead';
 import AUTH_FAIL from 'fixtures/auth/fail';
 import useRedux from 'hooks/useRedux';
 import { editUser } from 'store/auth';
@@ -98,9 +98,7 @@ export default function MyPage() {
 
   return (
     <div>
-      <Head>
-        <title>내 정보 | 코딩사부</title>
-      </Head>
+      <PageHead title="내 정보" />
       <form onSubmit={handleSubmit(onSubmit)} noValidate encType="multipart/form-data">
         <Styled.Row>
           <Styled.ProfileContainer imgUrl={imgUrl}>

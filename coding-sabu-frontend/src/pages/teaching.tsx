@@ -1,10 +1,9 @@
 import { useRouter } from 'next/router';
-import Head from 'next/head';
 import { useEffect, useCallback, useMemo } from 'react';
 import { ThunkAsyncState } from 'store';
 import LessonList from 'components/LessonList';
 import UnderlineTitle from 'components/UnderlineTitle';
-import useFetchLessonList from 'hooks/useFetchLessonList';
+import PageHead from 'components/PageHead';
 import useRedux from 'hooks/useRedux';
 import * as Styled from 'styles/MyTeachingLessons';
 import { User } from 'types';
@@ -24,9 +23,7 @@ export default function MyTeachingLessons() {
 
   return (
     <div>
-      <Head>
-        <title>내 가르침 | 코딩사부</title>
-      </Head>
+      <PageHead title="내 가르침" />
       <Styled.Container>
         <Styled.CreateLessonButton color="black" height={2} radius={10} onClick={goToLessonForm}>
           수련 개설

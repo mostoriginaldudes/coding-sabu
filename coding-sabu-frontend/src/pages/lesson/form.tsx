@@ -1,6 +1,5 @@
 import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
-import Head from 'next/head';
 import { useState, useEffect, useMemo, useCallback, ChangeEvent } from 'react';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -8,6 +7,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import Input from 'components/Input';
 import Button from 'components/Button';
 import UnderlineTitle from 'components/UnderlineTitle';
+import PageHead from 'components/PageHead';
 import LESSON_SUCCESS from 'fixtures/lesson/success';
 import LESSON_FAIL from 'fixtures/lesson/fail';
 import useRedux from 'hooks/useRedux';
@@ -117,9 +117,7 @@ export default function LessonForm() {
 
   return (
     <div>
-      <Head>
-        <title>수련 창설 | 코딩사부</title>
-      </Head>
+      <PageHead title="수련 창설" />
       <UnderlineTitle title="수련 창설" />
       <form
         css={Styled.form}

@@ -1,10 +1,11 @@
-import Head from 'next/head';
+import { NextPage } from 'next';
 import { useMemo } from 'react';
 import { FiAlertTriangle } from 'react-icons/fi';
 import Loader from 'components/Loader';
 import LessonDisplay from 'components/LessonDisplay';
 import UnderlineTitle from 'components/UnderlineTitle';
 import LessonList from 'components/LessonList';
+import PageHead from 'components/PageHead';
 import useFetchLessonList from 'hooks/useFetchLessonList';
 import { wrapper } from 'store';
 import { Empty } from 'styles/Home';
@@ -16,9 +17,7 @@ export default function Home() {
 
   return (
     <div>
-      <Head>
-        <title>HOME | 코딩사부</title>
-      </Head>
+      <PageHead title="HOME" />
       <Loader loading={loading} />
       {!loading && hasContent && (
         <>

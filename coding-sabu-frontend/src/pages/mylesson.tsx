@@ -1,7 +1,7 @@
-import Head from 'next/head';
 import LessonList from 'components/LessonList';
 import UnderlineTitle from 'components/UnderlineTitle';
 import Loader from 'components/Loader';
+import PageHead from 'components/PageHead';
 import useFetchLessonList from 'hooks/useFetchLessonList';
 
 export default function MyJoiningLessons() {
@@ -9,9 +9,7 @@ export default function MyJoiningLessons() {
 
   return (
     <div>
-      <Head>
-        <title>내 수련 목록 | 코딩사부</title>
-      </Head>
+      <PageHead title="내 수련 목록" />
       <UnderlineTitle title="내 수련 목록" />
       <Loader loading={loading} />
       <LessonList lessons={lessons} />

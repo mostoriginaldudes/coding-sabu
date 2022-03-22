@@ -1,13 +1,13 @@
 import { GetStaticPropsContext } from 'next';
 import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
-import Head from 'next/head';
 import { useState, useEffect, useCallback } from 'react';
 import { ValidationError } from 'yup';
 import { createLectureRequest } from 'apis';
 import UnderlineTitle from 'components/UnderlineTitle';
 import Input from 'components/Input';
 import Button from 'components/Button';
+import PageHead from 'components/PageHead';
 import LECTURE_FAIL from 'fixtures/lecture/fail';
 import LECTURE_SUCCESS from 'fixtures/lecture/success';
 import useRedux from 'hooks/useRedux';
@@ -97,9 +97,7 @@ export default function LectureForm({ lessonId }: Props) {
 
   return (
     <div>
-      <Head>
-        <title>수련 비급 작성 | 코딩사부</title>
-      </Head>
+      <PageHead title="수련 비급 작성" />
       <UnderlineTitle title="수련 비급 작성" />
       <form onSubmit={onSubmit}>
         <Input

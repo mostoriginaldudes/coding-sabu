@@ -1,12 +1,12 @@
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import Head from 'next/head';
 import { useEffect } from 'react';
 import styled from '@emotion/styled';
 import UnderlineTitle from 'components/UnderlineTitle';
 import LectureUnitList from 'components/LectureUnitList';
 import LectureContent from 'components/LectureContent';
 import Loader from 'components/Loader';
+import PageHead from 'components/PageHead';
 import useRedux from 'hooks/useRedux';
 import { ThunkAsyncState } from 'store';
 import { fetchLecture } from 'store/lecture';
@@ -37,9 +37,7 @@ const LecturePage: NextPage = () => {
 
   return (
     <div>
-      <Head>
-        <title>수련 비급 | 코딩사부</title>
-      </Head>
+      <PageHead title="수련 비급" />
       <Loader loading={lecture.loading} />
       {lesson() && lecture.data && (
         <>

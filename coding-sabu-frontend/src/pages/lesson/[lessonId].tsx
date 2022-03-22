@@ -1,11 +1,12 @@
 import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
-import Head from 'next/head';
+import { useCallback, useMemo } from 'react';
 import { useEffect, useCallback, useMemo } from 'react';
 import Button from 'components/Button';
 import TextBox from 'components/TextBox';
 import Loader from 'components/Loader';
 import UnderlineTitle from 'components/UnderlineTitle';
+import PageHead from 'components/PageHead';
 import AuthenticationError from 'errors/AuthenticationError';
 import LESSON_SUCCESS from 'fixtures/lesson/success';
 import LESSON_FAIL from 'fixtures/lesson/fail';
@@ -136,9 +137,7 @@ export default function LessonDetail() {
 
   return (
     <div>
-      <Head>
-        <title>수련 정보 | 코딩사부</title>
-      </Head>
+      <PageHead title="수련 정보" imgUrl={lesson.data?.thumbnailUrl} />
       <Styled.LessonDetailContainer>
         <Loader loading={lesson.loading} />
         {lesson.data && (
