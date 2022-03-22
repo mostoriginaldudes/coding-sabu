@@ -10,7 +10,7 @@ import PageHead from 'components/PageHead';
 import useRedux from 'hooks/useRedux';
 import { ThunkAsyncState } from 'store';
 import { fetchLecture } from 'store/lecture';
-import type { Lecture, Lesson } from 'types';
+import type { Lesson } from 'types';
 
 const LectureWrapper = styled.div`
   display: flex;
@@ -18,11 +18,11 @@ const LectureWrapper = styled.div`
 
 const LecturePage: NextPage = () => {
   const { useAppDispatch, useAppSelector } = useRedux();
-  const { lessons, lecture } = useAppSelector(state => ({
-    lessons: state.lesson.lessons as ThunkAsyncState<Lesson[]>,
-    lecture: state.lecture.lectureUnits as ThunkAsyncState<Lecture[]>
-  }));
   const dispatch = useAppDispatch();
+  const { lessons, lecture } = useAppSelector(state => ({
+    lessons: state.lesson.lessons,
+    lecture: state.lecture.lectureUnits
+  }));
 
   const router = useRouter();
   const { lessonId, unitId } = router.query as { lessonId: string; unitId: string };
@@ -32,7 +32,7 @@ const LecturePage: NextPage = () => {
 
   const content = () => lecture.data?.find(unit => unit.id === parseInt(unitId))?.content;
   useEffect(() => {
-    dispatch(fetchLecture(parseInt(lessonId)));
+    dispatch(fetchLecture(lessonId));
   }, []);
 
   return (

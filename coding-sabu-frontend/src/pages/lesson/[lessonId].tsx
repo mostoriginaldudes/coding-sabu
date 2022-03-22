@@ -26,6 +26,7 @@ export default function LessonDetail() {
   const { lessonId } = router.query as { lessonId: string };
 
   const { useAppDispatch, useAppSelector } = useRedux();
+  const dispatch = useAppDispatch();
   const { user, lesson, lecture, myJoiningLessons, myTeachingLessons } = useAppSelector(state => ({
     user: state.auth.user,
     lesson: state.lesson.lessonDetailInfo,

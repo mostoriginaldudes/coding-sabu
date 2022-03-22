@@ -11,10 +11,10 @@ import PageHead from 'components/PageHead';
 import LECTURE_FAIL from 'fixtures/lecture/fail';
 import LECTURE_SUCCESS from 'fixtures/lecture/success';
 import useRedux from 'hooks/useRedux';
-import { ThunkAsyncState } from 'store';
+import { store } from 'store';
 import { showHud } from 'store/ui';
 import { Row } from 'styles/modules/common';
-import { Lecture, LectureRequestInfo, Lesson } from 'types';
+import { Lecture, LectureRequestInfo } from 'types';
 
 const Editor = dynamic(() => import('components/Editor'), { ssr: false });
 
@@ -26,11 +26,11 @@ export default function LectureForm({ lessonId }: Props) {
   const router = useRouter();
 
   const { useAppDispatch, useAppSelector } = useRedux();
+  const dispatch = useAppDispatch();
   const { user, myTeachingLessons } = useAppSelector(state => ({
     user: state.auth.user,
-    myTeachingLessons: state.lesson.myTeachingLessons as ThunkAsyncState<Lesson[]>
+    myTeachingLessons: state.lesson.myTeachingLessons
   }));
-  const dispatch = useAppDispatch();
 
   const [unit, setUnit] = useState<string>('');
   const [content, setContent] = useState<string>('');

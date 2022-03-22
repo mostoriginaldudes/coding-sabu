@@ -1,17 +1,17 @@
 import { useRouter } from 'next/router';
 import { useEffect, useCallback, useMemo } from 'react';
-import { ThunkAsyncState } from 'store';
 import LessonList from 'components/LessonList';
 import UnderlineTitle from 'components/UnderlineTitle';
 import PageHead from 'components/PageHead';
 import useRedux from 'hooks/useRedux';
 import * as Styled from 'styles/MyTeachingLessons';
-import { User } from 'types';
 
 export default function MyTeachingLessons() {
   const { useAppSelector } = useRedux();
-  const user = useAppSelector(state => state.auth.user as ThunkAsyncState<User>);
-  const [_, lessons] = useFetchLessonList('myTeachingLessons');
+  const { user, myTeachingLessons } = useAppSelector(state => ({
+    user: state.auth.user,
+    myTeachingLessons: state.lesson.myTeachingLessons
+  }));
 
   const router = useRouter();
   const goToLessonForm = useCallback(() => router.push('/lesson/form'), []);

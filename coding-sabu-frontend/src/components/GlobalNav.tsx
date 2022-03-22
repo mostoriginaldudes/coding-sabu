@@ -8,7 +8,6 @@ import UserMenu from 'components/UserMenu';
 import AUTH_SUCCESS from 'fixtures/auth/success';
 import AUTH_FAIL from 'fixtures/auth/fail';
 import useRedux from 'hooks/useRedux';
-import { ThunkAsyncState } from 'store';
 import { fetchMyJoiningLessons, fetchMyTeachingLessons } from 'store/lesson';
 import { hideAuthForm, showAuthForm, showHud } from 'store/ui';
 import { FlexRow } from 'styles/modules/common';
@@ -23,7 +22,6 @@ import {
   white,
   UserProfileImage
 } from 'styles/GlobalNav';
-import { User } from 'types';
 
 const GlobalNav: FC = () => {
   const [authModalType, setAuthModalType] = useState<'login' | 'signup'>('login');
@@ -34,9 +32,9 @@ const GlobalNav: FC = () => {
   const dispatch = useAppDispatch();
 
   const { token, user, visibleAuthForm } = useAppSelector(state => ({
-    token: state.auth.token as string | null,
-    user: state.auth.user as ThunkAsyncState<User>,
-    visibleAuthForm: state.ui.visibleAuthForm as boolean
+    token: state.auth.token,
+    user: state.auth.user,
+    visibleAuthForm: state.ui.visibleAuthForm
   }));
 
   const setModalToRender = useCallback(
