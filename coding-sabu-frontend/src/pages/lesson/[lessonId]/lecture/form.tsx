@@ -25,15 +25,15 @@ interface Props {
 export default function LectureForm({ lessonId }: Props) {
   const router = useRouter();
 
+  const [unit, setUnit] = useState<string>('');
+  const [content, setContent] = useState<string>('');
+
   const { useAppDispatch, useAppSelector } = useRedux();
   const dispatch = useAppDispatch();
   const { user, myTeachingLessons } = useAppSelector(state => ({
     user: state.auth.user,
     myTeachingLessons: state.lesson.myTeachingLessons
   }));
-
-  const [unit, setUnit] = useState<string>('');
-  const [content, setContent] = useState<string>('');
 
   const checkIfAuthorized = useCallback(() => {
     if (user.data === null) {
@@ -119,7 +119,7 @@ export default function LectureForm({ lessonId }: Props) {
       </form>
     </div>
   );
-}
+};
 
 export function getStaticProps(context: GetStaticPropsContext) {
   const lessonId = context.params!.lessonId as string;
