@@ -1,5 +1,4 @@
 import { NextPage } from 'next';
-import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import styled from '@emotion/styled';
 import UnderlineTitle from 'components/UnderlineTitle';
@@ -8,7 +7,7 @@ import LectureContent from 'components/LectureContent';
 import Loader from 'components/Loader';
 import PageHead from 'components/PageHead';
 import useRedux from 'hooks/useRedux';
-import { ThunkAsyncState } from 'store';
+import { store, wrapper } from 'store';
 import { fetchLecture } from 'store/lecture';
 import type { Lesson } from 'types';
 
@@ -16,7 +15,12 @@ const LectureWrapper = styled.div`
   display: flex;
 `;
 
-const LecturePage: NextPage = () => {
+interface Props {
+  lessonId: number;
+  unitId: number;
+}
+
+const LecturePage: NextPage<Props> = ({ lessonId, unitId }) => {
   const { useAppDispatch, useAppSelector } = useRedux();
   const dispatch = useAppDispatch();
   const { lessons, lecture } = useAppSelector(state => ({
@@ -24,13 +28,10 @@ const LecturePage: NextPage = () => {
     lecture: state.lecture.lectureUnits
   }));
 
-  const router = useRouter();
-  const { lessonId, unitId } = router.query as { lessonId: string; unitId: string };
+  const lesson = () => lessons.data?.find((lesson: Lesson) => lesson.id === lessonId || '');
 
-  const lesson = () =>
-    lessons.data?.find((lesson: Lesson) => lesson.id === parseInt(lessonId) || '');
+  const content = () => lecture.data?.find(unit => unit.id === unitId)?.content;
 
-  const content = () => lecture.data?.find(unit => unit.id === parseInt(unitId))?.content;
   useEffect(() => {
     dispatch(fetchLecture(lessonId));
   }, []);
@@ -43,7 +44,7 @@ const LecturePage: NextPage = () => {
         <>
           <UnderlineTitle title={lesson()!.title || ''} />
           <LectureWrapper>
-            <LectureUnitList lecture={lecture.data} lessonId={parseInt(lessonId)} />
+            <LectureUnitList lecture={lecture.data} lessonId={lessonId} />
             <LectureContent key={unitId} content={content()} />
           </LectureWrapper>
         </>
@@ -54,8 +55,45 @@ const LecturePage: NextPage = () => {
 
 export default LecturePage;
 
-export async function getServerSideProps() {
+export const getStaticProps = wrapper.getStaticProps(store => async ({ params }) => {
+  const lessonId = params?.lessonId as string;
+  const unitId = params?.unitId as string;
+
+  const lessonIdNumber = parseInt(lessonId);
+  store.dispatch(fetchLecture(lessonIdNumber));
+
   return {
-    props: {}
+    props: {
+      lessonId: lessonIdNumber,
+      unitId: parseInt(unitId)
+    }
   };
-}
+});
+
+export const getStaticPaths = () => {
+  const { lessons } = store.getState().lesson;
+  const { lectureUnits } = store.getState().lecture;
+
+  type Paths = Array<{ params: { lessonId: number; unitId: number } }>;
+  let paths: Paths = [];
+
+  if (lessons.data && lectureUnits.data) {
+    for (const lesson of lessons.data) {
+      paths.concat(
+        lectureUnits.data
+          .filter(({ id }) => id === lesson.id)
+          .map(({ id }) => ({
+            params: {
+              lessonId: lesson.id,
+              unitId: id
+            }
+          }))
+      );
+    }
+  }
+
+  return {
+    paths,
+    fallback: true
+  };
+};

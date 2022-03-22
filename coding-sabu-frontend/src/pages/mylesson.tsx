@@ -3,6 +3,8 @@ import UnderlineTitle from 'components/UnderlineTitle';
 import Loader from 'components/Loader';
 import PageHead from 'components/PageHead';
 import useFetchLessonList from 'hooks/useFetchLessonList';
+import { wrapper } from 'store';
+import { fetchMyJoiningLessons } from 'store/lesson';
 
 export default function MyJoiningLessons() {
   const [loading, lessons] = useFetchLessonList('myJoiningLessons');
@@ -16,3 +18,11 @@ export default function MyJoiningLessons() {
     </div>
   );
 }
+
+export const getServerSideProps = wrapper.getServerSideProps(store => async () => {
+  await store.dispatch(fetchMyJoiningLessons());
+
+  return {
+    props: {}
+  };
+});

@@ -1,9 +1,12 @@
 import { useRouter } from 'next/router';
 import { useEffect, useCallback, useMemo } from 'react';
 import LessonList from 'components/LessonList';
+import Loader from 'components/Loader';
 import UnderlineTitle from 'components/UnderlineTitle';
 import PageHead from 'components/PageHead';
 import useRedux from 'hooks/useRedux';
+import { wrapper } from 'store';
+import { fetchMyTeachingLessons } from 'store/lesson';
 import * as Styled from 'styles/MyTeachingLessons';
 
 export default function MyTeachingLessons() {
@@ -29,8 +32,17 @@ export default function MyTeachingLessons() {
           수련 개설
         </Styled.CreateLessonButton>
         <UnderlineTitle title="내 가르침 목록" />
-        <LessonList lessons={lessons} />
+        <Loader loading={myTeachingLessons.loading} />
+        <LessonList lessons={myTeachingLessons.data || []} />
       </Styled.Container>
     </div>
   );
 }
+
+export const getServerSideProps = wrapper.getServerSideProps(store => async () => {
+  await store.dispatch(fetchMyTeachingLessons());
+
+  return {
+    props: {}
+  };
+});

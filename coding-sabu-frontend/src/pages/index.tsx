@@ -8,9 +8,10 @@ import LessonList from 'components/LessonList';
 import PageHead from 'components/PageHead';
 import useFetchLessonList from 'hooks/useFetchLessonList';
 import { wrapper } from 'store';
+import { fetchLessons } from 'store/lesson';
 import { Empty } from 'styles/Home';
 
-export default function Home() {
+const Home: NextPage = () => {
   const [loading, allLessons] = useFetchLessonList('lessons');
 
   const hasContent = useMemo(() => allLessons && allLessons.length > 0, [allLessons]);
@@ -34,9 +35,13 @@ export default function Home() {
       )}
     </div>
   );
-}
+};
 
-export const getServerSideProps = wrapper.getServerSideProps(store => async context => {
+export default Home;
+
+export const getStaticProps = wrapper.getStaticProps(store => async () => {
+  await store.dispatch(fetchLessons());
+
   return {
     props: {}
   };

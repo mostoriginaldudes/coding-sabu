@@ -31,9 +31,7 @@ export default function LessonForm() {
   const [description, setDescription] = useState<string>('');
 
   const { useAppDispatch, useAppSelector } = useRedux();
-
   const dispatch = useAppDispatch();
-
   const { teacherId } = useAppSelector(state => ({
     teacherId: state.auth.user.data?.id
   }));
@@ -166,3 +164,9 @@ export default function LessonForm() {
     </div>
   );
 }
+
+export const getStaticProps = () => {
+  return {
+    props: {}
+  };
+};

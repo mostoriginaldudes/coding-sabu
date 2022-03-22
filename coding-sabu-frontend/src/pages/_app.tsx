@@ -1,4 +1,3 @@
-import { NextPage } from 'next';
 import type { AppProps } from 'next/app';
 import { useStore } from 'react-redux';
 import { persistStore } from 'redux-persist';
@@ -18,7 +17,7 @@ const Main = styled.main`
   margin: ${sizes.unitBig / 8}em auto 2rem;
 `;
 
-const MyApp: NextPage<AppProps> = ({ Component, pageProps }) => {
+function MyApp({ Component, pageProps }: AppProps) {
   const store: StoreType = useStore();
   injectStore(store);
 
@@ -32,6 +31,6 @@ const MyApp: NextPage<AppProps> = ({ Component, pageProps }) => {
       </Main>
     </PersistGate>
   );
-};
+}
 
 export default wrapper.withRedux(MyApp);

@@ -178,3 +178,7 @@ export default function MyPage() {
     </div>
   );
 }
+
+export const getStaticProps = () => ({
+  props: {}
+});

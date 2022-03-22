@@ -35,3 +35,9 @@ export default function Error() {
     </Container>
   );
 }
+
+export const getStaticProps = () => {
+  return {
+    props: {}
+  };
+};

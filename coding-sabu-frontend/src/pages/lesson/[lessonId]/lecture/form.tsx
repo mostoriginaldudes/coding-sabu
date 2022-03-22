@@ -1,4 +1,4 @@
-import { GetStaticPropsContext } from 'next';
+import { NextPage, GetStaticPropsContext } from 'next';
 import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
 import { useState, useEffect, useCallback } from 'react';
@@ -22,7 +22,7 @@ interface Props {
   lessonId: number;
 }
 
-export default function LectureForm({ lessonId }: Props) {
+const LectureForm: NextPage<Props> = ({ lessonId }) => {
   const router = useRouter();
 
   const [unit, setUnit] = useState<string>('');
@@ -121,19 +121,23 @@ export default function LectureForm({ lessonId }: Props) {
   );
 };
 
+export default LectureForm;
+
 export function getStaticProps(context: GetStaticPropsContext) {
-  const lessonId = context.params!.lessonId as string;
+  const lessonId = parseInt(context.params!.lessonId as string);
 
   return {
     props: {
-      lessonId: parseInt(lessonId)
+      lessonId
     }
   };
 }
 
-export function getStaticPaths() {
+export const getStaticPaths = () => {
+  const { myTeachingLessons } = store.getState().lesson;
+
   return {
-    paths: [{ params: { lessonId: '24' } }],
+    paths: myTeachingLessons.data?.map(({ id }) => ({ params: { lessonId: id.toString() } })) || [],
     fallback: true
   };
-}
+};

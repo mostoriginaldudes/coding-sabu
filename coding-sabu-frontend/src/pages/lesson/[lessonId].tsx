@@ -1,7 +1,7 @@
+import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
 import { useCallback, useMemo } from 'react';
-import { useEffect, useCallback, useMemo } from 'react';
 import Button from 'components/Button';
 import TextBox from 'components/TextBox';
 import Loader from 'components/Loader';
@@ -18,12 +18,17 @@ import { fetchLecture } from 'store/lecture';
 import { showAuthForm, showHud } from 'store/ui';
 import { Row } from 'styles/modules/common';
 import * as Styled from 'styles/LessonDetail';
+import { store, wrapper } from 'store';
 
 const Viewer = dynamic(() => import('components/Viewer'), { ssr: false });
 
-export default function LessonDetail() {
+interface Props {
+  lessonId: string;
+  isLoggedIn: boolean;
+}
+
+const LessonDetail: NextPage<Props> = ({ lessonId, isLoggedIn }) => {
   const router = useRouter();
-  const { lessonId } = router.query as { lessonId: string };
 
   const { useAppDispatch, useAppSelector } = useRedux();
   const dispatch = useAppDispatch();
@@ -34,28 +39,9 @@ export default function LessonDetail() {
     myTeachingLessons: state.lesson.myTeachingLessons,
     lecture: state.lecture.lectureUnits
   }));
-  const dispatch = useAppDispatch();
-
-  const dispatchFetchOneLesson = useCallback(
-    (lessonId: string) => {
-      dispatch(fetchOneLesson(parseInt(lessonId)));
-    },
-    [dispatch]
-  );
-
-  const dispatchFetchLecture = useCallback(
-    (lessonId: number) => dispatch(fetchLecture(lessonId)),
-    [dispatch]
-  );
-
-  const isLoggedIn = useMemo(() => Boolean(user.data), [user]);
 
   const enrollIfLoggedIn = () => {
-    if (isLoggedIn) {
-      enrollLesson();
-    } else {
-      dispatch(showAuthForm());
-    }
+    isLoggedIn ? enrollLesson() : dispatch(showAuthForm());
   };
 
   const enrollLesson = async () => {
@@ -125,17 +111,6 @@ export default function LessonDetail() {
     }
   }, [hasLecture]);
 
-  const fetchLessonDetail = async () => {
-    await dispatchFetchOneLesson(lessonId);
-    if (isLoggedIn) {
-      await dispatchFetchLecture(parseInt(lessonId));
-    }
-  };
-
-  useEffect(() => {
-    fetchLessonDetail();
-  }, []);
-
   return (
     <div>
       <PageHead title="수련 정보" imgUrl={lesson.data?.thumbnailUrl} />
@@ -187,4 +162,33 @@ export default function LessonDetail() {
       </Styled.LessonDetailContainer>
     </div>
   );
-}
+};
+
+export default LessonDetail;
+
+export const getStaticProps = wrapper.getStaticProps(store => async ({ params }) => {
+  const isLoggedIn = Boolean(store.getState().auth.user.data);
+  const lessonId = params?.lessonId as string;
+
+  await store.dispatch(fetchOneLesson(parseInt(lessonId)));
+  if (isLoggedIn) {
+    await store.dispatch(fetchLecture(parseInt(lessonId)));
+  }
+
+  return {
+    props: {
+      lessonId,
+      isLoggedIn
+    }
+  };
+});
+
+export const getStaticPaths = () => {
+  return {
+    paths:
+      store
+        .getState()
+        .lesson.lessons.data?.map(({ id }) => ({ params: { lessonId: id.toString() } })) || [],
+    fallback: true
+  };
+};
