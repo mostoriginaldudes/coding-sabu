@@ -73,9 +73,11 @@ const LessonDisplay: FC<Props> = ({ lessons }) => {
                   <div>
                     <Viewer description={description} />
                   </div>
-                  <button>
-                    <Link href={`/lesson/${id}`}>자세히 보기</Link>
-                  </button>
+                  <Link href={`/lesson/${id}`} passHref>
+                    <a>
+                      <button>자세히 보기</button>
+                    </a>
+                  </Link>
                 </article>
               </Styled.Info>
             </Styled.Content>

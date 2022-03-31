@@ -143,7 +143,7 @@ const Info = styled.div`
       overflow: scroll;
     }
 
-    & > button {
+    & button {
       background-color: ${colors.yellow[4]};
       border: none;
       padding: 0.7em;
