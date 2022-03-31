@@ -8,7 +8,8 @@
     "dev": "next dev",
     "lint": "next lint",
     "test": "jest",
-    "test:watch": "jest --watchAll"
+    "test:watch": "jest --watchAll",
+    "test:coverage": "jest --coverage .",
   },
   "dependencies": {
     "@emotion/react": "^11.6.0",
