@@ -10,7 +10,6 @@ import useRedux from 'hooks/useRedux';
 import { store, wrapper } from 'store';
 import { fetchLecture } from 'store/lecture';
 import type { Lecture, Lesson } from 'types';
-import { Store } from '@reduxjs/toolkit';
 
 const LectureWrapper = styled.div`
   display: flex;
