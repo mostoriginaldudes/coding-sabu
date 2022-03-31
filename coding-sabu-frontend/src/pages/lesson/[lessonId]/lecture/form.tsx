@@ -1,20 +1,20 @@
-import { GetStaticPropsContext } from 'next';
+import { NextPage, GetStaticPropsContext } from 'next';
 import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
-import Head from 'next/head';
 import { useState, useEffect, useCallback } from 'react';
 import { ValidationError } from 'yup';
 import { createLectureRequest } from 'apis';
 import UnderlineTitle from 'components/UnderlineTitle';
 import Input from 'components/Input';
 import Button from 'components/Button';
+import PageHead from 'components/PageHead';
 import LECTURE_FAIL from 'fixtures/lecture/fail';
 import LECTURE_SUCCESS from 'fixtures/lecture/success';
 import useRedux from 'hooks/useRedux';
-import { ThunkAsyncState } from 'store';
+import { store } from 'store';
 import { showHud } from 'store/ui';
 import { Row } from 'styles/modules/common';
-import { Lecture, LectureRequestInfo, Lesson } from 'types';
+import { Lecture, LectureRequestInfo } from 'types';
 
 const Editor = dynamic(() => import('components/Editor'), { ssr: false });
 
@@ -22,18 +22,18 @@ interface Props {
   lessonId: number;
 }
 
-export default function LectureForm({ lessonId }: Props) {
+const LectureForm: NextPage<Props> = ({ lessonId }) => {
   const router = useRouter();
-
-  const { useAppDispatch, useAppSelector } = useRedux();
-  const { user, myTeachingLessons } = useAppSelector(state => ({
-    user: state.auth.user,
-    myTeachingLessons: state.lesson.myTeachingLessons as ThunkAsyncState<Lesson[]>
-  }));
-  const dispatch = useAppDispatch();
 
   const [unit, setUnit] = useState<string>('');
   const [content, setContent] = useState<string>('');
+
+  const { useAppDispatch, useAppSelector } = useRedux();
+  const dispatch = useAppDispatch();
+  const { user, myTeachingLessons } = useAppSelector(state => ({
+    user: state.auth.user,
+    myTeachingLessons: state.lesson.myTeachingLessons
+  }));
 
   const checkIfAuthorized = useCallback(() => {
     if (user.data === null) {
@@ -97,9 +97,7 @@ export default function LectureForm({ lessonId }: Props) {
 
   return (
     <div>
-      <Head>
-        <title>수련 비급 작성 | 코딩사부</title>
-      </Head>
+      <PageHead title="수련 비급 작성" />
       <UnderlineTitle title="수련 비급 작성" />
       <form onSubmit={onSubmit}>
         <Input
@@ -121,21 +119,25 @@ export default function LectureForm({ lessonId }: Props) {
       </form>
     </div>
   );
-}
+};
+
+export default LectureForm;
 
 export function getStaticProps(context: GetStaticPropsContext) {
-  const lessonId = context.params!.lessonId as string;
+  const lessonId = parseInt(context.params!.lessonId as string);
 
   return {
     props: {
-      lessonId: parseInt(lessonId)
+      lessonId
     }
   };
 }
 
-export function getStaticPaths() {
+export const getStaticPaths = () => {
+  const { myTeachingLessons } = store.getState().lesson;
+
   return {
-    paths: [{ params: { lessonId: '24' } }],
+    paths: myTeachingLessons.data?.map(({ id }) => ({ params: { lessonId: id.toString() } })) || [],
     fallback: true
   };
-}
+};

@@ -1,8 +1,8 @@
 import { useRouter } from 'next/router';
-import Head from 'next/head';
 import { useState, useEffect, useCallback } from 'react';
 import { css } from '@emotion/react';
 import Loader from 'components/Loader';
+import PageHead from 'components/PageHead';
 import useRedux from 'hooks/useRedux';
 import AUTH_SUCCESS from 'fixtures/auth/success';
 import { logout, setToken } from 'store/auth';
@@ -39,11 +39,15 @@ export default function Logout() {
 
   return (
     <div css={style}>
-      <Head>
-        <title>로그아웃 | 코딩사부</title>
-      </Head>
+      <PageHead title="로그아웃" />
       <Loader loading={true} />
       <h2>로그아웃을 진행중입니다.</h2>
     </div>
   );
 }
+
+export const getStaticProps = () => {
+  return {
+    props: {}
+  };
+};

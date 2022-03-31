@@ -1,9 +1,9 @@
-import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FcDisclaimer } from 'react-icons/fc';
 import styled from '@emotion/styled';
 import Button from 'components/Button';
+import PageHead from 'components/PageHead';
 
 const Container = styled.div`
   width: 100%;
@@ -21,17 +21,23 @@ const Wrapper = styled.section`
 export default function Error() {
   return (
     <Container>
-      <Head>
-        <title>오류 | 코딩사부</title>
-      </Head>
+      <PageHead title="오류" />
       <Wrapper>
         <Image src="/images/logo.svg" alt="코딩사부 로고" layout="fixed" width={500} height={300} />
         <h1>심각한 에러가 발생하였습니다.</h1>
         <FcDisclaimer />
-        <Link href="/" passHref>
-          <Button color="black">홈으로 이동</Button>
-        </Link>
+        <Button color="black">
+          <Link href="/" passHref>
+            <a>홈으로 이동</a>
+          </Link>
+        </Button>
       </Wrapper>
     </Container>
   );
 }
+
+export const getStaticProps = () => {
+  return {
+    props: {}
+  };
+};

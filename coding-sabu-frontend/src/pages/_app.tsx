@@ -1,4 +1,3 @@
-import { NextPage } from 'next';
 import type { AppProps } from 'next/app';
 import { useStore } from 'react-redux';
 import { persistStore } from 'redux-persist';
@@ -12,18 +11,13 @@ import { wrapper, StoreType } from 'store';
 import GlobalStyle from 'styles/GlobalStyle';
 import { sizes } from 'styles/modules/theme';
 
-import '@toast-ui/editor/dist/toastui-editor.css';
-import 'prismjs/themes/prism.css';
-import '@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight.css';
-import '@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-syntax.css';
-
 const Main = styled.main`
   width: calc(100% - 2rem);
   max-width: ${sizes.desktop}px;
   margin: ${sizes.unitBig / 8}em auto 2rem;
 `;
 
-const MyApp: NextPage<AppProps> = ({ Component, pageProps }) => {
+function MyApp({ Component, pageProps }: AppProps) {
   const store: StoreType = useStore();
   injectStore(store);
 
@@ -37,6 +31,6 @@ const MyApp: NextPage<AppProps> = ({ Component, pageProps }) => {
       </Main>
     </PersistGate>
   );
-};
+}
 
 export default wrapper.withRedux(MyApp);
