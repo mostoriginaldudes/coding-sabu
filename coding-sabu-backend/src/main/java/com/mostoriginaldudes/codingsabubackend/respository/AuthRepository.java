@@ -1,8 +1,8 @@
 package com.mostoriginaldudes.codingsabubackend.respository;
 
 import com.mostoriginaldudes.codingsabubackend.dto.LoginDto;
-import com.mostoriginaldudes.codingsabubackend.dto.UserDto;
 import com.mostoriginaldudes.codingsabubackend.dto.SignupDto;
+import com.mostoriginaldudes.codingsabubackend.dto.UserDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
