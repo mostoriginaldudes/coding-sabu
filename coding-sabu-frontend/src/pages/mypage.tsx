@@ -1,3 +1,4 @@
+import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useState, useEffect, useCallback, useMemo, ChangeEvent } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
@@ -5,25 +6,32 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import Input from 'components/Input';
 import Button from 'components/Button';
 import PageHead from 'components/PageHead';
+import AuthenticationError from 'errors/AuthenticationError';
 import AUTH_FAIL from 'fixtures/auth/fail';
 import useRedux from 'hooks/useRedux';
 import { editUser } from 'store/auth';
 import { showHud } from 'store/ui';
-import validationSchema from 'utils/FormValidation/auth/ValidationSchema';
+import { wrapper } from 'store';
 import * as Styled from 'styles/MyPage';
-import { EditUserInfo } from 'types';
+import { EditUserInfo, User } from 'types';
+import validationSchema from 'utils/FormValidation/auth/ValidationSchema';
 
-export default function MyPage() {
+interface Props {
+  loading: boolean;
+  user: User | null;
+  error: AuthenticationError | null;
+}
+
+const MyPage: NextPage<Props> = ({ loading, user, error }) => {
   const router = useRouter();
 
-  const { useAppDispatch, useAppSelector } = useRedux();
+  const { useAppDispatch } = useRedux();
   const dispatch = useAppDispatch();
-  const { data, error } = useAppSelector(state => state.auth.user);
 
-  const [imgUrl, setImgUrl] = useState<string | undefined>(data?.profileImage);
+  const [imgUrl, setImgUrl] = useState<string | undefined>(user?.profileImage);
   const [profileImage, setProfileImage] = useState<File | null>(null);
 
-  const hasBeenUploaded = useMemo(() => data?.profileImage !== '', [data]);
+  const hasBeenUploaded = useMemo(() => user?.profileImage !== '', [user]);
 
   const {
     register,
@@ -34,21 +42,21 @@ export default function MyPage() {
     mode: 'onChange',
     resolver: yupResolver(validationSchema.getEditUser()),
     defaultValues: {
-      id: data?.id,
-      email: data?.email,
-      nickname: data?.nickname,
-      phoneNum: data?.phoneNum,
-      description: data?.description
+      id: user?.id,
+      email: user?.email,
+      nickname: user?.nickname,
+      phoneNum: user?.phoneNum,
+      description: user?.description
     }
   });
 
   const onSubmit: SubmitHandler<EditUserInfo> = async (newInfo, event) => {
     event?.preventDefault();
 
-    if (data) {
+    if (user) {
       const formData = new FormData();
-      formData.append('id', String(data.id));
-      formData.append('email', data.email);
+      formData.append('id', String(user.id));
+      formData.append('email', user.email);
       formData.append('password', newInfo.password);
       formData.append('nickname', newInfo.nickname);
       formData.append('phoneNum', newInfo.phoneNum);
@@ -75,11 +83,11 @@ export default function MyPage() {
   );
 
   const checkIfLoggedIn = useCallback(() => {
-    if (!data) {
+    if (!user) {
       dispatch(showHud(AUTH_FAIL.REQUIRED_LOGIN));
       movePreviousPage();
     }
-  }, [data]);
+  }, [user]);
 
   const movePreviousPage = useCallback(() => {
     router.back();
@@ -87,7 +95,7 @@ export default function MyPage() {
 
   useEffect(() => {
     checkIfLoggedIn();
-  }, [data]);
+  }, [user]);
 
   useEffect(() => {
     return () => {
@@ -117,7 +125,7 @@ export default function MyPage() {
               label="이메일"
               placeholder="example@email.com"
               onChange={() => {}}
-              value={data?.email}
+              value={user?.email}
               readOnly
               disabled
             />
@@ -177,8 +185,18 @@ export default function MyPage() {
       </form>
     </div>
   );
-}
+};
 
-export const getStaticProps = () => ({
-  props: {}
+export default MyPage;
+
+export const getServerSideProps = wrapper.getServerSideProps(store => async () => {
+  const { loading, data: user, error } = store.getState().auth.user;
+
+  return {
+    props: {
+      loading,
+      user,
+      error
+    }
+  };
 });

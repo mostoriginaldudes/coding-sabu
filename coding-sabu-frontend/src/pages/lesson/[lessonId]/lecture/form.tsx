@@ -134,10 +134,10 @@ export function getStaticProps(context: GetStaticPropsContext) {
 }
 
 export const getStaticPaths = () => {
-  const { myTeachingLessons } = store.getState().lesson;
+  const { data: myTeachingLessons } = store.getState().lesson.myTeachingLessons;
 
   return {
-    paths: myTeachingLessons.data?.map(({ id }) => ({ params: { lessonId: id.toString() } })) || [],
+    paths: myTeachingLessons?.map(({ id }) => ({ params: { lessonId: id.toString() } })) || [],
     fallback: true
   };
 };

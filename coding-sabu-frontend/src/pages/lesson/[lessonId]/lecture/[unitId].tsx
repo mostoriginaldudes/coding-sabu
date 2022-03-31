@@ -9,7 +9,8 @@ import PageHead from 'components/PageHead';
 import useRedux from 'hooks/useRedux';
 import { store, wrapper } from 'store';
 import { fetchLecture } from 'store/lecture';
-import type { Lesson } from 'types';
+import type { Lecture, Lesson } from 'types';
+import { Store } from '@reduxjs/toolkit';
 
 const LectureWrapper = styled.div`
   display: flex;
@@ -18,19 +19,18 @@ const LectureWrapper = styled.div`
 interface Props {
   lessonId: number;
   unitId: number;
+  lessons: Lesson[] | null;
+  loading: boolean;
+  lecture: Lecture[] | null;
 }
 
-const LecturePage: NextPage<Props> = ({ lessonId, unitId }) => {
-  const { useAppDispatch, useAppSelector } = useRedux();
+const LecturePage: NextPage<Props> = ({ lessonId, unitId, lessons, loading, lecture }) => {
+  const { useAppDispatch } = useRedux();
   const dispatch = useAppDispatch();
-  const { lessons, lecture } = useAppSelector(state => ({
-    lessons: state.lesson.lessons,
-    lecture: state.lecture.lectureUnits
-  }));
 
-  const lesson = () => lessons.data?.find((lesson: Lesson) => lesson.id === lessonId || '');
+  const lesson = () => lessons?.find((lesson: Lesson) => lesson.id === lessonId || '');
 
-  const content = () => lecture.data?.find(unit => unit.id === unitId)?.content;
+  const content = () => lecture?.find(unit => unit.id === unitId)?.content;
 
   useEffect(() => {
     dispatch(fetchLecture(lessonId));
@@ -39,12 +39,12 @@ const LecturePage: NextPage<Props> = ({ lessonId, unitId }) => {
   return (
     <div>
       <PageHead title="수련 비급" />
-      <Loader loading={lecture.loading} />
-      {lesson() && lecture.data && (
+      <Loader loading={loading} />
+      {lesson() && lecture && (
         <>
           <UnderlineTitle title={lesson()!.title || ''} />
           <LectureWrapper>
-            <LectureUnitList lecture={lecture.data} lessonId={lessonId} />
+            <LectureUnitList lecture={lecture} lessonId={lessonId} />
             <LectureContent key={unitId} content={content()} />
           </LectureWrapper>
         </>
@@ -59,41 +59,43 @@ export const getStaticProps = wrapper.getStaticProps(store => async ({ params })
   const lessonId = params?.lessonId as string;
   const unitId = params?.unitId as string;
 
+  const { data: lessons } = store.getState().lesson.lessons;
+  const { loading, data: lecture } = store.getState().lecture.lectureUnits;
+
   const lessonIdNumber = parseInt(lessonId);
   store.dispatch(fetchLecture(lessonIdNumber));
 
   return {
     props: {
       lessonId: lessonIdNumber,
-      unitId: parseInt(unitId)
+      unitId: parseInt(unitId),
+      lessons,
+      loading,
+      lecture
     }
   };
 });
 
 export const getStaticPaths = () => {
-  const { lessons } = store.getState().lesson;
-  const { lectureUnits } = store.getState().lecture;
+  const { data: lessons } = store.getState().lesson.lessons;
+  const { data: lectureUnits } = store.getState().lecture.lectureUnits;
 
-  type Paths = Array<{ params: { lessonId: number; unitId: number } }>;
-  let paths: Paths = [];
-
-  if (lessons.data && lectureUnits.data) {
-    for (const lesson of lessons.data) {
-      paths.concat(
-        lectureUnits.data
-          .filter(({ id }) => id === lesson.id)
-          .map(({ id }) => ({
-            params: {
-              lessonId: lesson.id,
-              unitId: id
-            }
-          }))
-      );
-    }
-  }
+  const paths = lessons && lectureUnits ? getRouteParams(lessons, lectureUnits) : [];
 
   return {
     paths,
     fallback: true
   };
 };
+
+function getRouteParams(lessons: Lesson[], lectureUnits: Lecture[]) {
+  const paths: Array<{ params: { lessonId: number; unitId: number } }> = [];
+  for (const lesson of lessons) {
+    paths.push(
+      ...lectureUnits
+        .filter(({ id }) => id === lesson.id)
+        .map(({ id }) => ({ params: { lessonId: lesson.id, unitId: id } }))
+    );
+  }
+  return paths;
+}

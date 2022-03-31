@@ -6,28 +6,30 @@ import LessonDisplay from 'components/LessonDisplay';
 import UnderlineTitle from 'components/UnderlineTitle';
 import LessonList from 'components/LessonList';
 import PageHead from 'components/PageHead';
-import useFetchLessonList from 'hooks/useFetchLessonList';
 import { wrapper } from 'store';
 import { fetchLessons } from 'store/lesson';
 import { Empty } from 'styles/Home';
+import { Lesson } from 'types';
 
-const Home: NextPage = () => {
-  const [loading, allLessons] = useFetchLessonList('lessons');
+interface Props {
+  loading: boolean;
+  allLessons: Lesson[];
+}
 
+const Home: NextPage<Props> = ({ loading, allLessons }) => {
   const hasContent = useMemo(() => allLessons && allLessons.length > 0, [allLessons]);
 
   return (
     <div>
       <PageHead title="HOME" />
       <Loader loading={loading} />
-      {!loading && hasContent && (
+      {hasContent ? (
         <>
           <LessonDisplay lessons={allLessons} />
           <UnderlineTitle title="수련 목록" />
           <LessonList lessons={allLessons} />
         </>
-      )}
-      {!loading && !hasContent && (
+      ) : (
         <Empty>
           <h1>콘텐츠가 없습니다.</h1>
           <FiAlertTriangle />
@@ -39,10 +41,14 @@ const Home: NextPage = () => {
 
 export default Home;
 
-export const getStaticProps = wrapper.getStaticProps(store => async () => {
+export const getServerSideProps = wrapper.getServerSideProps(store => async () => {
   await store.dispatch(fetchLessons());
 
+  const { loading, data: allLessons } = store.getState().lesson.lessons;
   return {
-    props: {}
+    props: {
+      loading,
+      allLessons
+    }
   };
 });

@@ -1,3 +1,4 @@
+import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
 import { useState, useEffect, useMemo, useCallback, ChangeEvent } from 'react';
@@ -11,6 +12,7 @@ import PageHead from 'components/PageHead';
 import LESSON_SUCCESS from 'fixtures/lesson/success';
 import LESSON_FAIL from 'fixtures/lesson/fail';
 import useRedux from 'hooks/useRedux';
+import { wrapper } from 'store';
 import { createLesson } from 'store/lesson';
 import { showHud } from 'store/ui';
 import * as Styled from 'styles/LessonForm';
@@ -23,18 +25,19 @@ interface LessonFormProps {
   price: number;
 }
 
-export default function LessonForm() {
+interface Props {
+  teacherId: number | null;
+}
+
+const LessonForm: NextPage<Props> = ({ teacherId }) => {
   const router = useRouter();
 
   const [imgUrl, setImgUrl] = useState<string>('');
   const [imgFile, setImgFile] = useState<File | null>(null);
   const [description, setDescription] = useState<string>('');
 
-  const { useAppDispatch, useAppSelector } = useRedux();
+  const { useAppDispatch } = useRedux();
   const dispatch = useAppDispatch();
-  const { teacherId } = useAppSelector(state => ({
-    teacherId: state.auth.user.data?.id
-  }));
 
   const {
     register,
@@ -163,10 +166,13 @@ export default function LessonForm() {
       </form>
     </div>
   );
-}
-
-export const getStaticProps = () => {
-  return {
-    props: {}
-  };
 };
+
+export default LessonForm;
+
+export const getStaticProps = wrapper.getStaticProps(store => async () => {
+  const teacherId = store.getState().auth.user.data?.id || null;
+  return {
+    props: { teacherId }
+  };
+});

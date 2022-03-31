@@ -1,24 +1,25 @@
+import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect, useCallback, useMemo } from 'react';
 import LessonList from 'components/LessonList';
 import Loader from 'components/Loader';
 import UnderlineTitle from 'components/UnderlineTitle';
 import PageHead from 'components/PageHead';
-import useRedux from 'hooks/useRedux';
 import { wrapper } from 'store';
 import { fetchMyTeachingLessons } from 'store/lesson';
 import * as Styled from 'styles/MyTeachingLessons';
+import { Lesson, User } from 'types';
 
-export default function MyTeachingLessons() {
-  const { useAppSelector } = useRedux();
-  const { user, myTeachingLessons } = useAppSelector(state => ({
-    user: state.auth.user,
-    myTeachingLessons: state.lesson.myTeachingLessons
-  }));
+interface Props {
+  lessonIsLoading: boolean;
+  user: User | null;
+  myTeachingLessons: Lesson[];
+}
 
+const MyTeachingLessons: NextPage<Props> = ({ lessonIsLoading, user, myTeachingLessons }) => {
   const router = useRouter();
   const goToLessonForm = useCallback(() => router.push('/lesson/form'), []);
-  const isNotTeacher = useMemo(() => user.data?.userType !== 'teacher', [user]);
+  const isNotTeacher = useMemo(() => user?.userType !== 'teacher', [user]);
 
   useEffect(() => {
     isNotTeacher && router.replace('/');
@@ -32,17 +33,26 @@ export default function MyTeachingLessons() {
           수련 개설
         </Styled.CreateLessonButton>
         <UnderlineTitle title="내 가르침 목록" />
-        <Loader loading={myTeachingLessons.loading} />
-        <LessonList lessons={myTeachingLessons.data || []} />
+        <Loader loading={lessonIsLoading} />
+        <LessonList lessons={myTeachingLessons} />
       </Styled.Container>
     </div>
   );
-}
+};
+
+export default MyTeachingLessons;
 
 export const getServerSideProps = wrapper.getServerSideProps(store => async () => {
   await store.dispatch(fetchMyTeachingLessons());
 
+  const { data: user } = store.getState().auth.user;
+  const { loading: lessonIsLoading, data: myTeachingLessons } =
+    store.getState().lesson.myTeachingLessons;
   return {
-    props: {}
+    props: {
+      user,
+      lessonIsLoading,
+      myTeachingLessons: myTeachingLessons || []
+    }
   };
 });
