@@ -1,9 +1,22 @@
 {
-  "extends": ["next/babel", "next/core-web-vitals"],
+  "extends": ["next/babel", "next/core-web-vitals", "plugin:cypress/recommend"],
   "rules": {
-    "react-hooks/exhaustive-deps": "off"
+    "react-hooks/exhaustive-deps": "off",
+    "import/no-unresolved": "error"
   },
+  "settings": {
+    "import/parseers": {
+      "@typescript-eslint/parser": [".ts", ".tsx"]
+    },
+    "import/resolver": {
+      "typescript": {
+        "alwaysTryTypes": true
+      }
+    }
+  },
+  "plugins": ["cypress"],
   "env": {
-    "jest": true
+    "jest": true,
+    "cypress/globals": true
   }
 }
