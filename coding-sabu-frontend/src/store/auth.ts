@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { ThunkAsyncState } from '.';
 import { editUserRequest, loginRequest, logoutRequest, signupRequest } from 'apis';
 import { LoginInfo, SignupInfo, User } from 'types';
+import AuthenticationError from 'errors/AuthenticationError';
 
 const LOGIN = 'auth/LOGIN' as const;
 const SIGNUP = 'auth/SIGNUP' as const;
@@ -50,7 +51,7 @@ const authSlice = createSlice({
         state.user = {
           loading: false,
           data: null,
-          error: action.error as Error
+          error: action.error as AuthenticationError
         };
       })
       .addCase(signup.pending, state => {
@@ -125,7 +126,7 @@ const login = createAsyncThunk(LOGIN, async (loginInfo: LoginInfo, { rejectWithV
     const user: User = await loginRequest(loginInfo);
     return user;
   } catch (error) {
-    return rejectWithValue((error as Error).message);
+    return rejectWithValue((error as AuthenticationError).message);
   }
 });
 
