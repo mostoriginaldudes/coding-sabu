@@ -1,6 +1,6 @@
 import { NextPage } from 'next';
 import { useMemo } from 'react';
-import { FiAlertTriangle } from 'react-icons/fi';
+import { FiAlertTriangle as EmptyIcon } from 'react-icons/fi';
 import Loader from 'components/Loader';
 import LessonDisplay from 'components/LessonDisplay';
 import UnderlineTitle from 'components/UnderlineTitle';
@@ -19,19 +19,23 @@ const Home: NextPage = () => {
   return (
     <div>
       <PageHead title="HOME" />
-      <Loader loading={loading} />
-      {!loading && hasContent && (
+      {loading ? (
+        <Loader loading={loading} />
+      ) : (
         <>
-          <LessonDisplay lessons={allLessons} />
-          <UnderlineTitle title="수련 목록" />
-          <LessonList lessons={allLessons} />
+          {hasContent ? (
+            <>
+              <LessonDisplay lessons={allLessons || []} />
+              <UnderlineTitle title="수련 목록" />
+              <LessonList lessons={allLessons || []} />
+            </>
+          ) : (
+            <Empty>
+              <h1>콘텐츠가 없습니다.</h1>
+              <EmptyIcon />
+            </Empty>
+          )}
         </>
-      )}
-      {!loading && !hasContent && (
-        <Empty>
-          <h1>콘텐츠가 없습니다.</h1>
-          <FiAlertTriangle />
-        </Empty>
       )}
     </div>
   );
@@ -39,7 +43,7 @@ const Home: NextPage = () => {
 
 export default Home;
 
-export const getStaticProps = wrapper.getStaticProps(store => async () => {
+export const getServerSideProps = wrapper.getServerSideProps(store => async () => {
   await store.dispatch(fetchLessons());
 
   return {

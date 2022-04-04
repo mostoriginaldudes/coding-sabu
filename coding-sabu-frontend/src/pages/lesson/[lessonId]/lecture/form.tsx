@@ -10,6 +10,7 @@ import Button from 'components/Button';
 import PageHead from 'components/PageHead';
 import LECTURE_FAIL from 'fixtures/lecture/fail';
 import LECTURE_SUCCESS from 'fixtures/lecture/success';
+import useFetchLessonList from 'hooks/useFetchLessonList';
 import useRedux from 'hooks/useRedux';
 import { store } from 'store';
 import { showHud } from 'store/ui';
@@ -28,12 +29,12 @@ const LectureForm: NextPage<Props> = ({ lessonId }) => {
   const [unit, setUnit] = useState<string>('');
   const [content, setContent] = useState<string>('');
 
+  const [, myTeachingLessons] = useFetchLessonList('myTeachingLessons');
+
   const { useAppDispatch, useAppSelector } = useRedux();
+  const user = useAppSelector(state => state.auth.user);
+
   const dispatch = useAppDispatch();
-  const { user, myTeachingLessons } = useAppSelector(state => ({
-    user: state.auth.user,
-    myTeachingLessons: state.lesson.myTeachingLessons
-  }));
 
   const checkIfAuthorized = useCallback(() => {
     if (user.data === null) {
@@ -42,7 +43,7 @@ const LectureForm: NextPage<Props> = ({ lessonId }) => {
       return router.back();
     }
 
-    const lesson = myTeachingLessons.data?.find(({ id }) => id === lessonId);
+    const lesson = myTeachingLessons.find(({ id }) => id === lessonId);
     if (lesson && lesson.teacherId !== user.data.id) {
       return router.back();
     }

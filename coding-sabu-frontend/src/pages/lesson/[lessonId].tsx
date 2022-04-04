@@ -1,7 +1,7 @@
 import { GetServerSideProps, NextPage } from 'next';
 import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import Button from 'components/Button';
 import TextBox from 'components/TextBox';
 import Loader from 'components/Loader';
@@ -18,16 +18,14 @@ import { fetchLecture } from 'store/lecture';
 import { showAuthForm, showHud } from 'store/ui';
 import { Row } from 'styles/modules/common';
 import * as Styled from 'styles/LessonDetail';
-import { store, wrapper } from 'store';
 
 const Viewer = dynamic(() => import('components/Viewer'), { ssr: false });
 
 interface Props {
   lessonId: string;
-  isLoggedIn: boolean;
 }
 
-const LessonDetail: NextPage<Props> = ({ lessonId, isLoggedIn }) => {
+const LessonDetail: NextPage<Props> = ({ lessonId }) => {
   const router = useRouter();
 
   const { useAppDispatch, useAppSelector } = useRedux();
@@ -39,6 +37,8 @@ const LessonDetail: NextPage<Props> = ({ lessonId, isLoggedIn }) => {
     myTeachingLessons: state.lesson.myTeachingLessons,
     lecture: state.lecture.lectureUnits
   }));
+
+  const isLoggedIn = useMemo(() => Boolean(user.data), [user.data]);
 
   const enrollIfLoggedIn = () => {
     isLoggedIn ? enrollLesson() : dispatch(showAuthForm());
@@ -111,6 +111,13 @@ const LessonDetail: NextPage<Props> = ({ lessonId, isLoggedIn }) => {
     }
   }, [hasLecture]);
 
+  useEffect(() => {
+    dispatch(fetchOneLesson(parseInt(lessonId)));
+    if (isLoggedIn) {
+      dispatch(fetchLecture(parseInt(lessonId)));
+    }
+  }, []);
+
   return (
     <div>
       <PageHead title="수련 정보" imgUrl={lesson.data?.thumbnailUrl} />
@@ -167,28 +174,11 @@ const LessonDetail: NextPage<Props> = ({ lessonId, isLoggedIn }) => {
 export default LessonDetail;
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-  const isLoggedIn = Boolean(store.getState().auth.user.data);
   const lessonId = params?.lessonId as string;
-
-  await store.dispatch(fetchOneLesson(parseInt(lessonId)));
-  if (isLoggedIn) {
-    await store.dispatch(fetchLecture(parseInt(lessonId)));
-  }
 
   return {
     props: {
-      lessonId,
-      isLoggedIn
+      lessonId
     }
-  };
-});
-
-export const getStaticPaths = () => {
-  return {
-    paths:
-      store
-        .getState()
-        .lesson.lessons.data?.map(({ id }) => ({ params: { lessonId: id.toString() } })) || [],
-    fallback: true
   };
 };

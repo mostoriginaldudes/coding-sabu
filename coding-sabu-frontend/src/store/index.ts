@@ -26,7 +26,6 @@ const envIsDev = process.env.NODE_ENV === 'development';
 
 const persistConfig = {
   key: 'auth',
-  version: 1,
   storage,
   stateReconciler: hardSet,
   debug: envIsDev
@@ -48,10 +47,7 @@ const defaultMiddlewareOptions = {
 const reducer = (state: RootState, action: TotalActions): RootState => {
   switch (action.type) {
     case HYDRATE:
-      return {
-        ...state,
-        ...action.payload
-      };
+      return state;
     default:
       return rootReducer(state, action);
   }

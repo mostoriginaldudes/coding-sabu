@@ -19,12 +19,12 @@ export default function MyPage() {
 
   const { useAppDispatch, useAppSelector } = useRedux();
   const dispatch = useAppDispatch();
-  const { data, error } = useAppSelector(state => state.auth.user);
+  const { data: user, error } = useAppSelector(state => state.auth.user);
 
-  const [imgUrl, setImgUrl] = useState<string | undefined>(data?.profileImage);
+  const [imgUrl, setImgUrl] = useState<string | undefined>(user?.profileImage);
   const [profileImage, setProfileImage] = useState<File | null>(null);
 
-  const hasBeenUploaded = useMemo(() => data?.profileImage !== '', [data]);
+  const hasBeenUploaded = useMemo(() => user?.profileImage !== '', [user]);
 
   const {
     register,
@@ -35,21 +35,21 @@ export default function MyPage() {
     mode: 'onChange',
     resolver: yupResolver(validationSchema.getEditUser()),
     defaultValues: {
-      id: data?.id,
-      email: data?.email,
-      nickname: data?.nickname,
-      phoneNum: data?.phoneNum,
-      description: data?.description
+      id: user?.id,
+      email: user?.email,
+      nickname: user?.nickname,
+      phoneNum: user?.phoneNum,
+      description: user?.description
     }
   });
 
   const onSubmit: SubmitHandler<EditUserInfo> = async (newInfo, event) => {
     event?.preventDefault();
 
-    if (data) {
+    if (user) {
       const formData = new FormData();
-      formData.append('id', String(data.id));
-      formData.append('email', data.email);
+      formData.append('id', String(user.id));
+      formData.append('email', user.email);
       formData.append('password', newInfo.password);
       formData.append('nickname', newInfo.nickname);
       formData.append('phoneNum', newInfo.phoneNum);
@@ -76,11 +76,11 @@ export default function MyPage() {
   );
 
   const checkIfLoggedIn = useCallback(() => {
-    if (!data) {
+    if (!user) {
       dispatch(showHud(AUTH_FAIL.REQUIRED_LOGIN));
       movePreviousPage();
     }
-  }, [data]);
+  }, [user]);
 
   const movePreviousPage = useCallback(() => {
     router.back();
@@ -88,7 +88,7 @@ export default function MyPage() {
 
   useEffect(() => {
     checkIfLoggedIn();
-  }, [data]);
+  }, [user]);
 
   useEffect(() => {
     return () => {
@@ -118,7 +118,7 @@ export default function MyPage() {
               label="이메일"
               placeholder="example@email.com"
               onChange={() => {}}
-              value={data?.email}
+              value={user?.email}
               readOnly
               disabled
             />
