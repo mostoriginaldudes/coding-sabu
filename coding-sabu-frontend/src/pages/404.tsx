@@ -1,3 +1,4 @@
+import { GetStaticProps } from 'next';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import PageHead from 'components/PageHead';
@@ -27,7 +28,7 @@ export default function NotFound() {
   );
 }
 
-export const getStaticProps = () => {
+export const getStaticProps: GetStaticProps = () => {
   return {
     props: {}
   };

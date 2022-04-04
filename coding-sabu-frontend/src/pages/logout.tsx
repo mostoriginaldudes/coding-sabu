@@ -1,3 +1,4 @@
+import { GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
 import { useState, useEffect, useCallback } from 'react';
 import { css } from '@emotion/react';
@@ -46,7 +47,7 @@ export default function Logout() {
   );
 }
 
-export const getStaticProps = () => {
+export const getStaticProps: GetStaticProps = () => {
   return {
     props: {}
   };

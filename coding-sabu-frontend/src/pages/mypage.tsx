@@ -1,3 +1,4 @@
+import { GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
 import { useState, useEffect, useCallback, useMemo, ChangeEvent } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
@@ -179,6 +180,6 @@ export default function MyPage() {
   );
 }
 
-export const getStaticProps = () => ({
+export const getStaticProps: GetStaticProps = () => ({
   props: {}
 });

@@ -1,4 +1,4 @@
-import { NextPage } from 'next';
+import { GetServerSideProps, NextPage } from 'next';
 import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
 import { useCallback, useMemo } from 'react';
@@ -166,7 +166,7 @@ const LessonDetail: NextPage<Props> = ({ lessonId, isLoggedIn }) => {
 
 export default LessonDetail;
 
-export const getStaticProps = wrapper.getStaticProps(store => async ({ params }) => {
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const isLoggedIn = Boolean(store.getState().auth.user.data);
   const lessonId = params?.lessonId as string;
 

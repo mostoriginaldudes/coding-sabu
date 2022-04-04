@@ -1,3 +1,4 @@
+import { GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
 import { useState, useEffect, useMemo, useCallback, ChangeEvent } from 'react';
@@ -165,7 +166,7 @@ export default function LessonForm() {
   );
 }
 
-export const getStaticProps = () => {
+export const getStaticProps: GetStaticProps = () => {
   return {
     props: {}
   };
