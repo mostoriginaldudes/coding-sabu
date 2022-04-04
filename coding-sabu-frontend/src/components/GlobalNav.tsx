@@ -72,7 +72,7 @@ const GlobalNav: FC = () => {
       displayLoginSuccess();
       displayLoginFail();
     }
-  }, [user, displayLoginSuccess, displayLoginFail]);
+  }, [user]);
 
   return (
     <Styled.HeaderContainer data-testid="header">
