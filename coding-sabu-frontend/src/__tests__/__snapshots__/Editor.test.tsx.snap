@@ -1,0 +1,359 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Editor /> UI 테스트 스냅샷과 일치한다. 1`] = `
+<div>
+  <div
+    style="height: 600px;"
+  >
+    <div
+      class="toastui-editor-defaultUI"
+    >
+      <div
+        class="toastui-editor-toolbar"
+      >
+        <div
+          class="toastui-editor-md-tab-container"
+          style="display: none"
+        >
+          <div
+            aria-role="tabpanel"
+            class="toastui-editor-tabs"
+          >
+            <div
+              aria-label="Write"
+              aria-role="tab"
+              aria-selected="true"
+              class="tab-item active"
+              tabindex="0"
+            >
+              Write
+            </div>
+            <div
+              aria-label="Preview"
+              aria-role="tab"
+              aria-selected="false"
+              class="tab-item"
+              tabindex="-1"
+            >
+              Preview
+            </div>
+          </div>
+        </div>
+        <div
+          class="toastui-editor-defaultUI-toolbar"
+        >
+          <div
+            class="toastui-editor-toolbar-group"
+          >
+            <button
+              aria-label="Headings"
+              class="heading toastui-editor-toolbar-icons"
+              type="button"
+            >
+              
+            </button>
+            <button
+              aria-label="Bold"
+              class="bold toastui-editor-toolbar-icons"
+              type="button"
+            >
+              
+            </button>
+            <button
+              aria-label="Italic"
+              class="italic toastui-editor-toolbar-icons"
+              type="button"
+            >
+              
+            </button>
+            <button
+              aria-label="Text color"
+              class="toastui-editor-toolbar-icons color"
+              type="button"
+            >
+              
+            </button>
+            <button
+              aria-label="Strike"
+              class="strike toastui-editor-toolbar-icons"
+              type="button"
+            >
+              
+            </button>
+            <div
+              class="toastui-editor-toolbar-divider"
+              style="null"
+            />
+          </div>
+          <div
+            class="toastui-editor-toolbar-group"
+          >
+            <button
+              aria-label="Line"
+              class="hrline toastui-editor-toolbar-icons"
+              type="button"
+            >
+              
+            </button>
+            <button
+              aria-label="Blockquote"
+              class="quote toastui-editor-toolbar-icons"
+              type="button"
+            >
+              
+            </button>
+            <div
+              class="toastui-editor-toolbar-divider"
+            />
+          </div>
+          <div
+            class="toastui-editor-toolbar-group"
+          >
+            <button
+              aria-label="Unordered list"
+              class="bullet-list toastui-editor-toolbar-icons"
+              type="button"
+            >
+              
+            </button>
+            <button
+              aria-label="Ordered list"
+              class="ordered-list toastui-editor-toolbar-icons"
+              type="button"
+            >
+              
+            </button>
+            <button
+              aria-label="Task"
+              class="task-list toastui-editor-toolbar-icons"
+              type="button"
+            >
+              
+            </button>
+            <button
+              aria-label="Indent"
+              class="indent toastui-editor-toolbar-icons"
+              type="button"
+            >
+              
+            </button>
+            <button
+              aria-label="Outdent"
+              class="outdent toastui-editor-toolbar-icons"
+              type="button"
+            >
+              
+            </button>
+            <div
+              class="toastui-editor-toolbar-divider"
+            />
+          </div>
+          <div
+            class="toastui-editor-toolbar-group"
+          >
+            <button
+              aria-label="Insert table"
+              class="table toastui-editor-toolbar-icons"
+              type="button"
+            >
+              
+            </button>
+            <button
+              aria-label="Insert image"
+              class="image toastui-editor-toolbar-icons"
+              type="button"
+            >
+              
+            </button>
+            <button
+              aria-label="Insert link"
+              class="link toastui-editor-toolbar-icons"
+              type="button"
+            >
+              
+            </button>
+            <div
+              class="toastui-editor-toolbar-divider"
+            />
+          </div>
+          <div
+            class="toastui-editor-toolbar-group"
+          >
+            <button
+              aria-label="Inline code"
+              class="code toastui-editor-toolbar-icons"
+              type="button"
+            >
+              
+            </button>
+            <button
+              aria-label="Insert codeBlock"
+              class="codeblock toastui-editor-toolbar-icons"
+              type="button"
+            >
+              
+            </button>
+            <div
+              class="toastui-editor-toolbar-divider"
+            />
+          </div>
+          <div
+            class="toastui-editor-toolbar-group"
+          >
+            <div
+              class="toastui-editor-toolbar-item-wrapper"
+              style="display: inline-block;"
+            >
+              <label
+                class="scroll-sync active"
+              >
+                <input
+                  type="checkbox"
+                />
+                <span
+                  class="switch"
+                />
+              </label>
+            </div>
+            <div
+              class="toastui-editor-toolbar-divider"
+              style="display: none;"
+            />
+          </div>
+          <div
+            class="toastui-editor-toolbar-group"
+            style="display: none;"
+          >
+            <button
+              class="more toastui-editor-toolbar-icons"
+              type="button"
+            />
+            <div
+              class="toastui-editor-dropdown-toolbar"
+              style="display: none;"
+            />
+          </div>
+          <div
+            class="toastui-editor-tooltip"
+            style="display:none"
+          >
+            
+        
+            <div
+              class="arrow"
+            />
+            
+        
+            <span
+              class="text"
+            />
+            
+      
+          </div>
+        </div>
+        <div
+          aria-role="dialog"
+          class="toastui-editor-popup "
+          style="display: none;"
+        >
+          <div
+            class="toastui-editor-popup-body"
+          />
+        </div>
+      </div>
+      <div
+        class="toastui-editor-main toastui-editor-md-mode"
+      >
+        <div
+          class="toastui-editor-main-container"
+        >
+          <div
+            class="toastui-editor-md-container toastui-editor-md-vertical-style"
+          >
+            <div
+              class="toastui-editor md-mode"
+              style="min-height: 600px;"
+            >
+              <textarea
+                class="toastui-editor-pseudo-clipboard"
+              />
+              <div
+                class="ProseMirror"
+                contenteditable="true"
+                translate="no"
+              >
+                <div>
+                  <span
+                    class="placeholder ProseMirror-widget"
+                  >
+                    내용을 작성해주세요.
+                  </span>
+                  <br
+                    class="ProseMirror-trailingBreak"
+                  />
+                </div>
+              </div>
+            </div>
+            <div
+              class="toastui-editor-md-splitter"
+            />
+            <div
+              class="toastui-editor-md-preview"
+              style="min-height: 600px;"
+            >
+              <div
+                class="toastui-editor-contents"
+              />
+            </div>
+          </div>
+          <div
+            class="toastui-editor-ww-container"
+          >
+            <div
+              class="toastui-editor ww-mode"
+              style="min-height: 600px;"
+            >
+              <div
+                class="ProseMirror toastui-editor-contents"
+                contenteditable="true"
+                translate="no"
+              >
+                <p>
+                  <span
+                    class="placeholder ProseMirror-widget"
+                  >
+                    내용을 작성해주세요.
+                  </span>
+                  <br
+                    class="ProseMirror-trailingBreak"
+                  />
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="toastui-editor-mode-switch"
+        style="display: block"
+      >
+        <div
+          class="tab-item active"
+        >
+          Markdown
+        </div>
+        <div
+          class="tab-item"
+        >
+          WYSIWYG
+        </div>
+      </div>
+      <div
+        aria-role="menu"
+        class="toastui-editor-context-menu"
+        style="display: none;"
+      />
+    </div>
+  </div>
+</div>
+`;
